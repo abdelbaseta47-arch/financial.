@@ -248,47 +248,67 @@
             </div>
 
             <div id="fs-tab" class="tab-content max-w-5xl mx-auto">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex justify-between items-center">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex justify-between items-center overflow-x-auto">
                     <div>
                         <h3 class="text-lg font-bold text-gray-800" id="fs-header">القوائم المالية (Financial Statements)</h3>
-                        <p class="text-sm text-gray-500" id="fs-desc">تم إنشاء القوائم آلياً بناءً على الأرصدة الختامية وتصنيفات شجرة الحسابات.</p>
+                        <p class="text-sm text-gray-500" id="fs-desc">تم إنشاء القوائم الأربعة آلياً بناءً على الأرصدة الافتتاحية وحركات الفترة.</p>
                     </div>
-                    <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200">
-                        <button onclick="toggleStatement('is')" id="btn-show-is" class="px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all">قائمة الدخل</button>
-                        <button onclick="toggleStatement('bs')" id="btn-show-bs" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all">المركز المالي</button>
+                    <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0 gap-1 ml-4">
+                        <button onclick="toggleStatement('is')" id="btn-show-is" class="px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap">قائمة الدخل</button>
+                        <button onclick="toggleStatement('bs')" id="btn-show-bs" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">المركز المالي</button>
+                        <button onclick="toggleStatement('cf')" id="btn-show-cf" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">التدفقات النقدية</button>
+                        <button onclick="toggleStatement('eq')" id="btn-show-eq" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">حقوق الملكية</button>
                     </div>
                 </div>
 
-                <!-- رسالة تحذيرية إذا لم يكن هناك بيانات -->
+                <!-- Empty State -->
                 <div id="fs-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
                     <h4 class="text-lg font-bold mb-1" id="fs-empty-title">لا توجد بيانات كافية</h4>
                     <p class="text-sm" id="fs-empty-desc">الرجاء إدراج شجرة الحسابات وميزان المراجعة أولاً ليتمكن النظام من توليد القوائم المالية.</p>
                 </div>
 
-                <!-- قائمة الدخل -->
+                <!-- Income Statement -->
                 <div id="statement-is" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
                     <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
                         <h3 class="font-bold text-lg tracking-wide" id="is-title">قائمة الدخل (Income Statement)</h3>
                         <p class="text-xs text-brand-100 mt-1" id="is-subtitle">عن الفترة المنتهية</p>
                     </div>
                     <table class="w-full text-sm text-right text-gray-800" id="is-table">
-                        <tbody id="is-table-body">
-                            <!-- سيتم حقن البيانات برمجياً هنا -->
-                        </tbody>
+                        <tbody id="is-table-body"></tbody>
                     </table>
                 </div>
 
-                <!-- قائمة المركز المالي -->
+                <!-- Balance Sheet -->
                 <div id="statement-bs" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
                     <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
                         <h3 class="font-bold text-lg tracking-wide" id="bs-title">قائمة المركز المالي (Balance Sheet)</h3>
                         <p class="text-xs text-brand-100 mt-1" id="bs-subtitle">كما في نهاية الفترة</p>
                     </div>
                     <table class="w-full text-sm text-right text-gray-800" id="bs-table">
-                        <tbody id="bs-table-body">
-                            <!-- سيتم حقن البيانات برمجياً هنا -->
-                        </tbody>
+                        <tbody id="bs-table-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Cash Flow Statement -->
+                <div id="statement-cf" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+                    <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
+                        <h3 class="font-bold text-lg tracking-wide" id="cf-title">قائمة التدفقات النقدية (Cash Flow Statement)</h3>
+                        <p class="text-xs text-brand-100 mt-1" id="cf-subtitle">الطريقة غير المباشرة</p>
+                    </div>
+                    <table class="w-full text-sm text-right text-gray-800" id="cf-table">
+                        <tbody id="cf-table-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Changes in Equity -->
+                <div id="statement-eq" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+                    <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
+                        <h3 class="font-bold text-lg tracking-wide" id="eq-title">قائمة التغير في حقوق الملكية (Changes in Equity)</h3>
+                        <p class="text-xs text-brand-100 mt-1" id="eq-subtitle">عن الفترة المنتهية</p>
+                    </div>
+                    <table class="w-full text-sm text-right text-gray-800" id="eq-table">
+                        <tbody id="eq-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -325,19 +345,28 @@
                 "tb-download-btn": "Download Template", "tb-upload-title": "Upload TB", "tb-saved-title": "Trial Balance Details", "tb-clear-btn": "Clear TB",
                 "th-tb-code": "Code", "th-tb-name": "Account Name", "th-tb-opening": "Opening Balance", "th-tb-period": "Period Movement", "th-tb-ending": "Ending Balance", "th-tb-status": "Mapping",
                 "lbl-accounts-count": "Total Accounts",
-                "fs-header": "Financial Statements", "fs-desc": "Automatically generated based on ending balances and COA mapping.",
-                "btn-show-is": "Income Statement", "btn-show-bs": "Balance Sheet",
+                "fs-header": "Financial Statements", "fs-desc": "All 4 statements are automatically generated based on Opening and Period balances.",
+                "btn-show-is": "Income Statement", "btn-show-bs": "Balance Sheet", "btn-show-cf": "Cash Flow", "btn-show-eq": "Changes in Equity",
                 "fs-empty-title": "Insufficient Data", "fs-empty-desc": "Please upload Chart of Accounts and Trial Balance to generate statements.",
                 "is-title": "Income Statement", "is-subtitle": "For the period ended",
                 "bs-title": "Statement of Financial Position", "bs-subtitle": "As of end of period",
+                "cf-title": "Statement of Cash Flows", "cf-subtitle": "Indirect Method",
+                "eq-title": "Statement of Changes in Equity", "eq-subtitle": "For the period ended",
                 
                 // FS Rows Translation
                 "fs-rev": "Revenues", "fs-cogs": "Cost of Goods Sold (COGS)", "fs-gp": "Gross Profit",
                 "fs-exp": "Operating Expenses", "fs-ni": "Net Income (Loss)",
                 "fs-assets": "Assets", "fs-ca": "Current Assets", "fs-nca": "Non-Current Assets", "fs-ta": "Total Assets",
                 "fs-liab": "Liabilities", "fs-cl": "Current Liabilities", "fs-ncl": "Non-Current Liabilities", "fs-tl": "Total Liabilities",
-                "fs-eq": "Equity", "fs-re": "Retained Earnings (from Net Income)", "fs-te": "Total Equity",
-                "fs-tleq": "Total Liabilities & Equity"
+                "fs-eq": "Equity", "fs-re": "Retained Earnings", "fs-te": "Total Equity",
+                "fs-tleq": "Total Liabilities & Equity",
+
+                "cf-op-title": "Operating Activities", "cf-wc": "Changes in Working Capital", "cf-op": "Net Cash from Operating Activities",
+                "cf-inv-title": "Investing Activities", "cf-nca": "Changes in Non-Current Assets", "cf-inv": "Net Cash from Investing Activities",
+                "cf-fin-title": "Financing Activities", "cf-ncl": "Changes in Long-term Liab & Equity", "cf-fin": "Net Cash from Financing Activities",
+                "cf-net": "Net Increase (Decrease) in Cash", "cf-beg": "Cash at Beginning of Period", "cf-end": "Cash at End of Period",
+                
+                "eq-beg": "Beginning Balance", "eq-add": "Capital Additions / (Withdrawals)", "eq-ni": "Net Income for the Period", "eq-end": "Ending Balance"
             },
             ar: {
                 "txt-nav-coa": "شجرة الحسابات", "txt-nav-tb": "ميزان المراجعة", "txt-nav-dash": "لوحة القيادة",
@@ -350,19 +379,28 @@
                 "tb-download-btn": "تحميل القالب", "tb-upload-title": "رفع الميزان", "tb-saved-title": "تفاصيل ميزان المراجعة", "tb-clear-btn": "مسح الميزان",
                 "th-tb-code": "رقم الحساب", "th-tb-name": "اسم الحساب", "th-tb-opening": "الرصيد الافتتاحي", "th-tb-period": "حركات الفترة", "th-tb-ending": "الرصيد الختامي", "th-tb-status": "حالة الربط",
                 "lbl-accounts-count": "عدد الحسابات",
-                "fs-header": "القوائم المالية (Financial Statements)", "fs-desc": "تم إنشاء القوائم آلياً بناءً على الأرصدة الختامية وتصنيفات شجرة الحسابات.",
-                "btn-show-is": "قائمة الدخل", "btn-show-bs": "المركز المالي",
+                "fs-header": "القوائم المالية (Financial Statements)", "fs-desc": "تم إنشاء القوائم الأربعة آلياً بناءً على الأرصدة الافتتاحية وحركات الفترة.",
+                "btn-show-is": "قائمة الدخل", "btn-show-bs": "المركز المالي", "btn-show-cf": "التدفقات النقدية", "btn-show-eq": "حقوق الملكية",
                 "fs-empty-title": "لا توجد بيانات كافية", "fs-empty-desc": "الرجاء إدراج شجرة الحسابات وميزان المراجعة أولاً ليتمكن النظام من توليد القوائم.",
                 "is-title": "قائمة الدخل (Income Statement)", "is-subtitle": "عن الفترة المنتهية",
                 "bs-title": "قائمة المركز المالي (Balance Sheet)", "bs-subtitle": "كما في نهاية الفترة",
+                "cf-title": "قائمة التدفقات النقدية (Cash Flow Statement)", "cf-subtitle": "الطريقة غير المباشرة",
+                "eq-title": "قائمة التغير في حقوق الملكية (Changes in Equity)", "eq-subtitle": "عن الفترة المنتهية",
                 
                 // FS Rows Translation
                 "fs-rev": "الإيرادات والمبيعات", "fs-cogs": "تكلفة البضاعة المباعة", "fs-gp": "مجمل الربح (الخسارة)",
                 "fs-exp": "المصروفات التشغيلية", "fs-ni": "صافي الربح (الخسارة) للفترة",
                 "fs-assets": "الأصول (الموجودات)", "fs-ca": "الأصول المتداولة", "fs-nca": "الأصول غير المتداولة", "fs-ta": "إجمالي الأصول",
                 "fs-liab": "الخصوم (المطلوبات)", "fs-cl": "الخصوم المتداولة", "fs-ncl": "الخصوم غير المتداولة", "fs-tl": "إجمالي الخصوم",
-                "fs-eq": "حقوق الملكية", "fs-re": "أرباح مبقاة (تتضمن صافي أرباح الفترة)", "fs-te": "إجمالي حقوق الملكية",
-                "fs-tleq": "إجمالي الخصوم وحقوق الملكية"
+                "fs-eq": "حقوق الملكية", "fs-re": "أرباح مبقاة (تتضمن أرباح الفترة)", "fs-te": "إجمالي حقوق الملكية",
+                "fs-tleq": "إجمالي الخصوم وحقوق الملكية",
+
+                "cf-op-title": "الأنشطة التشغيلية", "cf-wc": "التغير في رأس المال العامل (أصول وخصوم متداولة)", "cf-op": "صافي النقد من الأنشطة التشغيلية",
+                "cf-inv-title": "الأنشطة الاستثمارية", "cf-nca": "التغير في الأصول غير المتداولة", "cf-inv": "صافي النقد من الأنشطة الاستثمارية",
+                "cf-fin-title": "الأنشطة التمويلية", "cf-ncl": "التغير في الخصوم طويلة الأجل ورأس المال", "cf-fin": "صافي النقد من الأنشطة التمويلية",
+                "cf-net": "صافي الزيادة (النقص) في النقدية", "cf-beg": "رصيد النقدية أول الفترة", "cf-end": "رصيد النقدية آخر الفترة",
+                
+                "eq-beg": "الرصيد الافتتاحي لحقوق الملكية", "eq-add": "إضافات / (مسحوبات) أخرى لرأس المال", "eq-ni": "صافي الدخل للفترة", "eq-end": "الرصيد الختامي لحقوق الملكية"
             }
         };
 
@@ -418,8 +456,6 @@
                 activeNav.classList.add('active', 'bg-brand-50', 'text-brand-600');
                 document.getElementById('current-tab-title').innerText = translations[currentLang][activeNav.querySelector('span').id];
             }
-            
-            // توليد القوائم المالية إذا تم فتح التبويب
             if(tabId === 'fs-tab') generateFinancialStatements();
         }
 
@@ -442,7 +478,7 @@
             ws['!cols'] = [{wch: 15}, {wch: 40}];
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "COA");
-            XLSX.writeFile(wb, "Chart_of_Accounts.xlsx");
+            XLSX.writeFile(wb, "Chart_of_Accounts_Template.xlsx");
         }
 
         function handleCOAUpload(event) {
@@ -535,11 +571,8 @@
                         const op_dr = formatNum(row[2]); const op_cr = formatNum(row[3]);
                         const per_dr = formatNum(row[4]); const per_cr = formatNum(row[5]);
                         
-                        // احتساب الرصيد الختامي بناءً على طبيعة الحساب أو الصافي
                         const net_change = (op_dr - op_cr) + (per_dr - per_cr);
                         let end_dr = 0, end_cr = 0;
-                        
-                        // الدقة المحاسبية: إذا كان الصافي موجب فهو مدين، وإذا كان سالب فهو دائن
                         if(net_change > 0) end_dr = Math.abs(net_change);
                         else if (net_change < 0) end_cr = Math.abs(net_change);
 
@@ -606,12 +639,11 @@
                 </tr>`;
             });
 
-            // جبر كسور الجافاسكريبت
             ['op_dr', 'op_cr', 'per_dr', 'per_cr', 'end_dr', 'end_cr'].forEach(k => sums[k] = Math.round(sums[k] * 100) / 100);
 
-            const isOpBalanced = sums.op_dr === sums.op_cr;
-            const isPerBalanced = sums.per_dr === sums.per_cr;
-            const isEndBalanced = sums.end_dr === sums.end_cr;
+            const isOpBalanced = Math.abs(sums.op_dr - sums.op_cr) < 0.1;
+            const isPerBalanced = Math.abs(sums.per_dr - sums.per_cr) < 0.1;
+            const isEndBalanced = Math.abs(sums.end_dr - sums.end_cr) < 0.1;
             const isBalanced = isOpBalanced && isPerBalanced && isEndBalanced;
 
             tfoot.innerHTML = `<tr>
@@ -647,122 +679,196 @@
         }
 
         function toggleStatement(type) {
-            document.getElementById('statement-is').style.display = type === 'is' ? 'block' : 'none';
-            document.getElementById('statement-bs').style.display = type === 'bs' ? 'block' : 'none';
-            
-            document.getElementById('btn-show-is').className = type === 'is' ? 'px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all' : 'px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all';
-            document.getElementById('btn-show-bs').className = type === 'bs' ? 'px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all' : 'px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all';
+            const types = ['is', 'bs', 'cf', 'eq'];
+            types.forEach(t => {
+                document.getElementById(`statement-${t}`).style.display = type === t ? 'block' : 'none';
+                const btn = document.getElementById(`btn-show-${t}`);
+                if (type === t) {
+                    btn.className = 'px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap';
+                } else {
+                    btn.className = 'px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap';
+                }
+            });
         }
 
         function generateFinancialStatements() {
             if (savedTB.length === 0 || savedCOA.length === 0) {
                 document.getElementById('fs-empty-state').style.display = 'block';
-                document.getElementById('statement-is').style.display = 'none';
-                document.getElementById('statement-bs').style.display = 'none';
+                ['is', 'bs', 'cf', 'eq'].forEach(t => document.getElementById(`statement-${t}`).style.display = 'none');
                 return;
             }
 
             document.getElementById('fs-empty-state').style.display = 'none';
-            document.getElementById('statement-is').style.display = 'block'; // Default view
             
-            // متغيرات التجميع
+            // Check active statement, default to IS
+            const anyActive = ['is', 'bs', 'cf', 'eq'].some(t => document.getElementById(`statement-${t}`).style.display === 'block');
+            if(!anyActive) toggleStatement('is');
+            
             let is = { rev: 0, cogs: 0, exp: 0 };
             let bs = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
             let details = { rev: [], cogs: [], exp: [], ca: [], nca: [], cl: [], ncl: [], eq: [] };
 
+            // Cash Flow & Equity calculation variables
+            let cash_op = 0, cash_end = 0;
+            let op_ca = 0, end_ca = 0; 
+            let op_nca = 0, end_nca = 0;
+            let op_cl = 0, end_cl = 0;
+            let op_ncl = 0, end_ncl = 0;
+            let op_eq = 0, end_eq_pre_ni = 0; // Equity without current period Net Income
+
             savedTB.forEach(acc => {
                 if (!acc.inCOA) return;
                 
-                let net_bal = acc.end_dr - acc.end_cr; // الرصيد الصافي (موجب=مدين ، سالب=دائن)
-                if (net_bal === 0) return; // تجاهل الأرصدة الصفرية
-
                 let code = acc.code;
+                let end_bal = acc.end_dr - acc.end_cr; 
                 
-                // --- قائمة الدخل ---
-                if (code.startsWith('4')) { 
-                    is.rev += (net_bal * -1); // الإيراد طبيعته دائن (سالب هنا، نضربه في -1 ليصبح موجب في القائمة)
-                    details.rev.push({n: acc.name, v: (net_bal * -1)});
-                }
-                else if (code.startsWith('5')) { 
-                    is.cogs += net_bal; 
-                    details.cogs.push({n: acc.name, v: net_bal});
-                }
-                else if (code.match(/^[6789]/)) { 
-                    is.exp += net_bal; 
-                    details.exp.push({n: acc.name, v: net_bal});
-                }
-                // --- المركز المالي ---
-                else if (code.startsWith('11')) { bs.ca += net_bal; details.ca.push({n: acc.name, v: net_bal}); }
-                else if (code.startsWith('12')) { bs.nca += net_bal; details.nca.push({n: acc.name, v: net_bal}); }
-                else if (code.startsWith('1')) { bs.ca += net_bal; details.ca.push({n: acc.name, v: net_bal}); } // fallback
+                // Helper to identify Cash accounts (Code 111 or names containing Cash/نقدية)
+                const isCash = code.startsWith('111') || /نقدية|صندوق|بنك|cash|bank/i.test(acc.name);
+
+                // --- Variables for IS & BS (Ending Balances) ---
+                if (code.startsWith('4')) { is.rev += (end_bal * -1); details.rev.push({n: acc.name, v: (end_bal * -1)}); }
+                else if (code.startsWith('5')) { is.cogs += end_bal; details.cogs.push({n: acc.name, v: end_bal}); }
+                else if (code.match(/^[6789]/)) { is.exp += end_bal; details.exp.push({n: acc.name, v: end_bal}); }
                 
-                else if (code.startsWith('21')) { bs.cl += (net_bal * -1); details.cl.push({n: acc.name, v: (net_bal * -1)}); }
-                else if (code.startsWith('22')) { bs.ncl += (net_bal * -1); details.ncl.push({n: acc.name, v: (net_bal * -1)}); }
-                else if (code.startsWith('2')) { bs.cl += (net_bal * -1); details.cl.push({n: acc.name, v: (net_bal * -1)}); } // fallback
+                else if (code.startsWith('11') || (code.startsWith('1') && !code.startsWith('12'))) { bs.ca += end_bal; details.ca.push({n: acc.name, v: end_bal}); }
+                else if (code.startsWith('12')) { bs.nca += end_bal; details.nca.push({n: acc.name, v: end_bal}); }
                 
-                else if (code.startsWith('3')) { bs.eq += (net_bal * -1); details.eq.push({n: acc.name, v: (net_bal * -1)}); }
+                else if (code.startsWith('21') || (code.startsWith('2') && !code.startsWith('22'))) { bs.cl += (end_bal * -1); details.cl.push({n: acc.name, v: (end_bal * -1)}); }
+                else if (code.startsWith('22')) { bs.ncl += (end_bal * -1); details.ncl.push({n: acc.name, v: (end_bal * -1)}); }
+                
+                else if (code.startsWith('3')) { bs.eq += (end_bal * -1); details.eq.push({n: acc.name, v: (end_bal * -1)}); }
+
+                // --- Variables for Cash Flow & Equity (Opening vs Ending) ---
+                let op_bal_dr = acc.op_dr - acc.op_cr;
+                let end_bal_dr = acc.end_dr - acc.end_cr;
+
+                if (code.startsWith('1')) {
+                    if (isCash) {
+                        cash_op += op_bal_dr; cash_end += end_bal_dr;
+                    } else if (code.startsWith('12')) {
+                        op_nca += op_bal_dr; end_nca += end_bal_dr;
+                    } else { // Current Assets excluding Cash
+                        op_ca += op_bal_dr; end_ca += end_bal_dr;
+                    }
+                }
+                else if (code.startsWith('2')) {
+                    let op_bal_cr = acc.op_cr - acc.op_dr;
+                    let end_bal_cr = acc.end_cr - acc.end_dr;
+                    if (code.startsWith('22')) { op_ncl += op_bal_cr; end_ncl += end_bal_cr; }
+                    else { op_cl += op_bal_cr; end_cl += end_bal_cr; }
+                }
+                else if (code.startsWith('3')) {
+                    let op_bal_cr = acc.op_cr - acc.op_dr;
+                    let end_bal_cr = acc.end_cr - acc.end_dr;
+                    op_eq += op_bal_cr; end_eq_pre_ni += end_bal_cr; 
+                }
             });
 
-            // حساب المجاميع لقائمة الدخل
+            // Calculate Net Income
             let gross_profit = is.rev - is.cogs;
             let net_income = gross_profit - is.exp;
             
-            // حساب مجاميع المركز المالي وإضافة الأرباح
+            // Calculate Totals for Balance Sheet
             let total_assets = bs.ca + bs.nca;
             let total_liabilities = bs.cl + bs.ncl;
-            let total_equity = bs.eq + net_income; // الأرباح المبقاة
+            let total_equity = bs.eq + net_income; 
             let total_liab_eq = total_liabilities + total_equity;
 
+            // --- Cash Flow Math (Indirect Method) ---
+            let change_ca = end_ca - op_ca; // Asset increase is Cash OUT (-)
+            let change_cl = end_cl - op_cl; // Liability increase is Cash IN (+)
+            let cf_operating = net_income - change_ca + change_cl;
+
+            let change_nca = end_nca - op_nca;
+            let cf_investing = -change_nca;
+
+            let change_ncl = end_ncl - op_ncl;
+            let change_eq = end_eq_pre_ni - op_eq; // Changes in equity Capital (excluding NI)
+            let cf_financing = change_ncl + change_eq;
+
+            let net_change_cash = cf_operating + cf_investing + cf_financing;
+
             const t = translations[currentLang];
-            const fmt = (n) => parseFloat(n).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            const fmt = (n) => {
+                if(n === 0) return "-";
+                let formatted = Math.abs(n).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                return n < 0 ? `(${formatted})` : formatted;
+            };
             
-            // --- بناء جدول قائمة الدخل ---
+            // --- 1. Income Statement ---
             let isHtml = `
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-rev']}</td><td class="px-6 py-3">${fmt(is.rev)}</td></tr>`;
-            details.rev.forEach(d => isHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`);
+            details.rev.forEach(d => { if(d.v !== 0) isHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`; });
             
-            isHtml += `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-cogs']}</td><td class="px-6 py-3 text-red-600">(${fmt(is.cogs)})</td></tr>`;
-            details.cogs.forEach(d => isHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">(${fmt(d.v)})</td></tr>`);
+            isHtml += `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-cogs']}</td><td class="px-6 py-3 text-red-600">${fmt(-is.cogs)}</td></tr>`;
+            details.cogs.forEach(d => { if(d.v !== 0) isHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(-d.v)}</td></tr>`; });
             
             isHtml += `<tr class="fs-row-sub bg-brand-50 border-y border-brand-100"><td class="px-6 py-3">${t['fs-gp']}</td><td class="px-6 py-3 text-brand-700">${fmt(gross_profit)}</td></tr>`;
             
-            isHtml += `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-exp']}</td><td class="px-6 py-3 text-red-600">(${fmt(is.exp)})</td></tr>`;
-            details.exp.forEach(d => isHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">(${fmt(d.v)})</td></tr>`);
+            isHtml += `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-exp']}</td><td class="px-6 py-3 text-red-600">${fmt(-is.exp)}</td></tr>`;
+            details.exp.forEach(d => { if(d.v !== 0) isHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(-d.v)}</td></tr>`; });
             
             isHtml += `<tr class="fs-row-total ${net_income >= 0 ? 'text-green-700' : 'text-red-700'}"><td class="px-6 py-4">${t['fs-ni']}</td><td class="px-6 py-4 text-lg">${fmt(net_income)}</td></tr>`;
-            
             document.getElementById('is-table-body').innerHTML = isHtml;
 
-            // --- بناء جدول المركز المالي ---
+            // --- 2. Balance Sheet ---
             let bsHtml = `
                 <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2">${t['fs-assets']}</td></tr>
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-ca']}</td><td class="px-6 py-3">${fmt(bs.ca)}</td></tr>`;
-            details.ca.forEach(d => bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`);
+            details.ca.forEach(d => { if(d.v !== 0) bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`; });
             
             bsHtml += `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-nca']}</td><td class="px-6 py-3">${fmt(bs.nca)}</td></tr>`;
-            details.nca.forEach(d => bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`);
+            details.nca.forEach(d => { if(d.v !== 0) bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`; });
             
             bsHtml += `<tr class="fs-row-total text-brand-800"><td class="px-6 py-4">${t['fs-ta']}</td><td class="px-6 py-4 text-lg">${fmt(total_assets)}</td></tr>`;
 
             bsHtml += `<tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2 mt-4">${t['fs-liab']} & ${t['fs-eq']}</td></tr>
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-cl']}</td><td class="px-6 py-3">${fmt(bs.cl)}</td></tr>`;
-            details.cl.forEach(d => bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`);
+            details.cl.forEach(d => { if(d.v !== 0) bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`; });
             
             bsHtml += `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-ncl']}</td><td class="px-6 py-3">${fmt(bs.ncl)}</td></tr>`;
-            details.ncl.forEach(d => bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`);
+            details.ncl.forEach(d => { if(d.v !== 0) bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`; });
             
             bsHtml += `<tr class="fs-row-sub bg-gray-50 border-y border-gray-200"><td class="px-6 py-3">${t['fs-tl']}</td><td class="px-6 py-3">${fmt(total_liabilities)}</td></tr>`;
             
             bsHtml += `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-eq']}</td><td class="px-6 py-3">${fmt(bs.eq)}</td></tr>`;
-            details.eq.forEach(d => bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`);
+            details.eq.forEach(d => { if(d.v !== 0) bsHtml += `<tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`; });
             bsHtml += `<tr class="fs-row-detail border-b border-gray-100 font-semibold"><td class="py-2 text-brand-600">${t['fs-re']}</td><td class="py-2 text-brand-600">${fmt(net_income)}</td></tr>`;
             bsHtml += `<tr class="fs-row-sub bg-gray-50 border-y border-gray-200"><td class="px-6 py-3">${t['fs-te']}</td><td class="px-6 py-3">${fmt(total_equity)}</td></tr>`;
 
-            // التوازن
             const balanceColor = Math.abs(total_assets - total_liab_eq) < 0.1 ? 'text-green-700' : 'text-red-700';
             bsHtml += `<tr class="fs-row-total ${balanceColor}"><td class="px-6 py-4">${t['fs-tleq']}</td><td class="px-6 py-4 text-lg">${fmt(total_liab_eq)}</td></tr>`;
-
             document.getElementById('bs-table-body').innerHTML = bsHtml;
+
+            // --- 3. Cash Flow Statement ---
+            let cfHtml = `
+                <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2">${t['cf-op-title']}</td></tr>
+                <tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${t['fs-ni']}</td><td class="py-2">${fmt(net_income)}</td></tr>
+                <tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${t['cf-wc']}</td><td class="py-2">${fmt(-change_ca + change_cl)}</td></tr>
+                <tr class="fs-row-sub bg-gray-50 border-y border-gray-200"><td class="px-6 py-3">${t['cf-op']}</td><td class="px-6 py-3 text-brand-700">${fmt(cf_operating)}</td></tr>
+
+                <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2 mt-4">${t['cf-inv-title']}</td></tr>
+                <tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${t['cf-nca']}</td><td class="py-2">${fmt(cf_investing)}</td></tr>
+                <tr class="fs-row-sub bg-gray-50 border-y border-gray-200"><td class="px-6 py-3">${t['cf-inv']}</td><td class="px-6 py-3 text-brand-700">${fmt(cf_investing)}</td></tr>
+
+                <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2 mt-4">${t['cf-fin-title']}</td></tr>
+                <tr class="fs-row-detail border-b border-gray-100"><td class="py-2">${t['cf-ncl']}</td><td class="py-2">${fmt(cf_financing)}</td></tr>
+                <tr class="fs-row-sub bg-gray-50 border-y border-gray-200"><td class="px-6 py-3">${t['cf-fin']}</td><td class="px-6 py-3 text-brand-700">${fmt(cf_financing)}</td></tr>
+
+                <tr class="fs-row-main mt-4 border-t-2 border-gray-300"><td class="px-6 py-3">${t['cf-net']}</td><td class="px-6 py-3 font-bold text-gray-900">${fmt(net_change_cash)}</td></tr>
+                <tr class="fs-row-main"><td class="px-6 py-3 text-gray-500">${t['cf-beg']}</td><td class="px-6 py-3 text-gray-500">${fmt(cash_op)}</td></tr>
+                <tr class="fs-row-total text-green-700"><td class="px-6 py-4">${t['cf-end']}</td><td class="px-6 py-4 text-lg">${fmt(cash_op + net_change_cash)}</td></tr>
+            `;
+            document.getElementById('cf-table-body').innerHTML = cfHtml;
+
+            // --- 4. Changes in Equity Statement ---
+            let eqHtml = `
+                <tr class="fs-row-main"><td class="px-6 py-3">${t['eq-beg']}</td><td class="px-6 py-3">${fmt(op_eq)}</td></tr>
+                <tr class="fs-row-main"><td class="px-6 py-3 text-green-600">${t['eq-ni']}</td><td class="px-6 py-3 text-green-600">${fmt(net_income)}</td></tr>
+                <tr class="fs-row-main"><td class="px-6 py-3">${t['eq-add']}</td><td class="px-6 py-3">${fmt(change_eq)}</td></tr>
+                <tr class="fs-row-total text-brand-800"><td class="px-6 py-4">${t['eq-end']}</td><td class="px-6 py-4 text-lg">${fmt(op_eq + net_income + change_eq)}</td></tr>
+            `;
+            document.getElementById('eq-table-body').innerHTML = eqHtml;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
