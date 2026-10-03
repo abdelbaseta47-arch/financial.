@@ -20,6 +20,9 @@
     <!-- Chart.js for Dashboard Visuals -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- HTML2PDF for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -46,6 +49,10 @@
         .ltr .fs-row-detail { padding-right: 1rem !important; padding-left: 2rem !important; }
         .fs-row-total { background-color: #f1f5f9; font-weight: 800; color: #0f172a; border-top: 2px solid #cbd5e1; border-bottom: 2px double #94a3b8; }
         .ratio-badge { font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 9999px; font-weight: 700; margin-right: 0.5rem; }
+        
+        /* CSS to hide elements during PDF generation */
+        body.pdf-exporting .no-print { display: none !important; }
+        body.pdf-exporting .tab-content.active { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden flex font-sans">
@@ -74,16 +81,16 @@
         <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 shrink-0">
             <div><h2 class="text-xl font-bold text-gray-800" id="current-tab-title">تأسيس شجرة الحسابات</h2></div>
             <div class="flex items-center gap-4">
-                <button onclick="toggleLanguage()" class="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-brand-600 transition-colors bg-gray-100 px-4 py-2 rounded-lg">
+                <button onclick="toggleLanguage()" class="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-brand-600 transition-colors bg-gray-100 px-4 py-2 rounded-lg no-print">
                     <i class="fas fa-globe"></i><span id="lang-text">English</span>
                 </button>
-                <button class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md transition-all duration-200 opacity-50 cursor-not-allowed" title="PDF سيتم التفعيل لاحقاً">
+                <button onclick="exportToPDF()" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md transition-all duration-200 no-print" title="تصدير الشاشة الحالية لملف PDF">
                     <i class="fas fa-file-pdf"></i><span id="btn-pdf-text">تصدير PDF</span>
                 </button>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-8 relative">
+        <div class="flex-1 overflow-y-auto p-8 relative" id="main-content-area">
             
             <div id="coa-tab" class="tab-content active max-w-6xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -91,7 +98,7 @@
                         <h3 class="text-lg font-bold text-gray-800 mb-2" id="coa-header">تأسيس شجرة الحسابات (Chart of Accounts)</h3>
                         <p class="text-sm text-gray-500 max-w-2xl leading-relaxed" id="coa-desc">قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.</p>
                     </div>
-                    <div class="flex gap-3 shrink-0">
+                    <div class="flex gap-3 shrink-0 no-print">
                         <button onclick="downloadCOATemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm transition-colors border border-gray-200 shadow-sm flex items-center gap-2">
                             <i class="fas fa-download text-green-600"></i><span id="coa-download-btn">تحميل القالب</span>
                         </button>
@@ -105,7 +112,7 @@
                 <div id="coa-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                         <h4 class="font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i><span id="coa-saved-title">شجرة الحسابات المحفوظة</span></h4>
-                        <button onclick="clearCOA()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1">
+                        <button onclick="clearCOA()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1 no-print">
                             <i class="fas fa-trash-alt"></i><span id="coa-clear-btn">إعادة تهيئة</span>
                         </button>
                     </div>
@@ -131,7 +138,7 @@
                         <h3 class="text-lg font-bold text-gray-800 mb-2" id="tb-header">إدراج ميزان المراجعة (Trial Balance)</h3>
                         <p class="text-sm text-gray-500 max-w-2xl leading-relaxed" id="tb-desc">قم برفع ميزان المراجعة (الافتتاحي والحركات). النظام سيتحقق من التوازن ويطابق الحسابات مع الشجرة.</p>
                     </div>
-                    <div class="flex gap-3 shrink-0">
+                    <div class="flex gap-3 shrink-0 no-print">
                         <button onclick="downloadTBTemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm transition-colors border border-gray-200 shadow-sm flex items-center gap-2">
                             <i class="fas fa-download text-green-600"></i><span id="tb-download-btn">تحميل القالب</span>
                         </button>
@@ -157,7 +164,7 @@
                 <div id="tb-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                         <h4 class="font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-table text-brand-500"></i><span id="tb-saved-title">تفاصيل ميزان المراجعة</span></h4>
-                        <button onclick="clearTB()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1">
+                        <button onclick="clearTB()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1 no-print">
                             <i class="fas fa-times-circle"></i><span id="tb-clear-btn">مسح الميزان</span>
                         </button>
                     </div>
@@ -284,7 +291,7 @@
                         <h3 class="text-lg font-bold text-gray-800" id="fs-header">القوائم المالية (Financial Statements)</h3>
                         <p class="text-sm text-gray-500" id="fs-desc">توليد آلي للقوائم الأربعة بناءً على الميزان المتزن.</p>
                     </div>
-                    <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0 gap-1 ml-4">
+                    <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0 gap-1 ml-4 no-print">
                         <button onclick="toggleStatement('is')" id="btn-show-is" class="px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap">قائمة الدخل</button>
                         <button onclick="toggleStatement('bs')" id="btn-show-bs" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">المركز المالي</button>
                         <button onclick="toggleStatement('cf')" id="btn-show-cf" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">التدفقات النقدية</button>
@@ -334,7 +341,7 @@
                         <h3 class="text-lg font-bold text-gray-800" id="analysis-title">مركز التحليل المالي (Financial Analytics)</h3>
                         <p class="text-sm text-gray-500" id="analysis-subtitle">تحليل متعمق للنسب، الهياكل، والانحرافات.</p>
                     </div>
-                    <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0 gap-1 ml-4">
+                    <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0 gap-1 ml-4 no-print">
                         <button onclick="toggleAnalysis('vertical')" id="btn-show-vertical" class="px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap">التحليل الرأسي</button>
                         <button onclick="toggleAnalysis('ratios')" id="btn-show-ratios" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">النسب والمؤشرات</button>
                         <button onclick="toggleAnalysis('horizontal')" id="btn-show-horizontal" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap relative">مقارنات وتحليل أفقي <span class="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span></button>
@@ -512,7 +519,7 @@
                         <h3 class="text-lg font-bold text-gray-800" id="forecast-title">التنبؤ المالي والتخطيط (FP&A)</h3>
                         <p class="text-sm text-gray-500" id="forecast-subtitle">محاكاة لسيناريوهات الإيرادات والتكاليف وتأثيرها المستقبلي على الأرباح والسيولة.</p>
                     </div>
-                    <button onclick="resetForecast()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
+                    <button onclick="resetForecast()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 no-print">
                         <i class="fas fa-undo"></i> <span id="btn-reset-forecast">إعادة ضبط</span>
                     </button>
                 </div>
@@ -525,7 +532,7 @@
 
                 <div id="forecast-content" style="display: none;" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <!-- Controls -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col gap-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col gap-6 no-print">
                         <h4 class="font-bold text-gray-800 border-b pb-2"><i class="fas fa-sliders-h text-brand-500 ml-2"></i> الفرضيات (Assumptions)</h4>
                         
                         <div>
@@ -590,7 +597,7 @@
         </div>
     </main>
 
-    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2"></div>
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 no-print"></div>
 
     <script>
         let currentLang = 'ar';
@@ -599,7 +606,6 @@
         let globalFS = null; 
         let isChartObj = null;
         let bsChartObj = null;
-        let forecastChartObj = null;
 
         const translations = {
             en: {
@@ -729,6 +735,35 @@
                     if(tabId === 'forecast-tab') initForecast();
                 }
             }
+        }
+
+        function exportToPDF() {
+            const activeTab = document.querySelector('.tab-content.active');
+            if (!activeTab) return;
+
+            const tabTitle = document.getElementById('current-tab-title').innerText;
+            
+            // Add class to hide 'no-print' elements
+            document.body.classList.add('pdf-exporting');
+            showToast(currentLang === 'ar' ? 'جاري تحضير ملف PDF...' : 'Preparing PDF...', 'success');
+
+            const opt = {
+                margin:       [10, 10, 10, 10],
+                filename:     `CFO_Report_${tabTitle}_${new Date().toLocaleDateString()}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, windowWidth: 1200 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+
+            html2pdf().set(opt).from(activeTab).save().then(() => {
+                // Remove class after PDF is generated
+                document.body.classList.remove('pdf-exporting');
+                showToast(currentLang === 'ar' ? 'تم تصدير التقرير بنجاح!' : 'Report Exported Successfully!', 'success');
+            }).catch(err => {
+                document.body.classList.remove('pdf-exporting');
+                showToast('حدث خطأ أثناء التصدير', 'error');
+                console.error(err);
+            });
         }
 
         function classifyAccount(code) {
@@ -1301,7 +1336,6 @@
             renderList(recs, 'list-recommendations', '<i class="fas fa-arrow-left text-brand-500"></i>');
         }
 
-        // Initialize App on Load
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('cfo_coa')) { savedCOA = JSON.parse(localStorage.getItem('cfo_coa')); renderCOATable(); }
             if (localStorage.getItem('cfo_tb')) { savedTB = JSON.parse(localStorage.getItem('cfo_tb')); renderTBTable(); }
