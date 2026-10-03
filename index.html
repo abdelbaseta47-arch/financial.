@@ -892,7 +892,7 @@
             document.getElementById('analysis-content').style.display = 'block';
 
             // Destructure all needed data, including averages calculated earlier
-            const { is, bs, det, gp, ni, ta, tl, teq, cash, inventory, ar, ap, avg_ar, avg_ap, avg_inv } = globalFS;
+            const { is, bs, det, gp, ni, ta, tl, teq, cash, inventory, ar, ap, avg_ar, avg_ap, avg_inv, cf_op, cf_inv, cf_fin } = globalFS;
             const t = translations[currentLang];
             
             const pct = (val, base) => base === 0 ? '-' : (Math.round((val / base) * 1000) / 10) + '%';
@@ -990,6 +990,18 @@
             document.getElementById('ratios-leverage').innerHTML = 
                 ratioRow('نسبة المديونية إلى الملكية (D/E)', fmtR(debtEquity), 'x', badge(1/debtEquity, 1, 0.5)) + // Inverted logic for badge (lower is safer)
                 ratioRow('نسبة الالتزامات للأصول (Debt Ratio)', pct(tl, ta));
+
+            // Cash Flow Ratios Calculation
+            const ocfRatio = bs.cl ? (cf_op / bs.cl) : 0;
+            const qualityOfIncome = ni ? (cf_op / ni) : 0;
+            const cashRoa = ta ? (cf_op / ta) * 100 : 0;
+            const freeCashFlow = cf_op + cf_inv; // Simplified FCF: Operating CF + Investing CF (Capex usually negative here)
+
+            document.getElementById('ratios-cashflow').innerHTML = 
+                ratioRow('جودة الأرباح (Quality of Income)', fmtR(qualityOfIncome), 'x', badge(qualityOfIncome, 1.0, 0.5)) +
+                ratioRow('تغطية التدفق التشغيلي (OCF Ratio)', fmtR(ocfRatio), 'x', badge(ocfRatio, 1.0, 0.5)) +
+                ratioRow('العائد النقدي على الأصول (Cash ROA)', fmtR(cashRoa), '%') +
+                ratioRow('التدفق النقدي الحر (Free Cash Flow)', freeCashFlow.toLocaleString(undefined, {minimumFractionDigits: 0}));
         }
 
         document.addEventListener('DOMContentLoaded', () => {
