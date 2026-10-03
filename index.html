@@ -517,6 +517,7 @@
         let globalFS = null; 
         let isChartObj = null;
         let bsChartObj = null;
+        let forecastChartObj = null; // New chart variable
 
         const translations = {
             en: {
@@ -622,11 +623,11 @@
             }
             document.querySelectorAll('table').forEach(table => {
                 table.className = currentLang === 'ar' ? "w-full text-sm text-right text-gray-800" : "w-full text-sm text-left text-gray-800";
-            });
-            const activeTab = document.querySelector('.tab-content.active');
-            if(activeTab) {
-                const activeNav = document.querySelector(`a[onclick="switchTab('${activeTab.id}')"]`);
-                if(activeNav) document.getElementById('current-tab-title').innerText = dict[activeNav.querySelector('span').id];
+            if(['fs-tab', 'dashboard-tab', 'analysis-tab', 'insights-tab', 'forecast-tab'].includes(tabId)) {
+                if(savedTB.length > 0 && savedCOA.length > 0) {
+                    generateFinancialStatements();
+                    if(tabId === 'forecast-tab') initForecast();
+                }
             }
         }
 
@@ -893,6 +894,87 @@
             generateDashboard();
             generateAnalysis();
             generateCFOInsights(); 
+            if(document.getElementById('forecast-tab').classList.contains('active')) initForecast();
+        }
+
+        function initForecast() {
+            if (!globalFS) {
+                document.getElementById('forecast-empty-state').style.display = 'block';
+                document.getElementById('forecast-content').style.display = 'none';
+                return;
+            }
+            document.getElementById('forecast-empty-state').style.display = 'none';
+            document.getElementById('forecast-content').style.display = 'grid';
+
+            // Set default COGS margin based on actuals
+            const actualCogsMargin = globalFS.is.rev ? (globalFS.is.cogs / globalFS.is.rev) * 100 : 0;
+            document.getElementById('range-cogs').value = actualCogsMargin;
+            
+            updateForecastUI();
+        }
+
+        function resetForecast() {
+            document.getElementById('range-rev').value = 0;
+            document.getElementById('range-opex').value = 0;
+            document.getElementById('input-new-assets').value = 0;
+            if(globalFS) document.getElementById('range-cogs').value = globalFS.is.rev ? (globalFS.is.cogs / globalFS.is.rev) * 100 : 0;
+            updateForecastUI();
+        }
+
+        function updateForecastUI() {
+            if (!globalFS) return;
+            const revGrowth = parseFloat(document.getElementById('range-rev').value) / 100;
+            const cogsMargin = parseFloat(document.getElementById('range-cogs').value) / 100;
+            const opexGrowth = parseFloat(document.getElementById('range-opex').value) / 100;
+            const capex = parseFloat(document.getElementById('input-new-assets').value) || 0;
+
+            document.getElementById('val-range-rev').innerText = document.getElementById('range-rev').value + '%';
+            document.getElementById('val-range-cogs').innerText = document.getElementById('range-cogs').value + '%';
+            document.getElementById('val-range-opex').innerText = document.getElementById('range-opex').value + '%';
+
+            // Actuals
+            const aRev = globalFS.is.rev;
+            const aCogs = globalFS.is.cogs;
+            const aGp = globalFS.gp;
+            const aOpex = globalFS.is.exp;
+            const aNi = globalFS.ni;
+            const aAssets = globalFS.ta;
+            const aCash = globalFS.cash;
+
+            // Forecasts
+            const fRev = aRev * (1 + revGrowth);
+            const fCogs = fRev * cogsMargin;
+            const fGp = fRev - fCogs;
+            const fOpex = aOpex * (1 + opexGrowth);
+            const fNi = fGp - fOpex;
+            
+            const fCash = aCash + (fNi - aNi) - capex; 
+            const fAssets = aAssets + capex + (fNi - aNi);
+
+            const fmt = (n) => n.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+            const fmtDiff = (act, forcast) => {
+                const diff = forcast - act;
+                if (diff === 0) return `<span class="text-gray-500">-</span>`;
+                return diff > 0 ? `<span class="text-green-600 font-bold">+${fmt(diff)} <i class="fas fa-caret-up"></i></span>` : `<span class="text-red-600 font-bold">(${fmt(Math.abs(diff))}) <i class="fas fa-caret-down"></i></span>`;
+            };
+
+            // Update Cards
+            document.getElementById('val-f-ni').innerText = fmt(fNi);
+            document.getElementById('var-f-ni').innerHTML = fmtDiff(aNi, fNi);
+            document.getElementById('val-f-cash').innerText = fmt(fCash);
+            document.getElementById('val-f-assets').innerText = fmt(fAssets);
+            document.getElementById('var-f-assets').innerHTML = fmtDiff(aAssets, fAssets);
+
+            // Update Table
+            const t = translations[currentLang];
+            const tbody = document.getElementById('forecast-table-body');
+            tbody.innerHTML = `
+                <tr class="hover:bg-gray-50 transition-colors"><td class="px-4 py-3 font-semibold">${t['fs-rev']}</td><td class="px-4 py-3">${fmt(aRev)}</td><td class="px-4 py-3 font-bold text-brand-700 bg-brand-50/50">${fmt(fRev)}</td><td class="px-4 py-3">${fmtDiff(aRev, fRev)}</td></tr>
+                <tr class="hover:bg-gray-50 transition-colors"><td class="px-4 py-3 font-semibold">${t['fs-cogs']}</td><td class="px-4 py-3 text-red-600">${fmt(aCogs)}</td><td class="px-4 py-3 font-bold text-red-700 bg-brand-50/50">${fmt(fCogs)}</td><td class="px-4 py-3">${fmtDiff(-aCogs, -fCogs)}</td></tr>
+                <tr class="bg-gray-50 border-y border-gray-200"><td class="px-4 py-3 font-bold">${t['fs-gp']}</td><td class="px-4 py-3 font-bold text-gray-800">${fmt(aGp)}</td><td class="px-4 py-3 font-bold text-brand-800 bg-brand-100/50">${fmt(fGp)}</td><td class="px-4 py-3">${fmtDiff(aGp, fGp)}</td></tr>
+                <tr class="hover:bg-gray-50 transition-colors"><td class="px-4 py-3 font-semibold">${t['fs-exp']}</td><td class="px-4 py-3 text-orange-600">${fmt(aOpex)}</td><td class="px-4 py-3 font-bold text-orange-700 bg-brand-50/50">${fmt(fOpex)}</td><td class="px-4 py-3">${fmtDiff(-aOpex, -fOpex)}</td></tr>
+                <tr class="bg-gray-100 border-t-2 border-gray-300"><td class="px-4 py-4 font-black">${t['fs-ni']}</td><td class="px-4 py-4 font-black text-gray-900">${fmt(aNi)}</td><td class="px-4 py-4 font-black text-brand-900 bg-brand-100">${fmt(fNi)}</td><td class="px-4 py-4">${fmtDiff(aNi, fNi)}</td></tr>
+            `;
         }
 
         function generateDashboard() {
