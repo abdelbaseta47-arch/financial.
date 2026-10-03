@@ -63,6 +63,7 @@
                 <li><a href="#" onclick="switchTab('dashboard-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-dash"><i class="fas fa-chart-pie w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-dash">لوحة القيادة</span></a></li>
                 <li><a href="#" onclick="switchTab('fs-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-fs"><i class="fas fa-file-invoice-dollar w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-fs">القوائم المالية</span></a></li>
                 <li><a href="#" onclick="switchTab('analysis-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-analysis"><i class="fas fa-search-dollar w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-analysis">التحليل المالي</span></a></li>
+                <li><a href="#" onclick="switchTab('insights-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-insights"><i class="fas fa-lightbulb w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-insights">رؤية المدير المالي</span></a></li>
             </ul>
         </nav>
     </aside>
@@ -363,7 +364,7 @@
                     <div id="analysis-ratios" style="display: none;" class="mb-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
                             
-                            <!-- Activity & Turnover Ratios (NEW) -->
+                            <!-- Activity & Turnover Ratios -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden md:col-span-2">
                                 <div class="bg-brand-50 p-4 border-b border-brand-200 font-bold text-brand-900 flex justify-between items-center">
                                     <div class="flex items-center gap-2"><i class="fas fa-sync-alt text-brand-600"></i> معدلات الدوران ودورة التحول النقدي (Activity & CCC)</div>
@@ -432,7 +433,7 @@
                                 <div class="p-4 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-x-8" id="ratios-leverage"></div>
                             </div>
                             
-                            <!-- Cash Flow Analysis (NEW) -->
+                            <!-- Cash Flow Analysis -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden md:col-span-2">
                                 <div class="bg-green-50 p-4 border-b border-green-200 font-bold text-green-900 flex items-center gap-2">
                                     <i class="fas fa-money-bill-wave text-green-600"></i> تحليل التدفقات النقدية (Cash Flow Analysis)
@@ -448,6 +449,56 @@
                             <i class="fas fa-tools text-5xl mb-4 opacity-50"></i>
                             <h4 class="text-xl font-bold mb-2">جاهز للتفعيل (مقارنة الفترات)</h4>
                             <p class="text-md max-w-2xl mx-auto">لتشغيل التحليل الأفقي واستخراج الانحرافات (Variance)، نحتاج لتعديل قالب إكسيل ميزان المراجعة ليقبل فترات متعددة (مثال: أرصدة شهر يناير وأرصدة شهر فبراير).</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="insights-tab" class="tab-content max-w-7xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800" id="insights-title">رؤية المدير المالي (CFO Strategic Insights)</h3>
+                    <p class="text-sm text-gray-500" id="insights-subtitle">ملخص تنفيذي يبرز نقاط القوة، يحدد المخاطر، ويقدم توصيات استراتيجية بناءً على التحليل المالي.</p>
+                </div>
+
+                <div id="insights-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
+                    <i class="fas fa-lightbulb text-4xl mb-3"></i>
+                    <h4 class="text-lg font-bold mb-1" id="insights-empty-title">بانتظار تحليل البيانات</h4>
+                    <p class="text-sm" id="insights-empty-desc">قم برفع ميزان المراجعة وتوليد القوائم أولاً ليقوم النظام باستخراج الرؤية الاستراتيجية.</p>
+                </div>
+
+                <div id="insights-content" style="display: none;" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    
+                    <!-- Strengths -->
+                    <div class="bg-white rounded-xl shadow-sm border-t-4 border-t-green-500 border-x border-b border-gray-100 flex flex-col">
+                        <div class="p-4 border-b border-gray-100 bg-green-50/50 flex items-center gap-2">
+                            <i class="fas fa-shield-alt text-green-600 text-xl"></i>
+                            <h4 class="font-bold text-green-800 text-lg" id="lbl-strengths">نقاط القوة (Strengths)</h4>
+                        </div>
+                        <div class="p-5 flex-1 bg-white">
+                            <ul id="list-strengths" class="space-y-4 text-sm text-gray-700"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Weaknesses & Risks -->
+                    <div class="bg-white rounded-xl shadow-sm border-t-4 border-t-red-500 border-x border-b border-gray-100 flex flex-col">
+                        <div class="p-4 border-b border-gray-100 bg-red-50/50 flex items-center gap-2">
+                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                            <h4 class="font-bold text-red-800 text-lg" id="lbl-weaknesses">نقاط الضعف والمخاطر (Risks)</h4>
+                        </div>
+                        <div class="p-5 flex-1 bg-white">
+                            <ul id="list-weaknesses" class="space-y-4 text-sm text-gray-700"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="bg-white rounded-xl shadow-sm border-t-4 border-t-brand-500 border-x border-b border-gray-100 flex flex-col">
+                        <div class="p-4 border-b border-gray-100 bg-brand-50/50 flex items-center gap-2">
+                            <i class="fas fa-bullseye text-brand-600 text-xl"></i>
+                            <h4 class="font-bold text-brand-800 text-lg" id="lbl-recommendations">توصيات استراتيجية (Actions)</h4>
+                        </div>
+                        <div class="p-5 flex-1 bg-white">
+                            <ul id="list-recommendations" class="space-y-4 text-sm text-gray-700"></ul>
                         </div>
                     </div>
 
@@ -470,7 +521,7 @@
         const translations = {
             en: {
                 "txt-nav-coa": "Chart of Accounts", "txt-nav-tb": "Trial Balance", "txt-nav-dash": "Dashboard",
-                "txt-nav-fs": "Financial Statements", "txt-nav-analysis": "Financial Analysis",
+                "txt-nav-fs": "Financial Statements", "txt-nav-analysis": "Financial Analysis", "txt-nav-insights": "CFO Insights",
                 "btn-pdf-text": "Export PDF", 
                 "coa-header": "Chart of Accounts Setup", "coa-desc": "Upload Excel with Account Code and Name only. System auto-classifies them.",
                 "coa-download-btn": "Template", "coa-upload-title": "Upload", "coa-saved-title": "Saved Accounts", "coa-clear-btn": "Reset",
@@ -498,10 +549,13 @@
                 "analysis-title": "Financial Analytics", "analysis-subtitle": "Ratios, Structures, and Variances.",
                 "analysis-empty-title": "Awaiting Data", "analysis-empty-desc": "Upload TB to generate analysis.",
                 "lbl-va-is": "Income Statement (% of Revenue)", "lbl-va-bs": "Balance Sheet (% of Total Assets)",
+                "insights-title": "CFO Strategic Insights", "insights-subtitle": "Executive summary of strengths, risks, and strategic recommendations.",
+                "insights-empty-title": "Awaiting Analysis", "insights-empty-desc": "Upload TB to generate strategic insights.",
+                "lbl-strengths": "Strengths", "lbl-weaknesses": "Risks & Weaknesses", "lbl-recommendations": "Strategic Actions"
             },
             ar: {
                 "txt-nav-coa": "شجرة الحسابات", "txt-nav-tb": "ميزان المراجعة", "txt-nav-dash": "لوحة القيادة",
-                "txt-nav-fs": "القوائم المالية", "txt-nav-analysis": "التحليل المالي",
+                "txt-nav-fs": "القوائم المالية", "txt-nav-analysis": "التحليل المالي", "txt-nav-insights": "رؤية المدير المالي",
                 "btn-pdf-text": "تصدير PDF",
                 "coa-header": "تأسيس شجرة الحسابات", "coa-desc": "قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.",
                 "coa-download-btn": "تحميل القالب", "coa-upload-title": "رفع الملف", "coa-saved-title": "شجرة الحسابات المحفوظة", "coa-clear-btn": "تهيئة",
@@ -529,6 +583,9 @@
                 "analysis-title": "مركز التحليل المالي", "analysis-subtitle": "تحليل متعمق للنسب، الهياكل، والانحرافات.",
                 "analysis-empty-title": "بانتظار البيانات", "analysis-empty-desc": "أدخل ميزان المراجعة ليتم توليد التحليل.",
                 "lbl-va-is": "قائمة الدخل (% من الإيرادات)", "lbl-va-bs": "المركز المالي (% من الأصول)",
+                "insights-title": "رؤية المدير المالي", "insights-subtitle": "ملخص تنفيذي يبرز نقاط القوة، يحدد المخاطر، ويقدم توصيات استراتيجية.",
+                "insights-empty-title": "بانتظار تحليل البيانات", "insights-empty-desc": "قم برفع ميزان المراجعة لتوليد الرؤية الاستراتيجية.",
+                "lbl-strengths": "نقاط القوة", "lbl-weaknesses": "المخاطر ونقاط الضعف", "lbl-recommendations": "توصيات استراتيجية"
             }
         };
 
@@ -582,8 +639,8 @@
                 activeNav.classList.add('active', 'bg-brand-50', 'text-brand-600');
                 document.getElementById('current-tab-title').innerText = translations[currentLang][activeNav.querySelector('span').id];
             }
-            if(tabId === 'fs-tab' || tabId === 'dashboard-tab' || tabId === 'analysis-tab') {
-                if(savedTB.length > 0) generateFinancialStatements();
+            if(['fs-tab', 'dashboard-tab', 'analysis-tab', 'insights-tab'].includes(tabId)) {
+                if(savedTB.length > 0 && savedCOA.length > 0) generateFinancialStatements();
             }
         }
 
@@ -703,23 +760,27 @@
         function generateFinancialStatements() {
             if (savedTB.length === 0 || savedCOA.length === 0) {
                 document.getElementById('fs-empty-state').style.display = 'block';
+                document.getElementById('dash-empty-state').style.display = 'block';
+                document.getElementById('analysis-empty-state').style.display = 'block';
+                document.getElementById('insights-empty-state').style.display = 'block';
                 ['is', 'bs', 'cf', 'eq'].forEach(t => document.getElementById(`statement-${t}`).style.display = 'none');
+                document.getElementById('dash-content').style.display = 'none';
+                document.getElementById('analysis-content').style.display = 'none';
+                document.getElementById('insights-content').style.display = 'none';
                 return;
             }
+            
             document.getElementById('fs-empty-state').style.display = 'none';
             if(!['is','bs','cf','eq'].some(t => document.getElementById(`statement-${t}`).style.display === 'block')) toggleStatement('is');
             
-            // Core Financial Objects
             let is = { rev: 0, cogs: 0, exp: 0 }; 
             let bs = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
             let det = { rev:[], cogs:[], exp:[], ca:[], nca:[], cl:[], ncl:[], eq:[] };
             
-            // Cash Flow Variables
             let cash_op = 0, cash_end = 0, op_ca = 0, end_ca = 0, op_nca = 0, end_nca = 0, op_cl = 0, end_cl = 0, op_ncl = 0, end_ncl = 0, op_eq = 0, end_eq_pre_ni = 0;
             
-            // Activity & Dashboard Variables
             let ar = 0, ap = 0, inventory = 0;
-            let op_ar = 0, op_ap = 0, op_inventory = 0; // Needed for Average calculations
+            let op_ar = 0, op_ap = 0, op_inventory = 0;
 
             savedTB.forEach(acc => {
                 if (!acc.inCOA) return;
@@ -727,35 +788,31 @@
                 const end_dr = acc.end_dr || 0;
                 const end_cr = acc.end_cr || 0;
                 const end = end_dr - end_cr;
-                const net_op = (acc.op_dr || 0) - (acc.op_cr || 0); // Opening net balance
+                const net_op = (acc.op_dr || 0) - (acc.op_cr || 0);
 
                 const isCash = c.startsWith('111') || /نقدية|صندوق|بنك|cash|bank/i.test(acc.name);
                 const isAR = /عملاء|ذمم|receivable|debtor/i.test(acc.name) || c.startsWith('112') || c.startsWith('113');
                 const isAP = /موردين|دائنون|payable|creditor/i.test(acc.name) || c.startsWith('211') || c.startsWith('212');
                 const isInv = /مخزون|بضاعة|inventory/i.test(acc.name) || c.startsWith('114');
                 
-                // Dashboard & Activity Metrics Extraction
                 if (isAR) { ar += end; op_ar += net_op; }
                 if (isAP) { ap += -end; op_ap += -net_op; }
                 if (isInv) { inventory += end; op_inventory += net_op; }
 
-                // Income Statement
                 if (c.startsWith('4')) { is.rev += -end; det.rev.push({n: acc.name, v: -end}); }
                 else if (c.startsWith('5')) { is.cogs += end; det.cogs.push({n: acc.name, v: end}); }
                 else if (c.match(/^[6789]/)) { is.exp += end; det.exp.push({n: acc.name, v: end}); }
                 
-                // Balance Sheet Endings
                 else if (c.startsWith('11') || (c.startsWith('1')&&!c.startsWith('12'))) { bs.ca += end; det.ca.push({n: acc.name, v: end}); }
                 else if (c.startsWith('12')) { bs.nca += end; det.nca.push({n: acc.name, v: end}); }
                 else if (c.startsWith('21') || (c.startsWith('2')&&!c.startsWith('22'))) { bs.cl += -end; det.cl.push({n: acc.name, v: -end}); }
                 else if (c.startsWith('22')) { bs.ncl += -end; det.ncl.push({n: acc.name, v: -end}); }
                 else if (c.startsWith('3')) { bs.eq += -end; det.eq.push({n: acc.name, v: -end}); }
 
-                // Opening & Movement tracking for Cash Flow & Equity
                 if (c.startsWith('1')) {
                     if(isCash){ cash_op+=net_op; cash_end+=end; }
                     else if(c.startsWith('12')){ op_nca+=net_op; end_nca+=end; }
-                    else{ op_ca+=net_op; end_ca+=end; } // Non-cash Current Assets
+                    else{ op_ca+=net_op; end_ca+=end; } 
                 } else if (c.startsWith('2')) {
                     let net_op_cr = -net_op, net_end_cr = -end;
                     if(c.startsWith('22')){ op_ncl+=net_op_cr; end_ncl+=net_end_cr; } else { op_cl+=net_op_cr; end_cl+=net_end_cr; }
@@ -764,7 +821,6 @@
                 }
             });
 
-            // Final Calculations
             let gp = is.rev - is.cogs;
             let ni = gp - is.exp;
             let ta = bs.ca + bs.nca;
@@ -772,31 +828,26 @@
             let teq = bs.eq + ni;
             let tleq = tl + teq;
             
-            // Cash Flow Components
             let cf_op = ni - (end_ca - op_ca) + (end_cl - op_cl);
             let cf_inv = -(end_nca - op_nca);
             let cf_fin = (end_ncl - op_ncl) + (end_eq_pre_ni - op_eq);
             let cf_net = cf_op + cf_inv + cf_fin;
 
-            // Averages for Activity Ratios
             let avg_ar = (op_ar + ar) / 2;
             let avg_ap = (op_ap + ap) / 2;
             let avg_inv = (op_inventory + inventory) / 2;
 
-            // Store Globally for Dashboard & Analysis
             globalFS = { 
                 is, bs, det, gp, ni, ta, tl, teq, tleq, 
                 cash: cash_op + cf_net, 
-                ar, ap, inventory, cf_op,
+                ar, ap, inventory, cf_op, cf_inv, cf_fin,
                 avg_ar, avg_ap, avg_inv
             };
 
-            // Rendering the tables (IS, BS, CF, EQ)
             const t = translations[currentLang];
             const fmt = (n) => n===0?'-':(n<0?`(${(Math.abs(n)).toLocaleString(undefined,{minimumFractionDigits:2})})`:n.toLocaleString(undefined,{minimumFractionDigits:2}));
             const renderRows = (arr, isNeg=false) => arr.filter(d=>d.v!==0).map(d=>`<tr class="fs-row-detail border-b"><td class="py-2">${d.n}</td><td class="py-2">${fmt(isNeg?-d.v:d.v)}</td></tr>`).join('');
 
-            // 1. IS Render
             document.getElementById('is-table-body').innerHTML = `
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-rev']}</td><td class="px-6 py-3">${fmt(is.rev)}</td></tr>${renderRows(det.rev)}
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-cogs']}</td><td class="px-6 py-3 text-red-600">${fmt(-is.cogs)}</td></tr>${renderRows(det.cogs, true)}
@@ -804,7 +855,6 @@
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-exp']}</td><td class="px-6 py-3 text-red-600">${fmt(-is.exp)}</td></tr>${renderRows(det.exp, true)}
                 <tr class="fs-row-total ${ni>=0?'text-green-700':'text-red-700'}"><td class="px-6 py-4">${t['fs-ni']}</td><td class="px-6 py-4 text-lg">${fmt(ni)}</td></tr>`;
 
-            // 2. BS Render
             document.getElementById('bs-table-body').innerHTML = `
                 <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2">${t['fs-assets']}</td></tr>
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-ca']}</td><td class="px-6 py-3">${fmt(bs.ca)}</td></tr>${renderRows(det.ca)}
@@ -819,7 +869,6 @@
                 <tr class="fs-row-sub bg-gray-50"><td class="px-6 py-3">${t['fs-te']}</td><td class="px-6 py-3">${fmt(teq)}</td></tr>
                 <tr class="fs-row-total ${Math.abs(ta-tleq)<0.1?'text-green-700':'text-red-700'}"><td class="px-6 py-4">${t['fs-tleq']}</td><td class="px-6 py-4 text-lg">${fmt(tleq)}</td></tr>`;
 
-            // 3. CF Render
             document.getElementById('cf-table-body').innerHTML = `
                 <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2">${t['cf-op-title']}</td></tr>
                 <tr class="fs-row-detail border-b"><td class="py-2">${t['fs-ni']}</td><td class="py-2">${fmt(ni)}</td></tr>
@@ -835,16 +884,15 @@
                 <tr class="fs-row-main"><td class="px-6 py-3 text-gray-500">${t['cf-beg']}</td><td class="px-6 py-3 text-gray-500">${fmt(cash_op)}</td></tr>
                 <tr class="fs-row-total text-green-700"><td class="px-6 py-4">${t['cf-end']}</td><td class="px-6 py-4 text-lg">${fmt(cash_op+cf_net)}</td></tr>`;
 
-            // 4. EQ Render
             document.getElementById('eq-table-body').innerHTML = `
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['eq-beg']}</td><td class="px-6 py-3">${fmt(op_eq)}</td></tr>
                 <tr class="fs-row-main"><td class="px-6 py-3 text-green-600">${t['eq-ni']}</td><td class="px-6 py-3 text-green-600">${fmt(ni)}</td></tr>
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['eq-add']}</td><td class="px-6 py-3">${fmt(end_eq_pre_ni-op_eq)}</td></tr>
                 <tr class="fs-row-total text-brand-800"><td class="px-6 py-4">${t['eq-end']}</td><td class="px-6 py-4 text-lg">${fmt(op_eq+ni+(end_eq_pre_ni-op_eq))}</td></tr>`;
             
-            // Trigger Dashboard & Analysis
             generateDashboard();
             generateAnalysis();
+            generateCFOInsights(); 
         }
 
         function generateDashboard() {
@@ -871,7 +919,6 @@
             document.getElementById('val-dash-wc').innerText = fmt(bs.ca - bs.cl);
 
             const t = translations[currentLang];
-            const fontFam = "Cairo, Inter, sans-serif";
             
             if(isChartObj) isChartObj.destroy();
             isChartObj = new Chart(document.getElementById('isChart'), {
@@ -899,14 +946,12 @@
             document.getElementById('analysis-empty-state').style.display = 'none';
             document.getElementById('analysis-content').style.display = 'block';
 
-            // Destructure all needed data, including averages calculated earlier
             const { is, bs, det, gp, ni, ta, tl, teq, cash, inventory, ar, ap, avg_ar, avg_ap, avg_inv, cf_op, cf_inv, cf_fin } = globalFS;
             const t = translations[currentLang];
             
             const pct = (val, base) => base === 0 ? '-' : (Math.round((val / base) * 1000) / 10) + '%';
             const renderVaRows = (arr, base) => arr.filter(d=>d.v!==0).map(d=>`<tr class="border-b"><td class="py-2 px-4">${d.n}</td><td class="py-2 px-4 font-semibold text-brand-600">${pct(Math.abs(d.v), base)}</td></tr>`).join('');
 
-            // 1. Vertical Analysis (IS & BS)
             document.getElementById('va-is-table-body').innerHTML = `
                 <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-rev']}</td><td class="py-2 px-4">100%</td></tr>
                 <tr class="bg-gray-50 font-bold"><td class="py-2 px-4 text-red-600">${t['fs-cogs']}</td><td class="py-2 px-4 text-red-600">${pct(is.cogs, is.rev)}</td></tr>
@@ -928,53 +973,36 @@
                 <tr class="bg-gray-100 font-bold border-b-4"><td class="py-2 px-4">${t['fs-te']}</td><td class="py-2 px-4 text-green-600">${pct(teq, ta)}</td></tr>
             `;
             
-            // 2. Ratio Analysis Calculation
             const fmtR = (n) => isNaN(n) || !isFinite(n) ? '-' : (Math.round(n * 10) / 10);
             
-            // Liquidity & Leverage
             const currentRatio = bs.cl ? bs.ca / bs.cl : 0;
             const quickRatio = bs.cl ? (cash + ar) / bs.cl : 0;
             const debtEquity = teq ? tl / teq : 0;
             const debtAssets = ta ? tl / ta : 0;
             
-            // Profitability
             const roa = ta ? (ni / ta) * 100 : 0;
             const roe = teq ? (ni / teq) * 100 : 0;
 
-            // --- ACTIVITY & TURNOVER RATIOS (CCC) ---
-            const daysInPeriod = 365; // Assuming Annualized for standard calculation. Adjust to 30 for monthly if strictly needed, but 365 is standard convention even for period projection.
-            
-            // AR Turnover & DSO
-            const arTurnover = avg_ar ? (is.rev / avg_ar) : 0;
+            const daysInPeriod = 365; 
+            const arTurnover = avg_ar && is.rev ? (is.rev / avg_ar) : 0;
             const dso = arTurnover ? (daysInPeriod / arTurnover) : 0;
-            
-            // Inventory Turnover & DIO
-            const invTurnover = avg_inv ? (is.cogs / avg_inv) : 0;
+            const invTurnover = avg_inv && is.cogs ? (is.cogs / avg_inv) : 0;
             const dio = invTurnover ? (daysInPeriod / invTurnover) : 0;
-            
-            // AP Turnover & DPO
-            const apTurnover = avg_ap ? (is.cogs / avg_ap) : 0; // Standard uses COGS or Purchases. Using COGS here.
+            const apTurnover = avg_ap && is.cogs ? (is.cogs / avg_ap) : 0; 
             const dpo = apTurnover ? (daysInPeriod / apTurnover) : 0;
 
-            // Cash Conversion Cycle
             const ccc = dio + dso - dpo;
 
-            // Update DOM for Activity Ratios
             document.getElementById('val-rt-ar').innerText = fmtR(arTurnover) + 'x';
             document.getElementById('val-dso').innerText = fmtR(dso);
-            
             document.getElementById('val-rt-inv').innerText = fmtR(invTurnover) + 'x';
             document.getElementById('val-dio').innerText = fmtR(dio);
-            
             document.getElementById('val-rt-ap').innerText = fmtR(apTurnover) + 'x';
             document.getElementById('val-dpo').innerText = fmtR(dpo);
 
             document.getElementById('val-ccc').innerText = isNaN(ccc) || !isFinite(ccc) ? '-' : Math.round(ccc);
-            // Color code CCC: Negative is usually good (cash generated before paying), high positive means cash tied up.
             document.getElementById('val-ccc').className = ccc < 30 ? "text-2xl font-black text-green-600" : (ccc > 60 ? "text-2xl font-black text-red-600" : "text-2xl font-black text-brand-700");
 
-
-            // Update DOM for Other Ratios
             const badge = (val, good, bad) => {
                 if(isNaN(val)) return '';
                 if(val >= good) return `<span class="ratio-badge bg-green-100 text-green-700">ممتاز</span>`;
@@ -996,20 +1024,112 @@
                 ratioRow('العائد على الملكية (ROE)', fmtR(roe), '%');
 
             document.getElementById('ratios-leverage').innerHTML = 
-                ratioRow('نسبة المديونية إلى الملكية (D/E)', fmtR(debtEquity), 'x', badge(1/debtEquity, 1, 0.5)) + // Inverted logic for badge (lower is safer)
+                ratioRow('نسبة المديونية إلى الملكية (D/E)', fmtR(debtEquity), 'x', badge(1/debtEquity, 1, 0.5)) + 
                 ratioRow('نسبة الالتزامات للأصول (Debt Ratio)', pct(tl, ta));
 
-            // Cash Flow Ratios Calculation
             const ocfRatio = bs.cl ? (cf_op / bs.cl) : 0;
             const qualityOfIncome = ni ? (cf_op / ni) : 0;
             const cashRoa = ta ? (cf_op / ta) * 100 : 0;
-            const freeCashFlow = cf_op + cf_inv; // Simplified FCF: Operating CF + Investing CF (Capex usually negative here)
+            const freeCashFlow = cf_op + cf_inv; 
 
             document.getElementById('ratios-cashflow').innerHTML = 
                 ratioRow('جودة الأرباح (Quality of Income)', fmtR(qualityOfIncome), 'x', badge(qualityOfIncome, 1.0, 0.5)) +
                 ratioRow('تغطية التدفق التشغيلي (OCF Ratio)', fmtR(ocfRatio), 'x', badge(ocfRatio, 1.0, 0.5)) +
                 ratioRow('العائد النقدي على الأصول (Cash ROA)', fmtR(cashRoa), '%') +
                 ratioRow('التدفق النقدي الحر (Free Cash Flow)', freeCashFlow.toLocaleString(undefined, {minimumFractionDigits: 0}));
+        }
+
+        function generateCFOInsights() {
+            if (!globalFS) return;
+            document.getElementById('insights-empty-state').style.display = 'none';
+            document.getElementById('insights-content').style.display = 'grid';
+
+            const { is, bs, gp, ni, ta, tl, teq, cash, cf_op, avg_ar, avg_ap, avg_inv } = globalFS;
+            
+            let strengths = [];
+            let weaknesses = [];
+            let recs = [];
+
+            // 1. Profitability Analysis
+            const netMargin = is.rev ? ni / is.rev : 0;
+            const grossMargin = is.rev ? gp / is.rev : 0;
+            
+            if (netMargin > 0.15) {
+                strengths.push("هامش صافي ربح ممتاز يتجاوز 15%، مما يدل على كفاءة عالية في التسعير والتحكم الصارم في المصروفات التشغيلية والإدارية.");
+                recs.push("استغلال هوامش الربح المرتفعة في إعادة استثمار جزء من الأرباح في تطوير الأعمال (R&D) أو التسويق لزيادة الحصة السوقية.");
+            } else if (netMargin > 0 && netMargin <= 0.05) {
+                weaknesses.push("هامش الربح الصافي ضعيف جداً (أقل من 5%)، أي زيادة طفيفة في التكاليف قد تؤدي إلى خسائر فعلية.");
+                recs.push("إجراء مراجعة شاملة لجميع بنود المصروفات (Cost Cutting)، ومراجعة سياسات التسعير لضمان تغطية التكاليف بهامش آمن.");
+            } else if (netMargin < 0) {
+                weaknesses.push("الشركة تحقق خسائر تشغيلية. الإيرادات الحالية لا تغطي التكاليف والمصروفات.");
+                recs.push("تطبيق خطة طوارئ فورية لإيقاف النزيف، إعادة هيكلة التكاليف الثابتة، والتركيز على المنتجات/الخدمات ذات الهامش الأعلى (Cash Cows).");
+            }
+
+            if (grossMargin < 0.20 && is.rev > 0) {
+                weaknesses.push("هامش مجمل الربح منخفض (تكلفة البضاعة المباعة تلتهم أغلب الإيرادات).");
+                recs.push("التفاوض المباشر مع الموردين لخفض أسعار الشراء، أو البحث عن بدائل لتقليل التكلفة المباشرة (COGS).");
+            }
+
+            // 2. Liquidity & Solvency Analysis
+            const currentRatio = bs.cl ? bs.ca / bs.cl : 0;
+            if (currentRatio > 1.5) {
+                strengths.push("وضع سيولة قصير الأجل مريح ومستقر (نسبة التداول فوق 1.5)، مما يوفر قدرة ممتازة على سداد الالتزامات المتداولة دون ضغوط.");
+            } else if (currentRatio < 1.0) {
+                weaknesses.push("عجز خطير في السيولة قصيرة الأجل (نسبة التداول أقل من 1). الأصول المتداولة لا تكفي لتغطية الالتزامات المطلوبة قريباً.");
+                recs.push("التفاوض الفوري مع الدائنين لجدولة الديون وتمديد فترات السداد، ومحاولة تسييل الأصول البطيئة أو الحصول على تسهيلات ائتمانية طارئة.");
+            }
+
+            const debtToEquity = teq ? tl / teq : 0;
+            if (debtToEquity > 2) {
+                weaknesses.push("نسبة مديونية عالية (الاعتماد الكثيف على التمويل الخارجي يفوق حقوق الملكية)، مما يزيد من المخاطر المالية وفوائد القروض.");
+                recs.push("تجنب أخذ أي قروض جديدة، وتوجيه التدفقات النقدية الحرة لسداد الديون الأعلى تكلفة لتقليل الرافعة المالية.");
+            } else if (debtToEquity > 0 && debtToEquity < 0.5) {
+                strengths.push("استقلالية مالية قوية ورافعة مالية منخفضة، هيكل التمويل يعتمد بشكل صحي على حقوق الملكية بدلاً من الديون.");
+            }
+
+            // 3. Cash Flow & Quality of Earnings Analysis
+            if (cf_op > 0 && cf_op >= ni && ni > 0) {
+                strengths.push("جودة أرباح استثنائية: الأرباح الدفترية تتحول بالكامل إلى نقد تشغيلي حقيقي، مما يدل على صحة عمليات التحصيل والبيع.");
+            } else if (cf_op < 0 && ni > 0) {
+                weaknesses.push("أزمة في جودة الأرباح: الشركة تحقق أرباحاً على الورق، ولكن العمليات التشغيلية تستنزف الكاش (تدفق تشغيلي سالب).");
+                recs.push("مراجعة دورة التحول النقدي فوراً؛ المشكلة تكمن إما في تأخر تحصيل العملاء، أو تضخم المخزون، أو الدفع السريع للموردين.");
+            } else if (cf_op < 0 && ni < 0) {
+                weaknesses.push("تآكل مزدوج: خسائر دفترية مقترنة بنزيف نقدي تشغيلي، الوضع يتطلب تدخلاً جوهرياً لضمان استمرارية الشركة (Going Concern).");
+            }
+
+            // 4. Efficiency & Turnover (DSO, DIO)
+            const daysInPeriod = 365;
+            const arTurnover = avg_ar && is.rev ? (is.rev / avg_ar) : 0;
+            const dso = arTurnover ? (daysInPeriod / arTurnover) : 0;
+            const invTurnover = avg_inv && is.cogs ? (is.cogs / avg_inv) : 0;
+            const dio = invTurnover ? (daysInPeriod / invTurnover) : 0;
+
+            if (dso > 90) {
+                weaknesses.push(`ضعف في كفاءة التحصيل. أموال الشركة مقيدة لدى العملاء بمتوسط (${Math.round(dso)} يوم)، مما يضغط على السيولة.`);
+                recs.push("تشديد سياسات الائتمان للعملاء الجدد، وعرض (خصم تعجيل دفع - Early Payment Discount) لتحفيز العملاء الحاليين على السداد السريع.");
+            } else if (dso > 0 && dso < 30) {
+                strengths.push(`كفاءة عالية جداً في تحصيل المديونيات من العملاء بمتوسط (${Math.round(dso)} يوم)، مما يدعم التدفق النقدي بقوة.`);
+            }
+
+            if (dio > 120) {
+                weaknesses.push(`تراكم وبطء في حركة المخزون. البضاعة تبقى في المستودعات بمتوسط (${Math.round(dio)} يوم)، مما يجمد رأس المال العامل.`);
+                recs.push("إطلاق حملات ترويجية لتصريف المخزون الراكد أو البطيء، وتطبيق نظام (JIT - Just In Time) لتقليل كميات الشراء وربطها بالطلب الفعلي.");
+            }
+
+            // Fallbacks if no data triggers specific conditions
+            if (strengths.length === 0) strengths.push("بناءً على الأرقام الحالية، أداء الشركة مستقر ولا توجد نقاط قوة استثنائية تتجاوز المعدلات الطبيعية.");
+            if (weaknesses.length === 0) weaknesses.push("لا توجد مخاطر مالية جوهرية أو مؤشرات سلبية خطيرة بناءً على ميزان المراجعة الحالي.");
+            if (recs.length === 0) recs.push("الاستمرار في مراقبة الأداء المالي والحفاظ على مستويات السيولة والربحية الحالية.");
+
+            // DOM Rendering
+            const renderList = (arr, elementId, iconStr) => {
+                const ul = document.getElementById(elementId);
+                ul.innerHTML = arr.map(text => `<li class="flex items-start gap-3"><span class="mt-1 shrink-0">${iconStr}</span><span class="leading-relaxed font-semibold">${text}</span></li>`).join('');
+            };
+
+            renderList(strengths, 'list-strengths', '<i class="fas fa-check-circle text-green-500"></i>');
+            renderList(weaknesses, 'list-weaknesses', '<i class="fas fa-times-circle text-red-500"></i>');
+            renderList(recs, 'list-recommendations', '<i class="fas fa-arrow-left text-brand-500"></i>');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
