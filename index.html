@@ -64,6 +64,7 @@
                 <li><a href="#" onclick="switchTab('fs-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-fs"><i class="fas fa-file-invoice-dollar w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-fs">القوائم المالية</span></a></li>
                 <li><a href="#" onclick="switchTab('analysis-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-analysis"><i class="fas fa-search-dollar w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-analysis">التحليل المالي</span></a></li>
                 <li><a href="#" onclick="switchTab('insights-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-insights"><i class="fas fa-lightbulb w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-insights">رؤية المدير المالي</span></a></li>
+                <li><a href="#" onclick="switchTab('forecast-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-forecast"><i class="fas fa-chart-line w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-forecast">التنبؤ المالي</span></a></li>
             </ul>
         </nav>
     </aside>
@@ -505,6 +506,87 @@
                 </div>
             </div>
 
+            <div id="forecast-tab" class="tab-content max-w-7xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800" id="forecast-title">التنبؤ المالي والتخطيط (FP&A)</h3>
+                        <p class="text-sm text-gray-500" id="forecast-subtitle">محاكاة لسيناريوهات الإيرادات والتكاليف وتأثيرها المستقبلي على الأرباح والسيولة.</p>
+                    </div>
+                    <button onclick="resetForecast()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
+                        <i class="fas fa-undo"></i> <span id="btn-reset-forecast">إعادة ضبط</span>
+                    </button>
+                </div>
+
+                <div id="forecast-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
+                    <i class="fas fa-chart-line text-4xl mb-3"></i>
+                    <h4 class="text-lg font-bold mb-1" id="forecast-empty-title">بانتظار البيانات المحاسبية</h4>
+                    <p class="text-sm" id="forecast-empty-desc">أدخل ميزان المراجعة أولاً لنقوم ببناء التنبؤات بناءً على أرقامك الفعلية.</p>
+                </div>
+
+                <div id="forecast-content" style="display: none;" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Controls -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col gap-6">
+                        <h4 class="font-bold text-gray-800 border-b pb-2"><i class="fas fa-sliders-h text-brand-500 ml-2"></i> الفرضيات (Assumptions)</h4>
+                        
+                        <div>
+                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span>نمو الإيرادات المتوقع</span><span id="val-range-rev" class="text-brand-600">0%</span></label>
+                            <input type="range" id="range-rev" min="-50" max="100" value="0" step="1" class="w-full accent-brand-600" oninput="updateForecastUI()">
+                        </div>
+                        
+                        <div>
+                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span>نسبة تكلفة المبيعات (من الإيرادات)</span><span id="val-range-cogs" class="text-red-600">0%</span></label>
+                            <input type="range" id="range-cogs" min="0" max="100" value="0" step="1" class="w-full accent-red-600" oninput="updateForecastUI()">
+                        </div>
+                        
+                        <div>
+                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span>تغير المصروفات التشغيلية</span><span id="val-range-opex" class="text-orange-600">0%</span></label>
+                            <input type="range" id="range-opex" min="-50" max="100" value="0" step="1" class="w-full accent-orange-600" oninput="updateForecastUI()">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">استثمارات رأسمالية جديدة (أصول CAPEX)</label>
+                            <input type="number" id="input-new-assets" value="0" class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" oninput="updateForecastUI()">
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="lg:col-span-2 flex flex-col gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-brand-50 p-4 rounded-xl border border-brand-100">
+                                <p class="text-xs text-brand-600 font-bold uppercase mb-1">صافي الربح المتوقع</p>
+                                <h4 class="text-2xl font-black text-brand-900" id="val-f-ni">0</h4>
+                                <p class="text-xs mt-1" id="var-f-ni">-</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                                <p class="text-xs text-green-600 font-bold uppercase mb-1">النقدية المتوقعة (Cash)</p>
+                                <h4 class="text-2xl font-black text-green-900" id="val-f-cash">0</h4>
+                                <p class="text-xs mt-1 text-gray-500">بعد الاستثمارات والأرباح</p>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
+                                <p class="text-xs text-purple-600 font-bold uppercase mb-1">إجمالي الأصول المتوقع</p>
+                                <h4 class="text-2xl font-black text-purple-900" id="val-f-assets">0</h4>
+                                <p class="text-xs mt-1" id="var-f-assets">-</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex-1">
+                            <div class="p-4 bg-gray-50 border-b border-gray-200 font-bold text-gray-700">مقارنة قائمة الدخل (الفعلي مقابل المتوقع)</div>
+                            <table class="w-full text-sm text-right text-gray-800">
+                                <thead class="bg-gray-100 text-xs uppercase text-gray-600">
+                                    <tr>
+                                        <th class="px-4 py-3">البند</th>
+                                        <th class="px-4 py-3">الفعلي (الحالي)</th>
+                                        <th class="px-4 py-3 bg-brand-50">المتوقع (Forecast)</th>
+                                        <th class="px-4 py-3">الانحراف (Variance)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="forecast-table-body" class="divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -517,12 +599,13 @@
         let globalFS = null; 
         let isChartObj = null;
         let bsChartObj = null;
-        let forecastChartObj = null; // New chart variable
+        let forecastChartObj = null;
 
         const translations = {
             en: {
                 "txt-nav-coa": "Chart of Accounts", "txt-nav-tb": "Trial Balance", "txt-nav-dash": "Dashboard",
                 "txt-nav-fs": "Financial Statements", "txt-nav-analysis": "Financial Analysis", "txt-nav-insights": "CFO Insights",
+                "txt-nav-forecast": "Financial Forecast",
                 "btn-pdf-text": "Export PDF", 
                 "coa-header": "Chart of Accounts Setup", "coa-desc": "Upload Excel with Account Code and Name only. System auto-classifies them.",
                 "coa-download-btn": "Template", "coa-upload-title": "Upload", "coa-saved-title": "Saved Accounts", "coa-clear-btn": "Reset",
@@ -552,11 +635,14 @@
                 "lbl-va-is": "Income Statement (% of Revenue)", "lbl-va-bs": "Balance Sheet (% of Total Assets)",
                 "insights-title": "CFO Strategic Insights", "insights-subtitle": "Executive summary of strengths, risks, and strategic recommendations.",
                 "insights-empty-title": "Awaiting Analysis", "insights-empty-desc": "Upload TB to generate strategic insights.",
-                "lbl-strengths": "Strengths", "lbl-weaknesses": "Risks & Weaknesses", "lbl-recommendations": "Strategic Actions"
+                "lbl-strengths": "Strengths", "lbl-weaknesses": "Risks & Weaknesses", "lbl-recommendations": "Strategic Actions",
+                "forecast-title": "FP&A and Forecasting", "forecast-subtitle": "Simulate revenue and cost scenarios to see future impact on profits and liquidity.",
+                "btn-reset-forecast": "Reset", "forecast-empty-title": "Awaiting Data", "forecast-empty-desc": "Upload TB to start forecasting."
             },
             ar: {
                 "txt-nav-coa": "شجرة الحسابات", "txt-nav-tb": "ميزان المراجعة", "txt-nav-dash": "لوحة القيادة",
                 "txt-nav-fs": "القوائم المالية", "txt-nav-analysis": "التحليل المالي", "txt-nav-insights": "رؤية المدير المالي",
+                "txt-nav-forecast": "التنبؤ المالي",
                 "btn-pdf-text": "تصدير PDF",
                 "coa-header": "تأسيس شجرة الحسابات", "coa-desc": "قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.",
                 "coa-download-btn": "تحميل القالب", "coa-upload-title": "رفع الملف", "coa-saved-title": "شجرة الحسابات المحفوظة", "coa-clear-btn": "تهيئة",
@@ -586,7 +672,9 @@
                 "lbl-va-is": "قائمة الدخل (% من الإيرادات)", "lbl-va-bs": "المركز المالي (% من الأصول)",
                 "insights-title": "رؤية المدير المالي", "insights-subtitle": "ملخص تنفيذي يبرز نقاط القوة، يحدد المخاطر، ويقدم توصيات استراتيجية.",
                 "insights-empty-title": "بانتظار تحليل البيانات", "insights-empty-desc": "قم برفع ميزان المراجعة لتوليد الرؤية الاستراتيجية.",
-                "lbl-strengths": "نقاط القوة", "lbl-weaknesses": "المخاطر ونقاط الضعف", "lbl-recommendations": "توصيات استراتيجية"
+                "lbl-strengths": "نقاط القوة", "lbl-weaknesses": "المخاطر ونقاط الضعف", "lbl-recommendations": "توصيات استراتيجية",
+                "forecast-title": "التنبؤ المالي والتخطيط (FP&A)", "forecast-subtitle": "محاكاة لسيناريوهات الإيرادات والتكاليف وتأثيرها المستقبلي على الأرباح والسيولة.",
+                "btn-reset-forecast": "إعادة ضبط", "forecast-empty-title": "بانتظار البيانات", "forecast-empty-desc": "أدخل ميزان المراجعة لتبدأ المحاكاة."
             }
         };
 
@@ -623,12 +711,7 @@
             }
             document.querySelectorAll('table').forEach(table => {
                 table.className = currentLang === 'ar' ? "w-full text-sm text-right text-gray-800" : "w-full text-sm text-left text-gray-800";
-            if(['fs-tab', 'dashboard-tab', 'analysis-tab', 'insights-tab', 'forecast-tab'].includes(tabId)) {
-                if(savedTB.length > 0 && savedCOA.length > 0) {
-                    generateFinancialStatements();
-                    if(tabId === 'forecast-tab') initForecast();
-                }
-            }
+            });
         }
 
         function switchTab(tabId) {
@@ -640,8 +723,11 @@
                 activeNav.classList.add('active', 'bg-brand-50', 'text-brand-600');
                 document.getElementById('current-tab-title').innerText = translations[currentLang][activeNav.querySelector('span').id];
             }
-            if(['fs-tab', 'dashboard-tab', 'analysis-tab', 'insights-tab'].includes(tabId)) {
-                if(savedTB.length > 0 && savedCOA.length > 0) generateFinancialStatements();
+            if(['fs-tab', 'dashboard-tab', 'analysis-tab', 'insights-tab', 'forecast-tab'].includes(tabId)) {
+                if(savedTB.length > 0 && savedCOA.length > 0) {
+                    generateFinancialStatements();
+                    if(tabId === 'forecast-tab') initForecast();
+                }
             }
         }
 
@@ -764,10 +850,12 @@
                 document.getElementById('dash-empty-state').style.display = 'block';
                 document.getElementById('analysis-empty-state').style.display = 'block';
                 document.getElementById('insights-empty-state').style.display = 'block';
+                document.getElementById('forecast-empty-state').style.display = 'block';
                 ['is', 'bs', 'cf', 'eq'].forEach(t => document.getElementById(`statement-${t}`).style.display = 'none');
                 document.getElementById('dash-content').style.display = 'none';
                 document.getElementById('analysis-content').style.display = 'none';
                 document.getElementById('insights-content').style.display = 'none';
+                document.getElementById('forecast-content').style.display = 'none';
                 return;
             }
             
@@ -906,7 +994,6 @@
             document.getElementById('forecast-empty-state').style.display = 'none';
             document.getElementById('forecast-content').style.display = 'grid';
 
-            // Set default COGS margin based on actuals
             const actualCogsMargin = globalFS.is.rev ? (globalFS.is.cogs / globalFS.is.rev) * 100 : 0;
             document.getElementById('range-cogs').value = actualCogsMargin;
             
@@ -1198,7 +1285,7 @@
                 recs.push("إطلاق حملات ترويجية لتصريف المخزون الراكد أو البطيء، وتطبيق نظام (JIT - Just In Time) لتقليل كميات الشراء وربطها بالطلب الفعلي.");
             }
 
-            // Fallbacks if no data triggers specific conditions
+            // Fallbacks
             if (strengths.length === 0) strengths.push("بناءً على الأرقام الحالية، أداء الشركة مستقر ولا توجد نقاط قوة استثنائية تتجاوز المعدلات الطبيعية.");
             if (weaknesses.length === 0) weaknesses.push("لا توجد مخاطر مالية جوهرية أو مؤشرات سلبية خطيرة بناءً على ميزان المراجعة الحالي.");
             if (recs.length === 0) recs.push("الاستمرار في مراقبة الأداء المالي والحفاظ على مستويات السيولة والربحية الحالية.");
@@ -1214,6 +1301,7 @@
             renderList(recs, 'list-recommendations', '<i class="fas fa-arrow-left text-brand-500"></i>');
         }
 
+        // Initialize App on Load
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('cfo_coa')) { savedCOA = JSON.parse(localStorage.getItem('cfo_coa')); renderCOATable(); }
             if (localStorage.getItem('cfo_tb')) { savedTB = JSON.parse(localStorage.getItem('cfo_tb')); renderTBTable(); }
