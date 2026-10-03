@@ -1,65 +1,227 @@
-<!-- ... existing code ... -->
-        <nav class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFO System - Financial Dashboard</title>
+    
+    <!-- Google Fonts: Cairo for Arabic, Inter for English -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS (CDN for immediate styling without build steps) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SheetJS for Excel Reading/Writing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* إخفاء المحتوى غير النشط */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* تحسينات بصرية (Scrollbar) */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 h-screen overflow-hidden flex font-sans">
+
+    <aside class="w-64 bg-white shadow-xl flex flex-col z-20 h-full border-l border-gray-100">
+        <!-- الشعار (Logo) -->
+        <div class="h-16 flex items-center justify-center border-b border-gray-100 bg-brand-900 text-white">
+            <i class="fas fa-chart-line text-2xl ml-3"></i>
+            <h1 class="text-xl font-bold tracking-wide">CFO System</h1>
+        </div>
+
+        <!-- روابط التنقل -->
+        <nav class="flex-1 overflow-y-auto py-6">
+            <ul class="space-y-2 px-3">
                 <li>
-                    <a href="#" onclick="switchTab('coa-tab')" class="sidebar-item active flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors" id="nav-coa">
-                        <i class="fas fa-sitemap w-5 text-center"></i>
+                    <a href="#" onclick="switchTab('coa-tab')" class="sidebar-item active flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-coa">
+                        <i class="fas fa-sitemap w-6 text-center"></i>
                         <span class="font-semibold text-sm" id="txt-nav-coa">شجرة الحسابات</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="switchTab('tb-tab')" class="sidebar-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors" id="nav-tb">
-                        <i class="fas fa-file-invoice-dollar w-5 text-center"></i>
+                    <a href="#" onclick="switchTab('tb-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-tb">
+                        <i class="fas fa-file-invoice-dollar w-6 text-center"></i>
                         <span class="font-semibold text-sm" id="txt-nav-tb">ميزان المراجعة</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="switchTab('dashboard-tab')" class="sidebar-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors" id="nav-dash">
-                        <i class="fas fa-chart-pie w-5 text-center"></i>
+                    <a href="#" onclick="switchTab('dashboard-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-dash">
+                        <i class="fas fa-chart-pie w-6 text-center"></i>
                         <span class="font-semibold text-sm" id="txt-nav-dash">لوحة القيادة</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="switchTab('fs-tab')" class="sidebar-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors" id="nav-fs">
-                        <i class="fas fa-file-alt w-5 text-center"></i>
+                    <a href="#" onclick="switchTab('fs-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-fs">
+                        <i class="fas fa-file-alt w-6 text-center"></i>
                         <span class="font-semibold text-sm" id="txt-nav-fs">القوائم المالية</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="switchTab('analysis-tab')" class="sidebar-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors" id="nav-analysis">
-                        <i class="fas fa-search-dollar w-5 text-center"></i>
+                    <a href="#" onclick="switchTab('analysis-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-analysis">
+                        <i class="fas fa-search-dollar w-6 text-center"></i>
                         <span class="font-semibold text-sm" id="txt-nav-analysis">التحليل المالي</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="switchTab('insights-tab')" class="sidebar-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors" id="nav-insights">
-                        <i class="fas fa-lightbulb w-5 text-center"></i>
-                        <span class="font-semibold text-sm" id="txt-nav-insights">التوصيات والقرارات</span>
+                    <a href="#" onclick="switchTab('insights-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-insights">
+                        <i class="fas fa-lightbulb w-6 text-center"></i>
+                        <span class="font-semibold text-sm" id="txt-nav-insights">القرارات والتوصيات</span>
                     </a>
                 </li>
             </ul>
         </nav>
         <div class="p-4 border-t border-gray-100 text-center text-xs text-gray-400">
-<!-- ... existing code ... -->
-                            <h3 class="text-lg font-bold text-gray-800 mb-1" id="coa-header">تأسيس شجرة الحسابات (Chart of Accounts)</h3>
-                            <p class="text-sm text-gray-500" id="coa-desc">قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.</p>
-                        </div>
-<!-- ... existing code ... -->
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-100 sticky top-0 shadow-sm">
+            CFO System v1.0
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-gray-50">
+        <!-- الشريط العلوي (Header) -->
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10">
+            <div>
+                <h2 class="text-xl font-bold text-gray-800" id="current-tab-title">إدارة شجرة الحسابات</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <!-- زر تغيير اللغة -->
+                <button onclick="toggleLanguage()" class="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-brand-600 transition-colors bg-gray-100 px-4 py-2 rounded-lg">
+                    <i class="fas fa-globe"></i>
+                    <span id="lang-text">English</span>
+                </button>
+                <!-- زر تصدير PDF -->
+                <button class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md transition-all duration-200">
+                    <i class="fas fa-download"></i>
+                    <span id="btn-pdf-text">تصدير PDF</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- مساحة عرض المحتوى (Scrollable Content Area) -->
+        <div class="flex-1 overflow-y-auto p-8">
+            
+            <div id="coa-tab" class="tab-content active max-w-6xl mx-auto">
+                
+                <!-- رأس القسم وبطاقة المعلومات -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2" id="coa-header">تأسيس شجرة الحسابات (Chart of Accounts)</h3>
+                        <p class="text-sm text-gray-500 max-w-2xl leading-relaxed" id="coa-desc">قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.</p>
+                    </div>
+                    <div class="flex gap-3 shrink-0">
+                        <button onclick="downloadCOATemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm transition-colors border border-gray-200 shadow-sm flex items-center gap-2">
+                            <i class="fas fa-file-excel text-green-600"></i>
+                            <span id="coa-download-btn">تحميل القالب</span>
+                        </button>
+                        <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer transition-colors shadow-sm flex items-center gap-2">
+                            <i class="fas fa-upload"></i>
+                            <span id="coa-upload-title">رفع الملف</span>
+                            <input type="file" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleCOAUpload(event)">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- جدول عرض شجرة الحسابات -->
+                <div id="coa-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                        <h4 class="font-bold text-gray-700 flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span id="coa-saved-title">شجرة الحسابات المعتمدة</span>
+                        </h4>
+                        <button onclick="clearCOA()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1">
+                            <i class="fas fa-trash-alt"></i>
+                            <span id="coa-clear-btn">إعادة تهيئة</span>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-right text-gray-500" id="coa-data-table">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b border-gray-200">
                                 <tr>
-                                    <th scope="col" class="px-6 py-4 rounded-tr-lg" id="th-code">رقم الحساب</th>
-                                    <th scope="col" class="px-6 py-4" id="th-name">اسم الحساب</th>
-                                    <th scope="col" class="px-6 py-4" id="th-type">النوع (تصنيف آلي)</th>
-                                    <th scope="col" class="px-6 py-4" id="th-statement">القائمة (تصنيف آلي)</th>
+                                    <th scope="col" class="px-6 py-4 font-bold" id="th-code">رقم الحساب</th>
+                                    <th scope="col" class="px-6 py-4 font-bold" id="th-name">اسم الحساب</th>
+                                    <th scope="col" class="px-6 py-4 font-bold" id="th-type">التصنيف (النوع)</th>
+                                    <th scope="col" class="px-6 py-4 font-bold" id="th-statement">القائمة المالية</th>
                                 </tr>
                             </thead>
-<!-- ... existing code ... -->
+                            <tbody id="coa-table-body">
+                                <!-- سيتم تعبئة البيانات هنا بواسطة جافاسكريبت -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tb-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
+                <i class="fas fa-tools text-6xl mb-4 text-gray-200"></i>
+                <h2 class="text-2xl font-bold">جاري تجهيز شاشة ميزان المراجعة</h2>
+                <p class="mt-2">سيتم بناؤها في الخطوة القادمة لربطها بشجرة الحسابات.</p>
+            </div>
+            
+            <div id="dashboard-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
+                <i class="fas fa-chart-pie text-6xl mb-4 text-gray-200"></i>
+                <h2 class="text-2xl font-bold">لوحة القيادة (تحت الإنشاء)</h2>
+            </div>
+            
+            <div id="fs-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
+                <i class="fas fa-file-alt text-6xl mb-4 text-gray-200"></i>
+                <h2 class="text-2xl font-bold">القوائم المالية (تحت الإنشاء)</h2>
+            </div>
+            
+            <div id="analysis-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
+                <i class="fas fa-search-dollar text-6xl mb-4 text-gray-200"></i>
+                <h2 class="text-2xl font-bold">التحليل المالي (تحت الإنشاء)</h2>
+            </div>
+            
+            <div id="insights-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
+                <i class="fas fa-lightbulb text-6xl mb-4 text-gray-200"></i>
+                <h2 class="text-2xl font-bold">القرارات والتوصيات (تحت الإنشاء)</h2>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- حاوية التنبيهات (Toast Notifications) -->
+    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2"></div>
+
     <script>
-        // المتغيرات العامة (State)
+        // المتغيرات العامة
         let currentLang = 'ar';
         let savedCOA = [];
 
-        // قاموس الترجمة
+        // قاموس الترجمة المحدث
         const translations = {
             en: {
                 "txt-nav-coa": "Chart of Accounts",
@@ -68,18 +230,18 @@
                 "txt-nav-fs": "Financial Statements",
                 "txt-nav-analysis": "Financial Analysis",
                 "txt-nav-insights": "Insights & Decisions",
-                "current-tab-title": "Chart of Accounts",
+                "current-tab-title": "Chart of Accounts Setup",
                 "btn-pdf-text": "Export PDF",
-                "coa-header": "Chart of Accounts Setup",
-                "coa-desc": "Upload your COA excel file containing only Account Code & Name. The system will auto-classify them.",
+                "coa-header": "Chart of Accounts (COA)",
+                "coa-desc": "Upload Excel file with only Account Code and Name. The system will auto-classify them.",
                 "coa-download-btn": "Download Template",
-                "coa-upload-title": "Click here to upload COA file",
+                "coa-upload-title": "Upload File",
                 "coa-saved-title": "Approved Chart of Accounts",
-                "coa-clear-btn": "Delete & Reset COA",
+                "coa-clear-btn": "Reset COA",
                 "th-code": "Account Code",
                 "th-name": "Account Name",
-                "th-type": "Type (Auto-mapped)",
-                "th-statement": "Statement (Auto-mapped)"
+                "th-type": "Classification (Type)",
+                "th-statement": "Financial Statement"
             },
             ar: {
                 "txt-nav-coa": "شجرة الحسابات",
@@ -87,79 +249,65 @@
                 "txt-nav-dash": "لوحة القيادة",
                 "txt-nav-fs": "القوائم المالية",
                 "txt-nav-analysis": "التحليل المالي",
-                "txt-nav-insights": "التوصيات والقرارات",
+                "txt-nav-insights": "القرارات والتوصيات",
                 "current-tab-title": "إدارة شجرة الحسابات",
                 "btn-pdf-text": "تصدير PDF",
                 "coa-header": "تأسيس شجرة الحسابات (Chart of Accounts)",
                 "coa-desc": "قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.",
-                "coa-download-btn": "تحميل قالب الشجرة",
-                "coa-upload-title": "اضغط هنا لرفع ملف شجرة الحسابات",
-                "coa-saved-title": "شجرة الحسابات المعتمدة في النظام",
-                "coa-clear-btn": "حذف الشجرة وإعادة التهيئة",
+                "coa-download-btn": "تحميل القالب",
+                "coa-upload-title": "رفع الملف",
+                "coa-saved-title": "شجرة الحسابات المعتمدة",
+                "coa-clear-btn": "إعادة تهيئة",
                 "th-code": "رقم الحساب",
                 "th-name": "اسم الحساب",
-                "th-type": "النوع (تصنيف آلي)",
-                "th-statement": "القائمة (تصنيف آلي)"
+                "th-type": "التصنيف (النوع)",
+                "th-statement": "القائمة المالية"
             }
         };
 
-        // دالة تطبيق الترجمة على الشاشة
+        
+        // دالة عرض التنبيهات (Toasts)
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            // ألوان حسب النوع
+            const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600';
+            const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+            
+            toast.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 transform transition-all duration-300 translate-y-10 opacity-0`;
+            toast.innerHTML = `<i class="fas ${icon} text-xl"></i><span class="font-semibold text-sm">${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            // الأنيمشن
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+            
+            // الإخفاء
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // تطبيق الترجمة
         function applyTranslations() {
             const dict = translations[currentLang];
             for (const [id, text] of Object.entries(dict)) {
                 const el = document.getElementById(id);
                 if (el) el.innerText = text;
             }
-        }
-
-        // عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCOAFromStorage();
-            applyTranslations();
-        });
-
-        // دالة التنقل بين التبويبات
-        function switchTab(tabId) {
-            // إخفاء كل المحتوى
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // إزالة التفعيل من القائمة الجانبية
-            document.querySelectorAll('.sidebar-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // تفعيل التبويب المطلوب
-            document.getElementById(tabId).classList.add('active');
             
-            // تفعيل الزر في القائمة الجانبية وتحديث العنوان العلوي من قاموس الترجمة
-            let titleId = "";
-            if(tabId === 'coa-tab') {
-                document.getElementById('nav-coa').classList.add('active');
-                titleId = 'txt-nav-coa';
-            } else if(tabId === 'tb-tab') {
-                document.getElementById('nav-tb').classList.add('active');
-                titleId = 'txt-nav-tb';
-            } else if(tabId === 'dashboard-tab') {
-                document.getElementById('nav-dash').classList.add('active');
-                titleId = 'txt-nav-dash';
-            } else if(tabId === 'fs-tab') {
-                document.getElementById('nav-fs').classList.add('active');
-                titleId = 'txt-nav-fs';
-            } else if(tabId === 'analysis-tab') {
-                document.getElementById('nav-analysis').classList.add('active');
-                titleId = 'txt-nav-analysis';
-            } else if(tabId === 'insights-tab') {
-                document.getElementById('nav-insights').classList.add('active');
-                titleId = 'txt-nav-insights';
-            }
-            
-            if(titleId) {
-                document.getElementById('current-tab-title').innerText = translations[currentLang][titleId];
+            // تعديل اتجاه الجدول
+            const table = document.getElementById('coa-data-table');
+            if(table) {
+                table.className = currentLang === 'ar' ? "w-full text-sm text-right text-gray-500" : "w-full text-sm text-left text-gray-500";
             }
         }
-<!-- ... existing code ... -->
-        // دالة تغيير اللغة (أساسية لتجربة المستخدم)
+
+        // تغيير اللغة
         function toggleLanguage() {
             const htmlTag = document.documentElement;
             if (currentLang === 'ar') {
@@ -167,30 +315,44 @@
                 htmlTag.setAttribute('dir', 'ltr');
                 htmlTag.setAttribute('lang', 'en');
                 document.getElementById('lang-text').innerText = 'عربي';
-                document.body.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-                showToast("Language changed to English", "info");
             } else {
                 currentLang = 'ar';
                 htmlTag.setAttribute('dir', 'rtl');
                 htmlTag.setAttribute('lang', 'ar');
                 document.getElementById('lang-text').innerText = 'English';
-                document.body.style.fontFamily = "'Cairo', sans-serif";
-                showToast("تم تغيير اللغة إلى العربية", "info");
             }
             
-            applyTranslations(); // تطبيق الترجمة فوراً
-            renderCOATable(); // تحديث الجدول لعرض التصنيفات باللغة الجديدة
+            applyTranslations();
+            renderCOATable(); // إعادة رسم الجدول لترجمة التصنيفات الآلية
             
-            // إعادة ضبط عنوان التبويب الحالي
-            const activeTabId = document.querySelector('.tab-content.active').id;
-            switchTab(activeTabId);
+            // تحديث عنوان التبويب الحالي
+            const activeTab = document.querySelector('.tab-content.active');
+            if(activeTab) switchTab(activeTab.id);
         }
 
-        // دالة تصدير الشاشة الحالية إلى PDF
-<!-- ... existing code ... -->
-        // ------------------ عمليات شجرة الحسابات (COA) ------------------
+        // التنقل بين الشاشات
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active', 'bg-brand-50', 'text-brand-600');
+            });
 
-        // دالة التصنيف الآلي بناءً على رقم الحساب
+            document.getElementById(tabId).classList.add('active');
+            
+            let titleKey = "";
+            const activeNav = document.querySelector(`a[onclick="switchTab('${tabId}')"]`);
+            if(activeNav) {
+                activeNav.classList.add('active', 'bg-brand-50', 'text-brand-600');
+                titleKey = activeNav.querySelector('span').id;
+            }
+            
+            if(titleKey) {
+                document.getElementById('current-tab-title').innerText = translations[currentLang][titleKey];
+            }
+        }
+
+
+        // التصنيف الآلي (Mapping)
         function classifyAccount(code) {
             const strCode = String(code).trim();
             let type = '';
@@ -218,7 +380,7 @@
             }
             else if (strCode.startsWith('5')) {
                 statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement';
-                type = currentLang === 'ar' ? 'تكلفة المبيعات' : 'COGS';
+                type = currentLang === 'ar' ? 'تكلفة المبيعات' : 'Cost of Sales (COGS)';
             }
             else if (strCode.startsWith('6') || strCode.startsWith('7') || strCode.startsWith('8') || strCode.startsWith('9')) {
                  statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement';
@@ -231,59 +393,79 @@
             return { type, statement };
         }
 
-        // تحميل قالب إكسيل فارغ للمستخدم ليعبئه
+        // تحميل القالب (عمودين فقط)
         function downloadCOATemplate() {
-            // القالب الآن يعتمد فقط على كود الحساب واسم الحساب
             const ws_data = [
-                ["رقم الحساب", "اسم الحساب"],
-                ["1101", "النقدية في البنوك"],
-                ["1102", "العملاء"],
-                ["2101", "الموردون"],
-                ["3101", "رأس المال"],
-                ["4101", "إيرادات المبيعات"],
-                ["5101", "تكلفة البضاعة المباعة"],
-                ["6101", "الرواتب والأجور"]
+                ["Account_Code", "Account_Name"],
+                ["1101", "Cash in Banks"],
+                ["1102", "Accounts Receivable"],
+                ["2101", "Accounts Payable"],
+                ["3101", "Share Capital"],
+                ["4101", "Sales Revenue"],
+                ["5101", "Cost of Goods Sold"],
+                ["6101", "Salaries Expense"]
             ];
+            
+            // تحويل العناوين للعربي إذا كانت اللغة عربي
+            if(currentLang === 'ar') {
+                ws_data[0] = ["رقم_الحساب", "اسم_الحساب"];
+                ws_data[1][1] = "النقدية في البنوك";
+                ws_data[2][1] = "العملاء / المدينون";
+                ws_data[3][1] = "الموردون";
+                ws_data[4][1] = "رأس المال";
+                ws_data[5][1] = "إيرادات المبيعات";
+                ws_data[6][1] = "تكلفة البضاعة المباعة";
+                ws_data[7][1] = "مصروف الرواتب والأجور";
+            }
+
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            
+            // ضبط عرض الأعمدة
+            const wscols = [{wch: 15}, {wch: 40}];
+            ws['!cols'] = wscols;
+
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "شجرة الحسابات");
+            XLSX.utils.book_append_sheet(wb, ws, "COA");
             XLSX.writeFile(wb, "Chart_of_Accounts_Template.xlsx");
-            showToast(currentLang === 'ar' ? "تم تحميل القالب بنجاح" : "Template Downloaded", "success");
+            
+            showToast(currentLang === 'ar' ? "تم تحميل القالب بنجاح" : "Template Downloaded Successfully", "success");
         }
 
-        // معالجة رفع ملف شجرة الحسابات
+        // رفع وقراءة الملف
         function handleCOAUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
                 try {
+                    const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
-                    
                     const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                     
                     if (json.length <= 1) {
-                        showToast(currentLang === 'ar' ? "الملف فارغ أو لا يحتوي على بيانات صحيحة." : "File is empty or invalid.", "error");
+                        showToast(currentLang === 'ar' ? "الملف فارغ أو غير صحيح." : "File is empty or invalid.", "error");
                         return;
                     }
 
-                    // تخطي صف العناوين وأخذ الكود والاسم فقط بدون التصنيف اليدوي
-                    const formattedData = json.slice(1).map(row => ({
-                        code: row[0] ? String(row[0]).trim() : '',
-                        name: row[1] ? String(row[1]).trim() : ''
-                    })).filter(row => row.code && row.name); // تصفية الصفوف الفارغة
+                    // تجاهل الصف الأول (العناوين) وأخذ العمودين الأول والثاني فقط
+                    let validAccountsCount = 0;
+                    const formattedData = json.slice(1).map(row => {
+                        const code = row[0] ? String(row[0]).trim() : '';
+                        const name = row[1] ? String(row[1]).trim() : '';
+                        if(code && name) validAccountsCount++;
+                        return { code, name };
+                    }).filter(row => row.code && row.name);
 
-                    if (formattedData.length > 0) {
+                    if (validAccountsCount > 0) {
                         savedCOA = formattedData;
                         localStorage.setItem('cfo_coa', JSON.stringify(savedCOA));
                         renderCOATable();
-                        showToast(currentLang === 'ar' ? `تم حفظ عدد ${formattedData.length} حساب بنجاح!` : `${formattedData.length} Accounts Saved!`, "success");
+                        showToast(currentLang === 'ar' ? `تم حفظ ${validAccountsCount} حساب بنجاح!` : `${validAccountsCount} accounts saved!`, "success");
                     } else {
-                        showToast(currentLang === 'ar' ? "لم يتم العثور على بيانات صالحة في الملف." : "No valid data found in file.", "error");
+                        showToast(currentLang === 'ar' ? "لم يتم العثور على أرقام وأسماء حسابات صالحة." : "No valid account data found.", "error");
                     }
                 } catch (error) {
                     console.error(error);
@@ -291,19 +473,10 @@
                 }
             };
             reader.readAsArrayBuffer(file);
-            event.target.value = '';
+            event.target.value = ''; // Reset input
         }
 
-        // تحميل شجرة الحسابات من الذاكرة المحلية
-        function loadCOAFromStorage() {
-            const stored = localStorage.getItem('cfo_coa');
-            if (stored) {
-                savedCOA = JSON.parse(stored);
-                renderCOATable();
-            }
-        }
-
-        // عرض شجرة الحسابات في الجدول
+        // عرض الجدول
         function renderCOATable() {
             const container = document.getElementById('coa-table-container');
             const tbody = document.getElementById('coa-table-body');
@@ -312,20 +485,28 @@
             if (savedCOA.length > 0) {
                 container.style.display = 'block';
                 savedCOA.forEach((account, index) => {
-                    // الاعتماد على التصنيف الآلي لعرض النوع والقائمة بشكل ديناميكي بناءً على اللغة الحالية
                     const classification = classifyAccount(account.code);
                     
+                    // تحديد لون الخلفية بناءً على القائمة لتسهيل القراءة
+                    let statementColorClass = classification.statement.includes('المركز') || classification.statement.includes('Balance') 
+                                              ? 'bg-blue-50 text-blue-700' 
+                                              : 'bg-green-50 text-green-700';
+
                     const tr = document.createElement('tr');
-                    tr.className = index % 2 === 0 ? 'bg-white border-b' : 'bg-gray-50 border-b';
+                    tr.className = 'bg-white border-b hover:bg-gray-50 transition-colors';
                     tr.innerHTML = `
-                        <td class="px-6 py-4 font-semibold text-gray-900">${account.code}</td>
-                        <td class="px-6 py-4 text-gray-700">${account.name}</td>
+                        <td class="px-6 py-4 font-bold text-gray-900">${account.code}</td>
+                        <td class="px-6 py-4 text-gray-800 font-medium">${account.name}</td>
                         <td class="px-6 py-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded border border-blue-200">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
                                 ${classification.type}
                             </span>
                         </td>
-                        <td class="px-6 py-4 font-medium">${classification.statement}</td>
+                        <td class="px-6 py-4 font-semibold text-xs">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full ${statementColorClass}">
+                                ${classification.statement}
+                            </span>
+                        </td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -334,5 +515,27 @@
             }
         }
 
-        // حذف شجرة الحسابات
-<!-- ... existing code ... -->
+        // مسح الشجرة
+        function clearCOA() {
+            const confirmMsg = currentLang === 'ar' ? "هل أنت متأكد من حذف شجرة الحسابات بالكامل؟" : "Are you sure you want to clear the entire COA?";
+            if(confirm(confirmMsg)) {
+                savedCOA = [];
+                localStorage.removeItem('cfo_coa');
+                renderCOATable();
+                showToast(currentLang === 'ar' ? "تم حذف شجرة الحسابات بنجاح" : "COA cleared successfully", "info");
+            }
+        }
+
+        // التحميل الأولي عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            const stored = localStorage.getItem('cfo_coa');
+            if (stored) {
+                savedCOA = JSON.parse(stored);
+                renderCOATable();
+            }
+            applyTranslations();
+        });
+
+    </script>
+</body>
+</html>
