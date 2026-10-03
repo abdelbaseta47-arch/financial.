@@ -11,7 +11,7 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Tailwind CSS (CDN for immediate styling without build steps) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- SheetJS for Excel Reading/Writing -->
@@ -39,7 +39,6 @@
     </script>
 
     <style>
-        /* إخفاء المحتوى غير النشط */
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
         
@@ -48,23 +47,23 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* تحسينات بصرية (Scrollbar) */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* تنسيق جداول ميزان المراجعة */
+        .tb-header-group { background-color: #e2e8f0; text-align: center; font-weight: bold; border-bottom: 2px solid #cbd5e1;}
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden flex font-sans">
 
-    <aside class="w-64 bg-white shadow-xl flex flex-col z-20 h-full border-l border-gray-100">
-        <!-- الشعار (Logo) -->
+    <aside class="w-64 bg-white shadow-xl flex flex-col z-20 h-full border-l border-gray-100 shrink-0">
         <div class="h-16 flex items-center justify-center border-b border-gray-100 bg-brand-900 text-white">
             <i class="fas fa-chart-line text-2xl ml-3"></i>
             <h1 class="text-xl font-bold tracking-wide">CFO System</h1>
         </div>
 
-        <!-- روابط التنقل -->
         <nav class="flex-1 overflow-y-auto py-6">
             <ul class="space-y-2 px-3">
                 <li>
@@ -75,7 +74,7 @@
                 </li>
                 <li>
                     <a href="#" onclick="switchTab('tb-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-tb">
-                        <i class="fas fa-file-invoice-dollar w-6 text-center"></i>
+                        <i class="fas fa-balance-scale w-6 text-center"></i>
                         <span class="font-semibold text-sm" id="txt-nav-tb">ميزان المراجعة</span>
                     </a>
                 </li>
@@ -87,7 +86,7 @@
                 </li>
                 <li>
                     <a href="#" onclick="switchTab('fs-tab')" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all duration-200" id="nav-fs">
-                        <i class="fas fa-file-alt w-6 text-center"></i>
+                        <i class="fas fa-file-invoice-dollar w-6 text-center"></i>
                         <span class="font-semibold text-sm" id="txt-nav-fs">القوائم المالية</span>
                     </a>
                 </li>
@@ -105,45 +104,36 @@
                 </li>
             </ul>
         </nav>
-        <div class="p-4 border-t border-gray-100 text-center text-xs text-gray-400">
-            CFO System v1.0
-        </div>
     </aside>
 
     <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-gray-50">
-        <!-- الشريط العلوي (Header) -->
-        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10">
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 shrink-0">
             <div>
-                <h2 class="text-xl font-bold text-gray-800" id="current-tab-title">إدارة شجرة الحسابات</h2>
+                <h2 class="text-xl font-bold text-gray-800" id="current-tab-title">تأسيس شجرة الحسابات</h2>
             </div>
             <div class="flex items-center gap-4">
-                <!-- زر تغيير اللغة -->
                 <button onclick="toggleLanguage()" class="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-brand-600 transition-colors bg-gray-100 px-4 py-2 rounded-lg">
                     <i class="fas fa-globe"></i>
                     <span id="lang-text">English</span>
                 </button>
-                <!-- زر تصدير PDF -->
                 <button class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md transition-all duration-200">
-                    <i class="fas fa-download"></i>
+                    <i class="fas fa-file-pdf"></i>
                     <span id="btn-pdf-text">تصدير PDF</span>
                 </button>
             </div>
         </header>
 
-        <!-- مساحة عرض المحتوى (Scrollable Content Area) -->
         <div class="flex-1 overflow-y-auto p-8">
             
             <div id="coa-tab" class="tab-content active max-w-6xl mx-auto">
-                
-                <!-- رأس القسم وبطاقة المعلومات -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2" id="coa-header">تأسيس شجرة الحسابات (Chart of Accounts)</h3>
-                        <p class="text-sm text-gray-500 max-w-2xl leading-relaxed" id="coa-desc">قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.</p>
+                        <p class="text-sm text-gray-500 max-w-2xl leading-relaxed" id="coa-desc">الخطوة الأولى: قم برفع ملف الإكسيل برقم واسم الحساب فقط. النظام سيصنفها آلياً لتهيئة النظام لموازين المراجعة.</p>
                     </div>
                     <div class="flex gap-3 shrink-0">
                         <button onclick="downloadCOATemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm transition-colors border border-gray-200 shadow-sm flex items-center gap-2">
-                            <i class="fas fa-file-excel text-green-600"></i>
+                            <i class="fas fa-download text-green-600"></i>
                             <span id="coa-download-btn">تحميل القالب</span>
                         </button>
                         <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer transition-colors shadow-sm flex items-center gap-2">
@@ -154,385 +144,448 @@
                     </div>
                 </div>
 
-                <!-- جدول عرض شجرة الحسابات -->
                 <div id="coa-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                         <h4 class="font-bold text-gray-700 flex items-center gap-2">
                             <i class="fas fa-check-circle text-green-500"></i>
-                            <span id="coa-saved-title">شجرة الحسابات المعتمدة</span>
+                            <span id="coa-saved-title">شجرة الحسابات المحفوظة بالنظام</span>
                         </h4>
                         <button onclick="clearCOA()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1">
                             <i class="fas fa-trash-alt"></i>
                             <span id="coa-clear-btn">إعادة تهيئة</span>
                         </button>
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[60vh]">
                         <table class="w-full text-sm text-right text-gray-500" id="coa-data-table">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b border-gray-200">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b border-gray-200 sticky top-0 z-10">
                                 <tr>
                                     <th scope="col" class="px-6 py-4 font-bold" id="th-code">رقم الحساب</th>
                                     <th scope="col" class="px-6 py-4 font-bold" id="th-name">اسم الحساب</th>
-                                    <th scope="col" class="px-6 py-4 font-bold" id="th-type">التصنيف (النوع)</th>
+                                    <th scope="col" class="px-6 py-4 font-bold" id="th-type">التصنيف الآلي</th>
                                     <th scope="col" class="px-6 py-4 font-bold" id="th-statement">القائمة المالية</th>
                                 </tr>
                             </thead>
-                            <tbody id="coa-table-body">
-                                <!-- سيتم تعبئة البيانات هنا بواسطة جافاسكريبت -->
-                            </tbody>
+                            <tbody id="coa-table-body"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div id="tb-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
-                <i class="fas fa-tools text-6xl mb-4 text-gray-200"></i>
-                <h2 class="text-2xl font-bold">جاري تجهيز شاشة ميزان المراجعة</h2>
-                <p class="mt-2">سيتم بناؤها في الخطوة القادمة لربطها بشجرة الحسابات.</p>
+            <div id="tb-tab" class="tab-content max-w-7xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2" id="tb-header">إدراج ميزان المراجعة (Trial Balance)</h3>
+                        <p class="text-sm text-gray-500 max-w-2xl leading-relaxed" id="tb-desc">قم برفع ميزان المراجعة (بالأرصدة الافتتاحية والحركات). النظام سيتحقق من التوازن ويطابق الحسابات مع الشجرة المعتمدة.</p>
+                    </div>
+                    <div class="flex gap-3 shrink-0">
+                        <button onclick="downloadTBTemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm transition-colors border border-gray-200 shadow-sm flex items-center gap-2">
+                            <i class="fas fa-download text-green-600"></i>
+                            <span id="tb-download-btn">تحميل القالب</span>
+                        </button>
+                        <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer transition-colors shadow-sm flex items-center gap-2">
+                            <i class="fas fa-upload"></i>
+                            <span id="tb-upload-title">رفع الميزان</span>
+                            <input type="file" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleTBUpload(event)">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- شريط الحالة (متزن / غير متزن) -->
+                <div id="tb-status-container" style="display: none;" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 text-xl"><i class="fas fa-list-ol"></i></div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-semibold uppercase" id="lbl-accounts-count">عدد الحسابات</p>
+                            <h4 class="text-xl font-bold text-gray-800" id="tb-accounts-count">0</h4>
+                        </div>
+                    </div>
+                    <div id="tb-balance-card" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 md:col-span-2">
+                        <!-- يتم تحديث هذا الجزء عبر الجافاسكريبت -->
+                    </div>
+                </div>
+
+                <div id="tb-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                        <h4 class="font-bold text-gray-700 flex items-center gap-2">
+                            <i class="fas fa-table text-brand-500"></i>
+                            <span id="tb-saved-title">تفاصيل ميزان المراجعة</span>
+                        </h4>
+                        <button onclick="clearTB()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1">
+                            <i class="fas fa-times-circle"></i>
+                            <span id="tb-clear-btn">مسح الميزان</span>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto max-h-[60vh]">
+                        <table class="w-full text-sm text-right text-gray-500" id="tb-data-table">
+                            <thead class="text-xs text-gray-700 bg-gray-100 sticky top-0 z-10 shadow-sm">
+                                <tr>
+                                    <th rowspan="2" class="px-4 py-3 border-b border-l border-gray-200" id="th-tb-code">رقم الحساب</th>
+                                    <th rowspan="2" class="px-4 py-3 border-b border-l border-gray-200" id="th-tb-name">اسم الحساب</th>
+                                    <th colspan="2" class="px-4 py-2 border-b border-l border-gray-200 tb-header-group" id="th-tb-opening">الرصيد الافتتاحي</th>
+                                    <th colspan="2" class="px-4 py-2 border-b border-l border-gray-200 tb-header-group" id="th-tb-period">حركات الفترة</th>
+                                    <th colspan="2" class="px-4 py-2 border-b border-l border-gray-200 tb-header-group" id="th-tb-ending">الرصيد الختامي</th>
+                                    <th rowspan="2" class="px-4 py-3 border-b border-gray-200 text-center" id="th-tb-status">حالة الربط</th>
+                                </tr>
+                                <tr>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">مدين (Dr)</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">دائن (Cr)</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">مدين (Dr)</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">دائن (Cr)</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600 bg-brand-50">مدين (Dr)</th>
+                                    <th class="px-4 py-2 border-b border-gray-200 text-gray-600 bg-brand-50">دائن (Cr)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-table-body"></tbody>
+                            <tfoot id="tb-table-foot" class="bg-gray-100 font-bold text-gray-800 sticky bottom-0 border-t-2 border-gray-300">
+                                <!-- سيتم حساب المجاميع هنا -->
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
             </div>
             
+            <!-- الواجهات تحت الإنشاء -->
             <div id="dashboard-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
-                <i class="fas fa-chart-pie text-6xl mb-4 text-gray-200"></i>
-                <h2 class="text-2xl font-bold">لوحة القيادة (تحت الإنشاء)</h2>
+                <i class="fas fa-chart-pie text-6xl mb-4 text-gray-200"></i><h2 class="text-2xl font-bold">لوحة القيادة (تحت الإنشاء)</h2>
             </div>
-            
             <div id="fs-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
-                <i class="fas fa-file-alt text-6xl mb-4 text-gray-200"></i>
-                <h2 class="text-2xl font-bold">القوائم المالية (تحت الإنشاء)</h2>
+                <i class="fas fa-file-invoice-dollar text-6xl mb-4 text-gray-200"></i><h2 class="text-2xl font-bold">القوائم المالية (تحت الإنشاء)</h2>
             </div>
-            
             <div id="analysis-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
-                <i class="fas fa-search-dollar text-6xl mb-4 text-gray-200"></i>
-                <h2 class="text-2xl font-bold">التحليل المالي (تحت الإنشاء)</h2>
+                <i class="fas fa-search-dollar text-6xl mb-4 text-gray-200"></i><h2 class="text-2xl font-bold">التحليل المالي (تحت الإنشاء)</h2>
             </div>
-            
             <div id="insights-tab" class="tab-content max-w-6xl mx-auto text-center py-20 text-gray-400">
-                <i class="fas fa-lightbulb text-6xl mb-4 text-gray-200"></i>
-                <h2 class="text-2xl font-bold">القرارات والتوصيات (تحت الإنشاء)</h2>
+                <i class="fas fa-lightbulb text-6xl mb-4 text-gray-200"></i><h2 class="text-2xl font-bold">القرارات والتوصيات (تحت الإنشاء)</h2>
             </div>
 
         </div>
     </main>
 
-    <!-- حاوية التنبيهات (Toast Notifications) -->
     <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2"></div>
 
     <script>
-        // المتغيرات العامة
+        // متغيرات النظام الأساسية
         let currentLang = 'ar';
         let savedCOA = [];
+        let savedTB = [];
 
-        // قاموس الترجمة المحدث
+        // قاموس الترجمة
         const translations = {
             en: {
-                "txt-nav-coa": "Chart of Accounts",
-                "txt-nav-tb": "Trial Balance",
-                "txt-nav-dash": "Dashboard",
-                "txt-nav-fs": "Financial Statements",
-                "txt-nav-analysis": "Financial Analysis",
-                "txt-nav-insights": "Insights & Decisions",
-                "current-tab-title": "Chart of Accounts Setup",
-                "btn-pdf-text": "Export PDF",
-                "coa-header": "Chart of Accounts (COA)",
-                "coa-desc": "Upload Excel file with only Account Code and Name. The system will auto-classify them.",
-                "coa-download-btn": "Download Template",
-                "coa-upload-title": "Upload File",
-                "coa-saved-title": "Approved Chart of Accounts",
-                "coa-clear-btn": "Reset COA",
-                "th-code": "Account Code",
-                "th-name": "Account Name",
-                "th-type": "Classification (Type)",
-                "th-statement": "Financial Statement"
+                "txt-nav-coa": "Chart of Accounts", "txt-nav-tb": "Trial Balance", "txt-nav-dash": "Dashboard",
+                "txt-nav-fs": "Financial Statements", "txt-nav-analysis": "Financial Analysis", "txt-nav-insights": "Insights & Decisions",
+                "btn-pdf-text": "Export PDF", 
+                "coa-header": "Chart of Accounts Setup", "coa-desc": "Step 1: Upload Excel file with Account Code and Name. The system will auto-classify them.",
+                "coa-download-btn": "Download Template", "coa-upload-title": "Upload File", "coa-saved-title": "Saved Chart of Accounts", "coa-clear-btn": "Reset",
+                "th-code": "Code", "th-name": "Account Name", "th-type": "Auto-Classification", "th-statement": "Financial Statement",
+                
+                // ترجمة ميزان المراجعة
+                "tb-header": "Trial Balance Upload", "tb-desc": "Upload Trial Balance (Opening & Period Movements). System will check balance and map with COA.",
+                "tb-download-btn": "Download Template", "tb-upload-title": "Upload TB", "tb-saved-title": "Trial Balance Details", "tb-clear-btn": "Clear TB",
+                "th-tb-code": "Code", "th-tb-name": "Account Name", "th-tb-opening": "Opening Balance", "th-tb-period": "Period Movement", "th-tb-ending": "Ending Balance", "th-tb-status": "Mapping Status",
+                "lbl-accounts-count": "Total Accounts"
             },
             ar: {
-                "txt-nav-coa": "شجرة الحسابات",
-                "txt-nav-tb": "ميزان المراجعة",
-                "txt-nav-dash": "لوحة القيادة",
-                "txt-nav-fs": "القوائم المالية",
-                "txt-nav-analysis": "التحليل المالي",
-                "txt-nav-insights": "القرارات والتوصيات",
-                "current-tab-title": "إدارة شجرة الحسابات",
+                "txt-nav-coa": "شجرة الحسابات", "txt-nav-tb": "ميزان المراجعة", "txt-nav-dash": "لوحة القيادة",
+                "txt-nav-fs": "القوائم المالية", "txt-nav-analysis": "التحليل المالي", "txt-nav-insights": "القرارات والتوصيات",
                 "btn-pdf-text": "تصدير PDF",
-                "coa-header": "تأسيس شجرة الحسابات (Chart of Accounts)",
-                "coa-desc": "قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.",
-                "coa-download-btn": "تحميل القالب",
-                "coa-upload-title": "رفع الملف",
-                "coa-saved-title": "شجرة الحسابات المعتمدة",
-                "coa-clear-btn": "إعادة تهيئة",
-                "th-code": "رقم الحساب",
-                "th-name": "اسم الحساب",
-                "th-type": "التصنيف (النوع)",
-                "th-statement": "القائمة المالية"
+                "coa-header": "تأسيس شجرة الحسابات (Chart of Accounts)", "coa-desc": "الخطوة الأولى: قم برفع ملف الإكسيل برقم واسم الحساب فقط. النظام سيصنفها آلياً.",
+                "coa-download-btn": "تحميل القالب", "coa-upload-title": "رفع الملف", "coa-saved-title": "شجرة الحسابات المحفوظة بالنظام", "coa-clear-btn": "إعادة تهيئة",
+                "th-code": "رقم الحساب", "th-name": "اسم الحساب", "th-type": "التصنيف الآلي", "th-statement": "القائمة المالية",
+                
+                // ترجمة ميزان المراجعة
+                "tb-header": "إدراج ميزان المراجعة (Trial Balance)", "tb-desc": "قم برفع ميزان المراجعة (بالأرصدة الافتتاحية والحركات). النظام سيتحقق من التوازن ويطابق الحسابات مع الشجرة المعتمدة.",
+                "tb-download-btn": "تحميل القالب", "tb-upload-title": "رفع الميزان", "tb-saved-title": "تفاصيل ميزان المراجعة", "tb-clear-btn": "مسح الميزان",
+                "th-tb-code": "رقم الحساب", "th-tb-name": "اسم الحساب", "th-tb-opening": "الرصيد الافتتاحي", "th-tb-period": "حركات الفترة", "th-tb-ending": "الرصيد الختامي", "th-tb-status": "حالة الربط",
+                "lbl-accounts-count": "عدد الحسابات"
             }
         };
 
-        
-        // دالة عرض التنبيهات (Toasts)
+        // دالة التنبيهات (Toast)
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
-            // ألوان حسب النوع
             const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600';
             const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
-            
             toast.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 transform transition-all duration-300 translate-y-10 opacity-0`;
             toast.innerHTML = `<i class="fas ${icon} text-xl"></i><span class="font-semibold text-sm">${message}</span>`;
-            
             container.appendChild(toast);
-            
-            // الأنيمشن
-            setTimeout(() => {
-                toast.classList.remove('translate-y-10', 'opacity-0');
-            }, 10);
-            
-            // الإخفاء
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-10');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); setTimeout(() => toast.remove(), 300); }, 4000);
         }
 
-        // تطبيق الترجمة
+        // تغيير اللغة والترجمة
+        function toggleLanguage() {
+            const htmlTag = document.documentElement;
+            if (currentLang === 'ar') {
+                currentLang = 'en'; htmlTag.setAttribute('dir', 'ltr'); htmlTag.setAttribute('lang', 'en'); document.getElementById('lang-text').innerText = 'عربي';
+            } else {
+                currentLang = 'ar'; htmlTag.setAttribute('dir', 'rtl'); htmlTag.setAttribute('lang', 'ar'); document.getElementById('lang-text').innerText = 'English';
+            }
+            applyTranslations(); renderCOATable(); renderTBTable();
+        }
+
         function applyTranslations() {
             const dict = translations[currentLang];
             for (const [id, text] of Object.entries(dict)) {
                 const el = document.getElementById(id);
                 if (el) el.innerText = text;
             }
-            
-            // تعديل اتجاه الجدول
-            const table = document.getElementById('coa-data-table');
-            if(table) {
+            document.querySelectorAll('table').forEach(table => {
                 table.className = currentLang === 'ar' ? "w-full text-sm text-right text-gray-500" : "w-full text-sm text-left text-gray-500";
-            }
-        }
-
-        // تغيير اللغة
-        function toggleLanguage() {
-            const htmlTag = document.documentElement;
-            if (currentLang === 'ar') {
-                currentLang = 'en';
-                htmlTag.setAttribute('dir', 'ltr');
-                htmlTag.setAttribute('lang', 'en');
-                document.getElementById('lang-text').innerText = 'عربي';
-            } else {
-                currentLang = 'ar';
-                htmlTag.setAttribute('dir', 'rtl');
-                htmlTag.setAttribute('lang', 'ar');
-                document.getElementById('lang-text').innerText = 'English';
-            }
-            
-            applyTranslations();
-            renderCOATable(); // إعادة رسم الجدول لترجمة التصنيفات الآلية
-            
-            // تحديث عنوان التبويب الحالي
+            });
             const activeTab = document.querySelector('.tab-content.active');
-            if(activeTab) switchTab(activeTab.id);
+            if(activeTab) switchTab(activeTab.id); // Update header title
         }
 
         // التنقل بين الشاشات
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.sidebar-item').forEach(item => {
-                item.classList.remove('active', 'bg-brand-50', 'text-brand-600');
-            });
-
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active', 'bg-brand-50', 'text-brand-600'));
             document.getElementById(tabId).classList.add('active');
-            
-            let titleKey = "";
             const activeNav = document.querySelector(`a[onclick="switchTab('${tabId}')"]`);
             if(activeNav) {
                 activeNav.classList.add('active', 'bg-brand-50', 'text-brand-600');
-                titleKey = activeNav.querySelector('span').id;
-            }
-            
-            if(titleKey) {
+                const titleKey = activeNav.querySelector('span').id;
                 document.getElementById('current-tab-title').innerText = translations[currentLang][titleKey];
             }
         }
 
-
-        // التصنيف الآلي (Mapping)
         function classifyAccount(code) {
             const strCode = String(code).trim();
-            let type = '';
-            let statement = '';
-
-            if (strCode.startsWith('1')) {
-                statement = currentLang === 'ar' ? 'المركز المالي' : 'Balance Sheet';
-                if (strCode.startsWith('11')) type = currentLang === 'ar' ? 'أصول متداولة' : 'Current Assets';
-                else if (strCode.startsWith('12')) type = currentLang === 'ar' ? 'أصول غير متداولة' : 'Non-Current Assets';
-                else type = currentLang === 'ar' ? 'أصول' : 'Assets';
-            } 
-            else if (strCode.startsWith('2')) {
-                statement = currentLang === 'ar' ? 'المركز المالي' : 'Balance Sheet';
-                if (strCode.startsWith('21')) type = currentLang === 'ar' ? 'خصوم متداولة' : 'Current Liabilities';
-                else if (strCode.startsWith('22')) type = currentLang === 'ar' ? 'خصوم غير متداولة' : 'Non-Current Liabilities';
-                else type = currentLang === 'ar' ? 'خصوم' : 'Liabilities';
-            }
-            else if (strCode.startsWith('3')) {
-                statement = currentLang === 'ar' ? 'المركز المالي' : 'Balance Sheet';
-                type = currentLang === 'ar' ? 'حقوق الملكية' : 'Equity';
-            }
-            else if (strCode.startsWith('4')) {
-                statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement';
-                type = currentLang === 'ar' ? 'إيرادات' : 'Revenues';
-            }
-            else if (strCode.startsWith('5')) {
-                statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement';
-                type = currentLang === 'ar' ? 'تكلفة المبيعات' : 'Cost of Sales (COGS)';
-            }
-            else if (strCode.startsWith('6') || strCode.startsWith('7') || strCode.startsWith('8') || strCode.startsWith('9')) {
-                 statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement';
-                 type = currentLang === 'ar' ? 'مصروفات' : 'Expenses';
-            }
-            else {
-                 statement = currentLang === 'ar' ? 'غير محدد' : 'Undefined';
-                 type = currentLang === 'ar' ? 'غير مصنف' : 'Unclassified';
-            }
+            let type = '', statement = '';
+            if (strCode.startsWith('1')) { statement = currentLang === 'ar' ? 'المركز المالي' : 'Balance Sheet'; if (strCode.startsWith('11')) type = currentLang === 'ar' ? 'أصول متداولة' : 'Current Assets'; else if (strCode.startsWith('12')) type = currentLang === 'ar' ? 'أصول غير متداولة' : 'Non-Current Assets'; else type = currentLang === 'ar' ? 'أصول' : 'Assets'; } 
+            else if (strCode.startsWith('2')) { statement = currentLang === 'ar' ? 'المركز المالي' : 'Balance Sheet'; if (strCode.startsWith('21')) type = currentLang === 'ar' ? 'خصوم متداولة' : 'Current Liabilities'; else if (strCode.startsWith('22')) type = currentLang === 'ar' ? 'خصوم غير متداولة' : 'Non-Current Liabilities'; else type = currentLang === 'ar' ? 'خصوم' : 'Liabilities'; }
+            else if (strCode.startsWith('3')) { statement = currentLang === 'ar' ? 'المركز المالي' : 'Balance Sheet'; type = currentLang === 'ar' ? 'حقوق الملكية' : 'Equity'; }
+            else if (strCode.startsWith('4')) { statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement'; type = currentLang === 'ar' ? 'إيرادات' : 'Revenues'; }
+            else if (strCode.startsWith('5')) { statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement'; type = currentLang === 'ar' ? 'تكلفة المبيعات' : 'COGS'; }
+            else if (strCode.match(/^[6789]/)) { statement = currentLang === 'ar' ? 'قائمة الدخل' : 'Income Statement'; type = currentLang === 'ar' ? 'مصروفات' : 'Expenses'; }
+            else { statement = currentLang === 'ar' ? 'غير محدد' : 'Undefined'; type = currentLang === 'ar' ? 'غير مصنف' : 'Unclassified'; }
             return { type, statement };
         }
 
-        // تحميل القالب (عمودين فقط)
         function downloadCOATemplate() {
-            const ws_data = [
-                ["Account_Code", "Account_Name"],
-                ["1101", "Cash in Banks"],
-                ["1102", "Accounts Receivable"],
-                ["2101", "Accounts Payable"],
-                ["3101", "Share Capital"],
-                ["4101", "Sales Revenue"],
-                ["5101", "Cost of Goods Sold"],
-                ["6101", "Salaries Expense"]
-            ];
-            
-            // تحويل العناوين للعربي إذا كانت اللغة عربي
-            if(currentLang === 'ar') {
-                ws_data[0] = ["رقم_الحساب", "اسم_الحساب"];
-                ws_data[1][1] = "النقدية في البنوك";
-                ws_data[2][1] = "العملاء / المدينون";
-                ws_data[3][1] = "الموردون";
-                ws_data[4][1] = "رأس المال";
-                ws_data[5][1] = "إيرادات المبيعات";
-                ws_data[6][1] = "تكلفة البضاعة المباعة";
-                ws_data[7][1] = "مصروف الرواتب والأجور";
-            }
-
+            const ws_data = currentLang === 'ar' ? [["رقم_الحساب", "اسم_الحساب"]] : [["Account_Code", "Account_Name"]];
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
-            
-            // ضبط عرض الأعمدة
-            const wscols = [{wch: 15}, {wch: 40}];
-            ws['!cols'] = wscols;
-
+            ws['!cols'] = [{wch: 15}, {wch: 40}];
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "COA");
+            XLSX.utils.book_append_sheet(wb, ws, "COA_Template");
             XLSX.writeFile(wb, "Chart_of_Accounts_Template.xlsx");
-            
-            showToast(currentLang === 'ar' ? "تم تحميل القالب بنجاح" : "Template Downloaded Successfully", "success");
+            showToast(currentLang === 'ar' ? "تم تحميل قالب الشجرة" : "COA Template Downloaded");
         }
 
-        // رفع وقراءة الملف
         function handleCOAUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
                     
-                    if (json.length <= 1) {
-                        showToast(currentLang === 'ar' ? "الملف فارغ أو غير صحيح." : "File is empty or invalid.", "error");
-                        return;
-                    }
-
-                    // تجاهل الصف الأول (العناوين) وأخذ العمودين الأول والثاني فقط
-                    let validAccountsCount = 0;
-                    const formattedData = json.slice(1).map(row => {
+                    let validAccounts = 0;
+                    savedCOA = json.slice(1).map(row => {
                         const code = row[0] ? String(row[0]).trim() : '';
                         const name = row[1] ? String(row[1]).trim() : '';
-                        if(code && name) validAccountsCount++;
+                        if(code && name) validAccounts++;
                         return { code, name };
                     }).filter(row => row.code && row.name);
 
-                    if (validAccountsCount > 0) {
-                        savedCOA = formattedData;
+                    if (validAccounts > 0) {
                         localStorage.setItem('cfo_coa', JSON.stringify(savedCOA));
                         renderCOATable();
-                        showToast(currentLang === 'ar' ? `تم حفظ ${validAccountsCount} حساب بنجاح!` : `${validAccountsCount} accounts saved!`, "success");
-                    } else {
-                        showToast(currentLang === 'ar' ? "لم يتم العثور على أرقام وأسماء حسابات صالحة." : "No valid account data found.", "error");
-                    }
-                } catch (error) {
-                    console.error(error);
-                    showToast(currentLang === 'ar' ? "حدث خطأ أثناء قراءة الملف." : "Error reading file.", "error");
-                }
+                        showToast(currentLang === 'ar' ? `تم حفظ ${validAccounts} حساب بنجاح` : `${validAccounts} accounts saved!`);
+                    } else showToast(currentLang === 'ar' ? "الملف فارغ أو غير صحيح." : "File is invalid.", "error");
+                } catch (error) { showToast(currentLang === 'ar' ? "خطأ في قراءة الملف" : "Error reading file", "error"); }
             };
             reader.readAsArrayBuffer(file);
-            event.target.value = ''; // Reset input
+            event.target.value = '';
         }
 
-        // عرض الجدول
         function renderCOATable() {
-            const container = document.getElementById('coa-table-container');
             const tbody = document.getElementById('coa-table-body');
             tbody.innerHTML = '';
-
             if (savedCOA.length > 0) {
-                container.style.display = 'block';
-                savedCOA.forEach((account, index) => {
-                    const classification = classifyAccount(account.code);
-                    
-                    // تحديد لون الخلفية بناءً على القائمة لتسهيل القراءة
-                    let statementColorClass = classification.statement.includes('المركز') || classification.statement.includes('Balance') 
-                                              ? 'bg-blue-50 text-blue-700' 
-                                              : 'bg-green-50 text-green-700';
-
-                    const tr = document.createElement('tr');
-                    tr.className = 'bg-white border-b hover:bg-gray-50 transition-colors';
-                    tr.innerHTML = `
-                        <td class="px-6 py-4 font-bold text-gray-900">${account.code}</td>
-                        <td class="px-6 py-4 text-gray-800 font-medium">${account.name}</td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
-                                ${classification.type}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 font-semibold text-xs">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full ${statementColorClass}">
-                                ${classification.statement}
-                            </span>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
+                document.getElementById('coa-table-container').style.display = 'block';
+                savedCOA.forEach(acc => {
+                    const cls = classifyAccount(acc.code);
+                    const color = cls.statement.includes('المركز') || cls.statement.includes('Balance') ? 'bg-blue-50 text-blue-700' : 'bg-green-50 text-green-700';
+                    tbody.innerHTML += `<tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-6 py-3 font-bold text-gray-900">${acc.code}</td>
+                        <td class="px-6 py-3 text-gray-800">${acc.name}</td>
+                        <td class="px-6 py-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100">${cls.type}</span></td>
+                        <td class="px-6 py-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${color}">${cls.statement}</span></td>
+                    </tr>`;
                 });
-            } else {
-                container.style.display = 'none';
-            }
+            } else document.getElementById('coa-table-container').style.display = 'none';
         }
 
-        // مسح الشجرة
         function clearCOA() {
-            const confirmMsg = currentLang === 'ar' ? "هل أنت متأكد من حذف شجرة الحسابات بالكامل؟" : "Are you sure you want to clear the entire COA?";
-            if(confirm(confirmMsg)) {
-                savedCOA = [];
-                localStorage.removeItem('cfo_coa');
-                renderCOATable();
-                showToast(currentLang === 'ar' ? "تم حذف شجرة الحسابات بنجاح" : "COA cleared successfully", "info");
+            if(confirm(currentLang === 'ar' ? "متأكد من حذف شجرة الحسابات؟" : "Clear entire COA?")) {
+                savedCOA = []; localStorage.removeItem('cfo_coa'); renderCOATable(); showToast("Cleared");
             }
         }
 
-        // التحميل الأولي عند فتح الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            const stored = localStorage.getItem('cfo_coa');
-            if (stored) {
-                savedCOA = JSON.parse(stored);
-                renderCOATable();
+        function downloadTBTemplate() {
+            const ws_data = currentLang === 'ar' 
+                ? [["رقم_الحساب", "اسم_الحساب", "افتتاحي_مدين", "افتتاحي_دائن", "حركة_مدين", "حركة_دائن"]] 
+                : [["Account_Code", "Account_Name", "Opening_Dr", "Opening_Cr", "Period_Dr", "Period_Cr"]];
+            
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            ws['!cols'] = [{wch: 15}, {wch: 35}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15}];
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "TB_Template");
+            XLSX.writeFile(wb, "Trial_Balance_Template.xlsx");
+            showToast(currentLang === 'ar' ? "تم تحميل قالب ميزان المراجعة" : "TB Template Downloaded");
+        }
+
+        function formatNum(num) {
+            const val = parseFloat(num);
+            return isNaN(val) ? 0 : val;
+        }
+
+        function handleTBUpload(event) {
+            if(savedCOA.length === 0) {
+                showToast(currentLang === 'ar' ? "الرجاء إدخال شجرة الحسابات أولاً!" : "Please upload Chart of Accounts first!", "error");
+                event.target.value = ''; return;
             }
+
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+                    
+                    let validAccounts = 0;
+                    savedTB = json.slice(1).map(row => {
+                        const code = row[0] ? String(row[0]).trim() : '';
+                        if(!code) return null;
+                        
+                        const op_dr = formatNum(row[2]); const op_cr = formatNum(row[3]);
+                        const per_dr = formatNum(row[4]); const per_cr = formatNum(row[5]);
+                        
+                        // حساب الرصيد الختامي
+                        const net_change = (op_dr - op_cr) + (per_dr - per_cr);
+                        let end_dr = 0, end_cr = 0;
+                        if(net_change > 0) end_dr = net_change;
+                        else if (net_change < 0) end_cr = Math.abs(net_change);
+
+                        // التحقق من وجوده في الشجرة
+                        const inCOA = savedCOA.some(acc => acc.code === code);
+                        
+                        validAccounts++;
+                        return { 
+                            code: code, name: row[1] ? String(row[1]).trim() : '', 
+                            op_dr, op_cr, per_dr, per_cr, end_dr, end_cr, inCOA 
+                        };
+                    }).filter(row => row !== null);
+
+                    if (validAccounts > 0) {
+                        localStorage.setItem('cfo_tb', JSON.stringify(savedTB));
+                        renderTBTable();
+                        showToast(currentLang === 'ar' ? `تم قراءة ${validAccounts} حساب في الميزان` : `${validAccounts} accounts read successfully!`);
+                    }
+                } catch (error) { showToast("Error reading TB file", "error"); }
+            };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
+        }
+
+        function renderTBTable() {
+            const container = document.getElementById('tb-table-container');
+            const statusContainer = document.getElementById('tb-status-container');
+            const tbody = document.getElementById('tb-table-body');
+            const tfoot = document.getElementById('tb-table-foot');
+            
+            if (savedTB.length === 0) {
+                container.style.display = 'none'; statusContainer.style.display = 'none'; return;
+            }
+
+            container.style.display = 'block'; statusContainer.style.display = 'grid';
+            document.getElementById('tb-accounts-count').innerText = savedTB.length;
+            tbody.innerHTML = '';
+
+            // متغيرات المجاميع
+            let sums = { op_dr: 0, op_cr: 0, per_dr: 0, per_cr: 0, end_dr: 0, end_cr: 0 };
+            let hasMissingCOA = false;
+
+            savedTB.forEach(acc => {
+                sums.op_dr += acc.op_dr; sums.op_cr += acc.op_cr;
+                sums.per_dr += acc.per_dr; sums.per_cr += acc.per_cr;
+                sums.end_dr += acc.end_dr; sums.end_cr += acc.end_cr;
+
+                if(!acc.inCOA) hasMissingCOA = true;
+                
+                const statusHtml = acc.inCOA 
+                    ? `<i class="fas fa-link text-green-500" title="مربوط بالشجرة"></i>` 
+                    : `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold whitespace-nowrap"><i class="fas fa-exclamation-triangle"></i> غير مدرج بالشجرة</span>`;
+                
+                // تلوين الصف إذا كان فيه مشكلة ربط
+                const rowClass = acc.inCOA ? "bg-white border-b hover:bg-gray-50" : "bg-red-50 border-b hover:bg-red-100 border-red-200";
+
+                tbody.innerHTML += `<tr class="${rowClass}">
+                    <td class="px-4 py-2 font-bold text-gray-900 border-l border-gray-100">${acc.code}</td>
+                    <td class="px-4 py-2 text-gray-800 border-l border-gray-100">${acc.name}</td>
+                    <td class="px-4 py-2 text-gray-600 border-l border-gray-100">${acc.op_dr.toLocaleString()}</td>
+                    <td class="px-4 py-2 text-gray-600 border-l border-gray-100">${acc.op_cr.toLocaleString()}</td>
+                    <td class="px-4 py-2 text-gray-600 border-l border-gray-100">${acc.per_dr.toLocaleString()}</td>
+                    <td class="px-4 py-2 text-gray-600 border-l border-gray-100">${acc.per_cr.toLocaleString()}</td>
+                    <td class="px-4 py-2 font-semibold text-brand-900 bg-brand-50 border-l border-white">${acc.end_dr.toLocaleString()}</td>
+                    <td class="px-4 py-2 font-semibold text-brand-900 bg-brand-50 border-l border-white">${acc.end_cr.toLocaleString()}</td>
+                    <td class="px-4 py-2 text-center">${statusHtml}</td>
+                </tr>`;
+            });
+
+            // تقريب الأرقام لمعالجة كسور الجافاسكريبت
+            sums.end_dr = Math.round(sums.end_dr * 100) / 100;
+            sums.end_cr = Math.round(sums.end_cr * 100) / 100;
+
+            const isBalanced = (sums.end_dr === sums.end_cr) && (sums.per_dr === sums.per_cr);
+            const balanceColor = isBalanced ? "text-green-600" : "text-red-600";
+
+            tfoot.innerHTML = `<tr>
+                <td colspan="2" class="px-4 py-3 text-left border-l border-gray-200">الإجمالي (Totals)</td>
+                <td class="px-4 py-3 border-l border-gray-200">${sums.op_dr.toLocaleString()}</td>
+                <td class="px-4 py-3 border-l border-gray-200">${sums.op_cr.toLocaleString()}</td>
+                <td class="px-4 py-3 border-l border-gray-200 ${sums.per_dr !== sums.per_cr ? 'text-red-600 bg-red-50' : ''}">${sums.per_dr.toLocaleString()}</td>
+                <td class="px-4 py-3 border-l border-gray-200 ${sums.per_dr !== sums.per_cr ? 'text-red-600 bg-red-50' : ''}">${sums.per_cr.toLocaleString()}</td>
+                <td class="px-4 py-3 border-l border-white bg-brand-100 ${balanceColor}">${sums.end_dr.toLocaleString()}</td>
+                <td class="px-4 py-3 border-l border-white bg-brand-100 ${balanceColor}">${sums.end_cr.toLocaleString()}</td>
+                <td></td>
+            </tr>`;
+
+            // تحديث بطاقة الحالة (Status Card)
+            const statusCard = document.getElementById('tb-balance-card');
+            if (isBalanced && !hasMissingCOA) {
+                statusCard.className = "bg-green-50 p-4 rounded-xl shadow-sm border border-green-200 flex items-center gap-4 md:col-span-2";
+                statusCard.innerHTML = `<div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-xl"><i class="fas fa-check-double"></i></div>
+                                        <div><h4 class="text-lg font-bold text-green-800">${currentLang === 'ar' ? 'الميزان متزن ومطابق' : 'Balanced & Mapped'}</h4>
+                                        <p class="text-xs text-green-600">${currentLang === 'ar' ? 'إجمالي الأرصدة الختامية متساوية وجميع الحسابات معرفة بالشجرة.' : 'Totals are equal and all accounts exist in COA.'}</p></div>`;
+            } else {
+                statusCard.className = "bg-red-50 p-4 rounded-xl shadow-sm border border-red-200 flex items-center gap-4 md:col-span-2";
+                let errorMsg = currentLang === 'ar' ? 'يوجد فوارق في الأرصدة أو حسابات غير معرفة.' : 'Unbalanced or unmapped accounts detected.';
+                statusCard.innerHTML = `<div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl"><i class="fas fa-times-circle"></i></div>
+                                        <div><h4 class="text-lg font-bold text-red-800">${currentLang === 'ar' ? 'يجب مراجعة الميزان' : 'Review Required'}</h4>
+                                        <p class="text-xs text-red-600">${errorMsg}</p></div>`;
+            }
+        }
+
+        function clearTB() {
+            if(confirm(currentLang === 'ar' ? "مسح بيانات الميزان الحالي؟" : "Clear Trial Balance data?")) {
+                savedTB = []; localStorage.removeItem('cfo_tb'); renderTBTable();
+            }
+        }
+
+        // التهيئة عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedCOA = localStorage.getItem('cfo_coa');
+            if (storedCOA) { savedCOA = JSON.parse(storedCOA); renderCOATable(); }
+            const storedTB = localStorage.getItem('cfo_tb');
+            if (storedTB) { savedTB = JSON.parse(storedTB); renderTBTable(); }
             applyTranslations();
         });
 
