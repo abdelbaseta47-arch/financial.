@@ -673,13 +673,16 @@
 
             savedTB.forEach(acc => {
                 if (!acc.inCOA) return;
-                const c = acc.code, end = acc.end_dr - acc.end_cr;
+                const c = acc.code;
+                const end_dr = acc.end_dr || 0;
+                const end_cr = acc.end_cr || 0;
+                const end = end_dr - end_cr;
                 const isCash = c.startsWith('111') || /نقدية|صندوق|بنك|cash|bank/i.test(acc.name);
                 
                 // Specific Account Extractions for CFO Dashboard
-                if (/عملاء|ذمم|receivable|debtor/i.test(acc.name) || c.startsWith('112') || c.startsWith('113')) { ar += end_dr - end_cr; }
-                if (/موردين|دائنون|payable|creditor/i.test(acc.name) || c.startsWith('211') || c.startsWith('212')) { ap += -(end_dr - end_cr); }
-                if (/مخزون|بضاعة|inventory/i.test(acc.name) || c.startsWith('114')) { inventory += end_dr - end_cr; }
+                if (/عملاء|ذمم|receivable|debtor/i.test(acc.name) || c.startsWith('112') || c.startsWith('113')) { ar += end; }
+                if (/موردين|دائنون|payable|creditor/i.test(acc.name) || c.startsWith('211') || c.startsWith('212')) { ap += -end; }
+                if (/مخزون|بضاعة|inventory/i.test(acc.name) || c.startsWith('114')) { inventory += end; }
 
                 if (c.startsWith('4')) { is.rev += -end; det.rev.push({n: acc.name, v: -end}); }
                 else if (c.startsWith('5')) { is.cogs += end; det.cogs.push({n: acc.name, v: end}); }
@@ -690,16 +693,17 @@
                 else if (c.startsWith('22')) { bs.ncl += -end; det.ncl.push({n: acc.name, v: -end}); }
                 else if (c.startsWith('3')) { bs.eq += -end; det.eq.push({n: acc.name, v: -end}); }
 
-                let op_dr = acc.op_dr - acc.op_cr, end_dr = acc.end_dr - acc.end_cr;
+                let net_op = (acc.op_dr || 0) - (acc.op_cr || 0);
+                
                 if (c.startsWith('1')) {
-                    if(isCash){ cash_op+=op_dr; cash_end+=end_dr; }
-                    else if(c.startsWith('12')){ op_nca+=op_dr; end_nca+=end_dr; }
-                    else{ op_ca+=op_dr; end_ca+=end_dr; }
+                    if(isCash){ cash_op+=net_op; cash_end+=end; }
+                    else if(c.startsWith('12')){ op_nca+=net_op; end_nca+=end; }
+                    else{ op_ca+=net_op; end_ca+=end; }
                 } else if (c.startsWith('2')) {
-                    let op_cr = -op_dr, end_cr = -end_dr;
-                    if(c.startsWith('22')){ op_ncl+=op_cr; end_ncl+=end_cr; } else { op_cl+=op_cr; end_cl+=end_cr; }
+                    let net_op_cr = -net_op, net_end_cr = -end;
+                    if(c.startsWith('22')){ op_ncl+=net_op_cr; end_ncl+=net_end_cr; } else { op_cl+=net_op_cr; end_cl+=net_end_cr; }
                 } else if (c.startsWith('3')) {
-                    op_eq += -op_dr; end_eq_pre_ni += -end_dr;
+                    op_eq += -net_op; end_eq_pre_ni += -end;
                 }
             });
 
