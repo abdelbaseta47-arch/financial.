@@ -241,8 +241,8 @@
             
             <div id="dashboard-tab" class="tab-content max-w-7xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-                    <h3 class="text-lg font-bold text-gray-800" id="dash-title">لوحة القيادة التنفيذية (Executive Dashboard)</h3>
-                    <p class="text-sm text-gray-500" id="dash-subtitle">نظرة عامة على الأداء المالي والمؤشرات الرئيسية.</p>
+                    <h3 class="text-lg font-bold text-gray-800" id="dash-title">لوحة القيادة التنفيذية (CFO Command Center)</h3>
+                    <p class="text-sm text-gray-500" id="dash-subtitle">ملخص شامل للوضع المالي، السيولة، والربحية بلمحة بصر.</p>
                 </div>
 
                 <div id="dash-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
@@ -252,23 +252,66 @@
                 </div>
 
                 <div id="dash-content" style="display: none;">
-                    <!-- KPI Cards -->
+                    <!-- Liquidity & Cash Row -->
+                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-water text-blue-500 ml-2"></i>السيولة والتدفقات النقدية</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-blue-500">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">النقدية وما في حكمها</p>
+                            <h4 class="text-2xl font-black text-gray-800" id="val-dash-cash">0</h4>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-green-500">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">العملاء (AR)</p>
+                            <h4 class="text-2xl font-black text-gray-800" id="val-dash-ar">0</h4>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-red-500">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">الموردين (AP)</p>
+                            <h4 class="text-2xl font-black text-gray-800" id="val-dash-ap">0</h4>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-emerald-500">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي التدفق التشغيلي</p>
+                            <h4 class="text-2xl font-black text-gray-800" id="val-dash-ocf">0</h4>
+                        </div>
+                    </div>
+
+                    <!-- Profitability Row -->
+                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-chart-line text-green-500 ml-2"></i>الأداء والربحية</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي الإيرادات</p>
+                            <h4 class="text-xl font-bold text-gray-800" id="val-dash-rev">0</h4>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">مجمل الربح</p>
+                            <h4 class="text-xl font-bold text-brand-600" id="val-dash-gp">0</h4>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي الربح</p>
+                            <h4 class="text-xl font-bold text-green-600" id="val-dash-ni">0</h4>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">هامش صافي الربح</p>
+                            <h4 class="text-xl font-bold text-purple-600" id="val-dash-margin">0%</h4>
+                        </div>
+                    </div>
+
+                    <!-- Structure Row -->
+                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-building text-purple-500 ml-2"></i>الهيكل المالي</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-blue-500">
-                            <p class="text-sm text-gray-500 font-semibold mb-1" id="lbl-kpi-rev">إجمالي الإيرادات</p>
-                            <h4 class="text-2xl font-bold text-gray-800" id="val-kpi-rev">0</h4>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي الأصول</p>
+                            <h4 class="text-xl font-bold text-gray-800" id="val-dash-ta">0</h4>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-green-500">
-                            <p class="text-sm text-gray-500 font-semibold mb-1" id="lbl-kpi-ni">صافي الربح</p>
-                            <h4 class="text-2xl font-bold text-gray-800" id="val-kpi-ni">0</h4>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي الالتزامات</p>
+                            <h4 class="text-xl font-bold text-orange-600" id="val-dash-tl">0</h4>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-purple-500">
-                            <p class="text-sm text-gray-500 font-semibold mb-1" id="lbl-kpi-margin">هامش صافي الربح</p>
-                            <h4 class="text-2xl font-bold text-gray-800" id="val-kpi-margin">0%</h4>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">حقوق الملكية</p>
+                            <h4 class="text-xl font-bold text-gray-800" id="val-dash-eq">0</h4>
                         </div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-yellow-500">
-                            <p class="text-sm text-gray-500 font-semibold mb-1" id="lbl-kpi-cr">نسبة التداول (سيولة)</p>
-                            <h4 class="text-2xl font-bold text-gray-800" id="val-kpi-cr">0</h4>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">رأس المال العامل</p>
+                            <h4 class="text-xl font-bold text-blue-600" id="val-dash-wc">0</h4>
                         </div>
                     </div>
 
@@ -279,17 +322,24 @@
                             <div class="relative h-64"><canvas id="isChart"></canvas></div>
                         </div>
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <h4 class="font-bold text-gray-700 mb-4 text-center" id="lbl-chart-bs">هيكل الأصول</h4>
+                            <h4 class="font-bold text-gray-700 mb-4 text-center" id="lbl-chart-bs">هيكل الأصول والالتزامات</h4>
                             <div class="relative h-64"><canvas id="bsChart"></canvas></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="analysis-tab" class="tab-content max-w-5xl mx-auto">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-                    <h3 class="text-lg font-bold text-gray-800" id="analysis-title">التحليل المالي الرأسي (Vertical Analysis)</h3>
-                    <p class="text-sm text-gray-500" id="analysis-subtitle">تحليل الوزن النسبي لكل بند مقارنة بالإجمالي.</p>
+            <div id="analysis-tab" class="tab-content max-w-6xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex justify-between items-center overflow-x-auto">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800" id="analysis-title">مركز التحليل المالي (Financial Analytics)</h3>
+                        <p class="text-sm text-gray-500" id="analysis-subtitle">تحليل متعمق للنسب، الهياكل، والانحرافات.</p>
+                    </div>
+                    <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0 gap-1 ml-4">
+                        <button onclick="toggleAnalysis('vertical')" id="btn-show-vertical" class="px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap">التحليل الرأسي</button>
+                        <button onclick="toggleAnalysis('ratios')" id="btn-show-ratios" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">تحليل النسب</button>
+                        <button onclick="toggleAnalysis('horizontal')" id="btn-show-horizontal" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap relative">التحليل الأفقي <span class="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span></button>
+                    </div>
                 </div>
 
                 <div id="analysis-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
@@ -299,16 +349,49 @@
                 </div>
 
                 <div id="analysis-content" style="display: none;">
-                    <!-- IS Vertical Analysis -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-                        <div class="bg-gray-100 p-4 border-b border-gray-200"><h3 class="font-bold text-gray-800" id="lbl-va-is">قائمة الدخل - تحليل رأسي (نسبة إلى الإيرادات)</h3></div>
-                        <table class="w-full text-sm text-right text-gray-800" id="va-is-table"><tbody id="va-is-table-body"></tbody></table>
+                    
+                    <!-- Vertical Analysis Sub-tab -->
+                    <div id="analysis-vertical" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="bg-brand-900 text-white p-4 border-b border-gray-200 text-center"><h3 class="font-bold" id="lbl-va-is">قائمة الدخل (% من الإيرادات)</h3></div>
+                            <table class="w-full text-sm text-right text-gray-800" id="va-is-table"><tbody id="va-is-table-body"></tbody></table>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="bg-brand-900 text-white p-4 border-b border-gray-200 text-center"><h3 class="font-bold" id="lbl-va-bs">المركز المالي (% من الأصول)</h3></div>
+                            <table class="w-full text-sm text-right text-gray-800" id="va-bs-table"><tbody id="va-bs-table-body"></tbody></table>
+                        </div>
                     </div>
-                    <!-- BS Vertical Analysis -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-                        <div class="bg-gray-100 p-4 border-b border-gray-200"><h3 class="font-bold text-gray-800" id="lbl-va-bs">المركز المالي - تحليل رأسي (نسبة إلى إجمالي الأصول)</h3></div>
-                        <table class="w-full text-sm text-right text-gray-800" id="va-bs-table"><tbody id="va-bs-table-body"></tbody></table>
+
+                    <!-- Ratio Analysis Sub-tab -->
+                    <div id="analysis-ratios" style="display: none;" class="mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Liquidity -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-tint text-blue-500"></i> نسب السيولة</div>
+                                <div class="p-4 space-y-4" id="ratios-liquidity"></div>
+                            </div>
+                            <!-- Profitability -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-chart-pie text-green-500"></i> نسب الربحية</div>
+                                <div class="p-4 space-y-4" id="ratios-profitability"></div>
+                            </div>
+                            <!-- Leverage -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-balance-scale-left text-orange-500"></i> نسب المديونية والرافعة</div>
+                                <div class="p-4 space-y-4" id="ratios-leverage"></div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Horizontal Analysis Sub-tab -->
+                    <div id="analysis-horizontal" style="display: none;" class="mb-8">
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-8 text-center text-blue-800">
+                            <i class="fas fa-project-diagram text-5xl mb-4 opacity-50"></i>
+                            <h4 class="text-xl font-bold mb-2">يتطلب فترات مقارنة</h4>
+                            <p class="text-md max-w-2xl mx-auto">لإجراء التحليل الأفقي (Variance Analysis) واستخراج قوائم المقارنة، نحتاج لتعديل قالب ميزان المراجعة ليقبل بيانات (شهر حالي وشهر سابق) في الخطوة القادمة.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -329,6 +412,14 @@
         let globalFS = null; // Store financial data for charts & analysis
         let isChartObj = null;
         let bsChartObj = null;
+
+        function toggleAnalysis(type) {
+            ['vertical', 'ratios', 'horizontal'].forEach(t => {
+                document.getElementById(`analysis-${t}`).style.display = type === t ? 'grid' : (type===t&&t==='horizontal'?'block':'none');
+                if(t==='ratios' && type==='ratios') document.getElementById(`analysis-${t}`).style.display = 'block';
+                document.getElementById(`btn-show-${t}`).className = type === t ? 'px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap' : 'px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap';
+            });
+        }
 
         const translations = {
             en: {
@@ -576,11 +667,19 @@
             let is = { rev: 0, cogs: 0, exp: 0 }; let bs = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
             let det = { rev:[], cogs:[], exp:[], ca:[], nca:[], cl:[], ncl:[], eq:[] };
             let cash_op = 0, cash_end = 0, op_ca = 0, end_ca = 0, op_nca = 0, end_nca = 0, op_cl = 0, end_cl = 0, op_ncl = 0, end_ncl = 0, op_eq = 0, end_eq_pre_ni = 0;
+            
+            // New Variables for Dashboard & Ratios
+            let ar = 0, ap = 0, inventory = 0;
 
             savedTB.forEach(acc => {
                 if (!acc.inCOA) return;
                 const c = acc.code, end = acc.end_dr - acc.end_cr;
                 const isCash = c.startsWith('111') || /نقدية|صندوق|بنك|cash|bank/i.test(acc.name);
+                
+                // Specific Account Extractions for CFO Dashboard
+                if (/عملاء|ذمم|receivable|debtor/i.test(acc.name) || c.startsWith('112') || c.startsWith('113')) { ar += end_dr - end_cr; }
+                if (/موردين|دائنون|payable|creditor/i.test(acc.name) || c.startsWith('211') || c.startsWith('212')) { ap += -(end_dr - end_cr); }
+                if (/مخزون|بضاعة|inventory/i.test(acc.name) || c.startsWith('114')) { inventory += end_dr - end_cr; }
 
                 if (c.startsWith('4')) { is.rev += -end; det.rev.push({n: acc.name, v: -end}); }
                 else if (c.startsWith('5')) { is.cogs += end; det.cogs.push({n: acc.name, v: end}); }
@@ -607,13 +706,13 @@
             let gp = is.rev - is.cogs, ni = gp - is.exp;
             let ta = bs.ca + bs.nca, tl = bs.cl + bs.ncl, teq = bs.eq + ni, tleq = tl + teq;
             
-            // Save globally for Dashboard & Analysis
-            globalFS = { is, bs, det, gp, ni, ta, tl, teq, tleq };
-
             let cf_op = ni - (end_ca - op_ca) + (end_cl - op_cl);
             let cf_inv = -(end_nca - op_nca);
             let cf_fin = (end_ncl - op_ncl) + (end_eq_pre_ni - op_eq);
             let cf_net = cf_op + cf_inv + cf_fin;
+
+            // Save globally for Dashboard & Analysis
+            globalFS = { is, bs, det, gp, ni, ta, tl, teq, tleq, cash: cash_op+cf_net, ar, ap, inventory, cf_op };
 
             const t = translations[currentLang];
             const fmt = (n) => n===0?'-':(n<0?`(${(Math.abs(n)).toLocaleString(undefined,{minimumFractionDigits:2})})`:n.toLocaleString(undefined,{minimumFractionDigits:2}));
@@ -675,14 +774,24 @@
             document.getElementById('dash-empty-state').style.display = 'none';
             document.getElementById('dash-content').style.display = 'block';
 
-            const { is, bs, ni } = globalFS;
+            const { is, bs, gp, ni, ta, tl, teq, cash, ar, ap, cf_op } = globalFS;
             const fmt = (n) => n.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
             
-            // Update KPIs
-            document.getElementById('val-kpi-rev').innerText = fmt(is.rev);
-            document.getElementById('val-kpi-ni').innerText = fmt(ni);
-            document.getElementById('val-kpi-margin').innerText = is.rev ? (Math.round((ni / is.rev) * 1000) / 10) + '%' : '0%';
-            document.getElementById('val-kpi-cr').innerText = bs.cl ? (bs.ca / bs.cl).toFixed(2) : '-';
+            // Update Dashboard CFO KPIs
+            document.getElementById('val-dash-cash').innerText = fmt(cash);
+            document.getElementById('val-dash-ar').innerText = fmt(ar);
+            document.getElementById('val-dash-ap').innerText = fmt(ap);
+            document.getElementById('val-dash-ocf').innerText = fmt(cf_op);
+            
+            document.getElementById('val-dash-rev').innerText = fmt(is.rev);
+            document.getElementById('val-dash-gp').innerText = fmt(gp);
+            document.getElementById('val-dash-ni').innerText = fmt(ni);
+            document.getElementById('val-dash-margin').innerText = is.rev ? (Math.round((ni / is.rev) * 1000) / 10) + '%' : '0%';
+            
+            document.getElementById('val-dash-ta').innerText = fmt(ta);
+            document.getElementById('val-dash-tl').innerText = fmt(tl);
+            document.getElementById('val-dash-eq').innerText = fmt(teq);
+            document.getElementById('val-dash-wc').innerText = fmt(bs.ca - bs.cl);
 
             // Charts
             const t = translations[currentLang];
@@ -707,10 +816,10 @@
             bsChartObj = new Chart(document.getElementById('bsChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: [t['fs-ca'], t['fs-nca']],
+                    labels: [t['fs-ca'], t['fs-nca'], t['fs-cl'], t['fs-ncl']],
                     datasets: [{
-                        data: [bs.ca, bs.nca],
-                        backgroundColor: ['#0284c7', '#38bdf8'],
+                        data: [bs.ca, bs.nca, bs.cl, bs.ncl],
+                        backgroundColor: ['#0284c7', '#38bdf8', '#f97316', '#fdba74'],
                         borderWidth: 2
                     }]
                 },
@@ -726,35 +835,62 @@
             }
             document.getElementById('analysis-empty-state').style.display = 'none';
             document.getElementById('analysis-content').style.display = 'block';
+            if(!['vertical','ratios','horizontal'].some(t => document.getElementById(`analysis-${t}`).style.display !== 'none')) toggleAnalysis('vertical');
 
-            const { is, bs, det, gp, ni, ta, tl, teq } = globalFS;
+            const { is, bs, det, gp, ni, ta, tl, teq, cash, inventory } = globalFS;
             const t = translations[currentLang];
             const pct = (val, base) => base === 0 ? '-' : (Math.round((val / base) * 1000) / 10) + '%';
             const renderVaRows = (arr, base) => arr.filter(d=>d.v!==0).map(d=>`<tr class="border-b"><td class="py-2 px-4">${d.n}</td><td class="py-2 px-4 font-semibold text-brand-600">${pct(Math.abs(d.v), base)}</td></tr>`).join('');
 
-            // IS Analysis (Base = Revenue)
+            // 1. Vertical Analysis (IS)
             document.getElementById('va-is-table-body').innerHTML = `
-                <tr class="bg-gray-50 font-bold"><td class="py-2 px-4">${t['fs-rev']}</td><td class="py-2 px-4">100%</td></tr>
+                <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-rev']}</td><td class="py-2 px-4">100%</td></tr>
                 <tr class="bg-gray-50 font-bold"><td class="py-2 px-4 text-red-600">${t['fs-cogs']}</td><td class="py-2 px-4 text-red-600">${pct(is.cogs, is.rev)}</td></tr>
                 ${renderVaRows(det.cogs, is.rev)}
-                <tr class="bg-brand-50 font-bold"><td class="py-2 px-4">${t['fs-gp']}</td><td class="py-2 px-4 text-brand-700">${pct(gp, is.rev)}</td></tr>
+                <tr class="bg-brand-100 font-bold"><td class="py-2 px-4">${t['fs-gp']}</td><td class="py-2 px-4 text-brand-700">${pct(gp, is.rev)}</td></tr>
                 <tr class="bg-gray-50 font-bold"><td class="py-2 px-4 text-red-600">${t['fs-exp']}</td><td class="py-2 px-4 text-red-600">${pct(is.exp, is.rev)}</td></tr>
                 ${renderVaRows(det.exp, is.rev)}
-                <tr class="bg-gray-200 font-bold"><td class="py-3 px-4 ${ni>=0?'text-green-700':'text-red-700'}">${t['fs-ni']}</td><td class="py-3 px-4 text-lg ${ni>=0?'text-green-700':'text-red-700'}">${pct(ni, is.rev)}</td></tr>
+                <tr class="bg-gray-200 font-bold border-t-2"><td class="py-3 px-4 ${ni>=0?'text-green-700':'text-red-700'}">${t['fs-ni']}</td><td class="py-3 px-4 text-lg ${ni>=0?'text-green-700':'text-red-700'}">${pct(ni, is.rev)}</td></tr>
             `;
 
-            // BS Analysis (Base = Total Assets)
+            // 1. Vertical Analysis (BS)
             document.getElementById('va-bs-table-body').innerHTML = `
-                <tr class="bg-gray-50 font-bold"><td class="py-2 px-4">${t['fs-ca']}</td><td class="py-2 px-4 text-brand-600">${pct(bs.ca, ta)}</td></tr>
+                <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-ca']}</td><td class="py-2 px-4 text-brand-600">${pct(bs.ca, ta)}</td></tr>
                 ${renderVaRows(det.ca, ta)}
-                <tr class="bg-gray-50 font-bold"><td class="py-2 px-4">${t['fs-nca']}</td><td class="py-2 px-4 text-brand-600">${pct(bs.nca, ta)}</td></tr>
+                <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-nca']}</td><td class="py-2 px-4 text-brand-600">${pct(bs.nca, ta)}</td></tr>
                 ${renderVaRows(det.nca, ta)}
-                <tr class="bg-brand-50 font-bold border-b-2"><td class="py-3 px-4">${t['fs-ta']}</td><td class="py-3 px-4 text-lg">100%</td></tr>
+                <tr class="bg-brand-100 font-bold border-b-4"><td class="py-3 px-4">${t['fs-ta']}</td><td class="py-3 px-4 text-lg">100%</td></tr>
                 
-                <tr class="bg-gray-50 font-bold"><td class="py-2 px-4">${t['fs-cl']}</td><td class="py-2 px-4 text-orange-600">${pct(bs.cl, ta)}</td></tr>
-                <tr class="bg-gray-50 font-bold"><td class="py-2 px-4">${t['fs-ncl']}</td><td class="py-2 px-4 text-orange-600">${pct(bs.ncl, ta)}</td></tr>
-                <tr class="bg-gray-50 font-bold"><td class="py-2 px-4">${t['fs-te']}</td><td class="py-2 px-4 text-green-600">${pct(teq, ta)}</td></tr>
+                <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-cl']}</td><td class="py-2 px-4 text-orange-600">${pct(bs.cl, ta)}</td></tr>
+                <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-ncl']}</td><td class="py-2 px-4 text-orange-600">${pct(bs.ncl, ta)}</td></tr>
+                <tr class="bg-gray-100 font-bold border-b-4"><td class="py-2 px-4">${t['fs-te']}</td><td class="py-2 px-4 text-green-600">${pct(teq, ta)}</td></tr>
             `;
+            
+            // 2. Ratio Analysis
+            const fmtR = (n) => isNaN(n) || !isFinite(n) ? '-' : (Math.round(n * 100) / 100);
+            const currentRatio = bs.cl ? bs.ca / bs.cl : 0;
+            const quickRatio = bs.cl ? (cash + globalFS.ar) / bs.cl : 0;
+            const roa = ta ? (ni / ta) * 100 : 0;
+            const roe = teq ? (ni / teq) * 100 : 0;
+            const debtEquity = teq ? tl / teq : 0;
+            const debtAssets = ta ? tl / ta : 0;
+
+            const ratioRow = (name, val, suffix='') => `<div class="flex justify-between items-center border-b pb-2"><span class="text-gray-600 font-semibold">${name}</span><span class="font-bold text-gray-900">${val}${suffix}</span></div>`;
+
+            document.getElementById('ratios-liquidity').innerHTML = 
+                ratioRow('نسبة التداول (Current Ratio)', fmtR(currentRatio), 'x') +
+                ratioRow('نسبة السيولة السريعة (Quick Ratio)', fmtR(quickRatio), 'x') +
+                ratioRow('رأس المال العامل', fmtR(bs.ca - bs.cl).toLocaleString());
+
+            document.getElementById('ratios-profitability').innerHTML = 
+                ratioRow('هامش مجمل الربح (Gross Margin)', pct(gp, is.rev)) +
+                ratioRow('هامش صافي الربح (Net Margin)', pct(ni, is.rev)) +
+                ratioRow('العائد على الأصول (ROA)', fmtR(roa), '%') +
+                ratioRow('العائد على الملكية (ROE)', fmtR(roe), '%');
+
+            document.getElementById('ratios-leverage').innerHTML = 
+                ratioRow('نسبة المديونية إلى الملكية (D/E)', fmtR(debtEquity), 'x') +
+                ratioRow('نسبة الالتزامات للأصول (Debt Ratio)', pct(tl, ta));
         }
 
         document.addEventListener('DOMContentLoaded', () => {
