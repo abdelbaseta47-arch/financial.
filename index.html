@@ -50,9 +50,16 @@
         .fs-row-total { background-color: #f1f5f9; font-weight: 800; color: #0f172a; border-top: 2px solid #cbd5e1; border-bottom: 2px double #94a3b8; }
         .ratio-badge { font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 9999px; font-weight: 700; margin-right: 0.5rem; }
         
-        /* CSS to hide elements during PDF generation */
+        /* CSS to hide elements during PDF generation and Fix Fading Issue */
         body.pdf-exporting .no-print { display: none !important; }
-        body.pdf-exporting .tab-content.active { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; }
+        body.pdf-exporting .tab-content.active { 
+            box-shadow: none !important; 
+            margin: 0 !important; 
+            max-width: 100% !important; 
+            animation: none !important; 
+            transform: none !important;
+            background-color: #f9fafb !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden flex font-sans">
