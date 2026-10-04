@@ -39,7 +39,6 @@
         .ltr .fs-row-detail { padding-right: 1rem !important; padding-left: 2rem !important; }
         .fs-row-total { background-color: #f1f5f9; font-weight: 800; color: #0f172a; border-top: 2px solid #cbd5e1; border-bottom: 2px double #94a3b8; }
         
-        /* تجميد التحريكات أثناء التصدير لـ PDF لضمان وضوح الألوان */
         body.pdf-exporting * { animation: none !important; transition: none !important; }
         body.pdf-exporting .no-print { display: none !important; }
         body.pdf-exporting .tab-content.active { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; background-color: #ffffff !important; }
@@ -47,6 +46,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden flex font-sans">
 
+    <!-- شريط القوائم الجانبي -->
     <aside class="w-64 bg-white shadow-xl flex flex-col z-20 h-full border-l border-gray-100 shrink-0 no-print">
         <div class="h-16 flex items-center justify-center border-b border-gray-100 bg-brand-900 text-white">
             <i class="fas fa-chart-line text-2xl ml-3 mr-3"></i>
@@ -54,45 +54,42 @@
         </div>
         <nav class="flex-1 overflow-y-auto py-6">
             <ul class="space-y-1 px-3">
-                <li><a href="#" onclick="switchTab('coa-tab'); return false;" class="sidebar-item active flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-coa"><i class="fas fa-sitemap w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-coa">شجرة الحسابات</span></a></li>
-                <li><a href="#" onclick="switchTab('mapping-tab'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-map"><i class="fas fa-link w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-map">ربط وتوجيه الحسابات</span></a></li>
-                <li><a href="#" onclick="switchTab('tb-tab'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-tb"><i class="fas fa-balance-scale w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-tb">ميزان المراجعة</span></a></li>
-                <li><a href="#" onclick="switchTab('dashboard-tab'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-dash"><i class="fas fa-chart-pie w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-dash">لوحة القيادة</span></a></li>
-                <li><a href="#" onclick="switchTab('fs-tab'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-fs"><i class="fas fa-file-invoice-dollar w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-fs">القوائم المالية</span></a></li>
-                <li><a href="#" onclick="switchTab('analysis-tab'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-analysis"><i class="fas fa-search-dollar w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-analysis">التحليل المالي</span></a></li>
-                <li><a href="#" onclick="switchTab('insights-tab'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-insights"><i class="fas fa-lightbulb w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-insights">رؤية المدير المالي</span></a></li>
-                <li><a href="#" onclick="switchTab('forecast-tab'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-forecast"><i class="fas fa-chart-line w-6 text-center"></i><span class="font-semibold text-sm" id="txt-nav-forecast">التنبؤ المالي</span></a></li>
+                <li><a href="#" onclick="switchTab('coa-tab', 'nav-coa'); return false;" class="sidebar-item active flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-coa"><i class="fas fa-sitemap w-6 text-center"></i><span class="font-semibold text-sm">شجرة الحسابات</span></a></li>
+                <li><a href="#" onclick="switchTab('mapping-tab', 'nav-map'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-map"><i class="fas fa-link w-6 text-center"></i><span class="font-semibold text-sm">ربط وتوجيه الحسابات</span></a></li>
+                <li><a href="#" onclick="switchTab('tb-tab', 'nav-tb'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-tb"><i class="fas fa-balance-scale w-6 text-center"></i><span class="font-semibold text-sm">ميزان المراجعة</span></a></li>
+                <li><a href="#" onclick="switchTab('dashboard-tab', 'nav-dash'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-dash"><i class="fas fa-chart-pie w-6 text-center"></i><span class="font-semibold text-sm">لوحة القيادة</span></a></li>
+                <li><a href="#" onclick="switchTab('fs-tab', 'nav-fs'); return false;" class="sidebar-item flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-brand-50 hover:text-brand-600 rounded-lg transition-all" id="nav-fs"><i class="fas fa-file-invoice-dollar w-6 text-center"></i><span class="font-semibold text-sm">القوائم المالية</span></a></li>
             </ul>
         </nav>
     </aside>
 
     <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-gray-50">
+        <!-- الشريط العلوي -->
         <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 shrink-0">
             <div><h2 class="text-xl font-bold text-gray-800" id="current-tab-title">تأسيس شجرة الحسابات</h2></div>
             <div class="flex items-center gap-3">
-                <button onclick="clearAppData()" class="flex items-center gap-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-2 rounded-lg no-print shadow-sm transition-all" title="مسح البيانات المؤقتة لحل مشاكل التجميد"><i class="fas fa-trash-alt"></i><span>تهيئة النظام</span></button>
-                <button onclick="toggleLanguage()" class="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-brand-600 bg-gray-100 px-4 py-2 rounded-lg no-print transition-all"><i class="fas fa-globe"></i><span id="lang-text">English</span></button>
-                <button onclick="exportToPDF()" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md no-print transition-all"><i class="fas fa-file-pdf"></i><span id="btn-pdf-text">تصدير PDF</span></button>
+                <button onclick="clearAppData()" class="flex items-center gap-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-2 rounded-lg no-print shadow-sm transition-all"><i class="fas fa-trash-alt"></i><span>تهيئة النظام</span></button>
+                <button onclick="exportToPDF()" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md no-print transition-all"><i class="fas fa-file-pdf"></i><span>تصدير PDF</span></button>
             </div>
         </header>
 
         <div class="flex-1 overflow-y-auto p-8 relative" id="main-content-area">
             
-            <!-- 1. COA Tab -->
+            <!-- 1. شجرة الحسابات COA -->
             <div id="coa-tab" class="tab-content active max-w-5xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 mb-2" id="coa-header">تأسيس شجرة الحسابات</h3>
-                        <p class="text-sm text-gray-500 max-w-2xl" id="coa-desc">قم برفع ملف الإكسيل برقم الحساب واسم الحساب فقط.</p>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">تأسيس شجرة الحسابات</h3>
+                        <p class="text-sm text-gray-500 max-w-2xl">قم برفع ملف الإكسيل برقم الحساب واسم الحساب فقط.</p>
                     </div>
                     <div class="flex gap-3 no-print">
-                        <button onclick="downloadCOATemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm border flex items-center gap-2"><i class="fas fa-download text-green-600"></i><span id="coa-download-btn">تحميل القالب</span></button>
-                        <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer shadow-sm flex items-center gap-2"><i class="fas fa-upload"></i><span id="coa-upload-title">رفع الملف</span><input type="file" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleCOAUpload(event)"></label>
+                        <button onclick="downloadCOATemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm border flex items-center gap-2"><i class="fas fa-download text-green-600"></i><span>تحميل القالب</span></button>
+                        <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer shadow-sm flex items-center gap-2"><i class="fas fa-upload"></i><span>رفع الملف</span><input type="file" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleCOAUpload(event)"></label>
                     </div>
                 </div>
                 <div id="coa-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
-                        <h4 class="font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i><span id="coa-saved-title">الحسابات المدرجة</span></h4>
+                        <h4 class="font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i><span>الحسابات المدرجة</span></h4>
                         <span class="text-xs text-gray-500 font-semibold bg-white px-2 py-1 border rounded-md" id="coa-count-badge">0 حساب</span>
                     </div>
                     <div class="overflow-x-auto max-h-[60vh]">
@@ -104,11 +101,11 @@
                 </div>
             </div>
 
-            <!-- 2. Mapping Tab -->
+            <!-- 2. توجيه الحسابات Mapping -->
             <div id="mapping-tab" class="tab-content max-w-7xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">ربط وتوجيه الحسابات (Account Mapping)</h3>
-                    <p class="text-sm text-gray-500">قم بتوجيه كل حساب لقائمته الصحيحة ونوع التدفق النقدي. <span class="font-bold text-brand-600">القوائم المالية ستُبنى حصرياً على هذا التوجيه.</span></p>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">ربط وتوجيه الحسابات</h3>
+                    <p class="text-sm text-gray-500">قم بتوجيه كل حساب لقائمته الصحيحة. <span class="font-bold text-brand-600">القوائم المالية ستُبنى حصرياً على هذا التوجيه.</span></p>
                 </div>
                 <div id="map-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-sitemap text-4xl mb-3"></i>
@@ -116,6 +113,9 @@
                     <p class="text-sm">قم برفع شجرة الحسابات أولاً لتفعيل شاشة الربط.</p>
                 </div>
                 <div id="map-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-4 border-b bg-gray-50 text-left">
+                        <button onclick="saveMapping()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg text-sm shadow-sm transition-all">حفظ التوجيه</button>
+                    </div>
                     <div class="overflow-x-auto max-h-[70vh]">
                         <table class="w-full text-sm text-right text-gray-600">
                             <thead class="text-xs text-white bg-brand-900 sticky top-0 z-10 shadow-sm">
@@ -123,8 +123,7 @@
                                     <th class="px-4 py-3 font-bold border-l border-brand-700 w-24">رقم الحساب</th>
                                     <th class="px-4 py-3 font-bold border-l border-brand-700">اسم الحساب</th>
                                     <th class="px-4 py-3 font-bold border-l border-brand-700 w-48">النوع (Type)</th>
-                                    <th class="px-4 py-3 font-bold border-l border-brand-700 w-48">المجموعة (Group)</th>
-                                    <th class="px-4 py-3 font-bold w-48">التدفق النقدي (Cash Flow)</th>
+                                    <th class="px-4 py-3 font-bold w-48">المجموعة (Group)</th>
                                 </tr>
                             </thead>
                             <tbody id="map-table-body" class="divide-y divide-gray-100"></tbody>
@@ -133,25 +132,28 @@
                 </div>
             </div>
 
-            <!-- 3. Trial Balance Tab -->
+            <!-- 3. ميزان المراجعة TB -->
             <div id="tb-tab" class="tab-content max-w-7xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 mb-2" id="tb-header">إدراج ميزان المراجعة</h3>
-                        <p class="text-sm text-gray-500 max-w-2xl" id="tb-desc">قم برفع ميزان المراجعة ليقوم النظام بمطابقته مع الشجرة واستخراج القوائم.</p>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">إدراج ميزان المراجعة</h3>
+                        <p class="text-sm text-gray-500 max-w-2xl">قم برفع ميزان المراجعة (رقم الحساب، مدين، دائن).</p>
                     </div>
                     <div class="flex gap-3 no-print">
-                        <button onclick="downloadTBTemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm border flex items-center gap-2"><i class="fas fa-download text-green-600"></i><span id="tb-download-btn">تحميل القالب</span></button>
-                        <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer shadow-sm flex items-center gap-2"><i class="fas fa-upload"></i><span id="tb-upload-title">رفع الميزان</span><input type="file" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleTBUpload(event)"></label>
+                        <button onclick="downloadTBTemplate()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm border flex items-center gap-2"><i class="fas fa-download text-green-600"></i><span>تحميل القالب</span></button>
+                        <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer shadow-sm flex items-center gap-2"><i class="fas fa-upload"></i><span>رفع الميزان</span><input type="file" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleTBUpload(event)"></label>
                     </div>
                 </div>
 
-                <div id="tb-status-container" style="display: none;" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 text-xl"><i class="fas fa-list-ol"></i></div>
-                        <div><p class="text-xs text-gray-400 font-bold uppercase">عدد الحسابات</p><h4 class="text-xl font-black text-gray-800" id="tb-accounts-count">0</h4></div>
+                <div id="tb-status-container" style="display: none;" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div><p class="text-xs text-gray-400 font-bold uppercase">إجمالي المدين</p><h4 class="text-xl font-black text-blue-600" id="tb-total-dr">0</h4></div>
+                        <i class="fas fa-arrow-down text-2xl text-blue-100"></i>
                     </div>
-                    <div id="tb-balance-card" class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 md:col-span-2"></div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div><p class="text-xs text-gray-400 font-bold uppercase">إجمالي الدائن</p><h4 class="text-xl font-black text-red-600" id="tb-total-cr">0</h4></div>
+                        <i class="fas fa-arrow-up text-2xl text-red-100"></i>
+                    </div>
                 </div>
 
                 <div id="tb-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -159,47 +161,106 @@
                         <table class="w-full text-sm text-right text-gray-500">
                             <thead class="text-xs text-gray-700 bg-gray-100 sticky top-0 z-10 shadow-sm">
                                 <tr>
-                                    <th rowspan="2" class="px-4 py-3 border-b border-l border-gray-200">رقم الحساب</th><th rowspan="2" class="px-4 py-3 border-b border-l border-gray-200">اسم الحساب</th>
-                                    <th colspan="2" class="px-4 py-2 border-b border-l border-gray-200 tb-header-group">رصيد افتتاحي</th><th colspan="2" class="px-4 py-2 border-b border-l border-gray-200 tb-header-group">حركات الفترة</th><th colspan="2" class="px-4 py-2 border-b border-l border-gray-200 tb-header-group bg-brand-50">الرصيد الختامي</th>
-                                    <th rowspan="2" class="px-4 py-3 border-b border-gray-200 text-center">التوجيه</th>
-                                </tr>
-                                <tr>
-                                    <th class="px-3 py-2 border-b border-l">مدين</th><th class="px-3 py-2 border-b border-l">دائن</th>
-                                    <th class="px-3 py-2 border-b border-l">مدين</th><th class="px-3 py-2 border-b border-l">دائن</th>
-                                    <th class="px-3 py-2 border-b border-l bg-brand-50">مدين</th><th class="px-3 py-2 border-b bg-brand-50">دائن</th>
+                                    <th class="px-4 py-3 border-b border-l border-gray-200">رقم الحساب</th>
+                                    <th class="px-4 py-3 border-b border-l border-gray-200">اسم الحساب</th>
+                                    <th class="px-4 py-3 border-b border-l border-gray-200">مدين</th>
+                                    <th class="px-4 py-3 border-b border-gray-200">دائن</th>
                                 </tr>
                             </thead>
                             <tbody id="tb-table-body"></tbody>
-                            <tfoot id="tb-table-foot" class="bg-gray-100 font-bold text-gray-800 sticky bottom-0 border-t-2 border-gray-300"></tfoot>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. Dashboard Tab -->
+            <!-- 4. لوحة القيادة Dashboard -->
             <div id="dashboard-tab" class="tab-content max-w-7xl mx-auto">
                 <div id="dash-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
-                    <i class="fas fa-chart-bar text-4xl mb-3"></i><h4 class="text-lg font-bold mb-1">بانتظار البيانات</h4><p class="text-sm">أدخل ميزان المراجعة ليتم توليد لوحة القيادة.</p>
+                    <i class="fas fa-chart-bar text-4xl mb-3"></i><h4 class="text-lg font-bold mb-1">بانتظار البيانات</h4><p class="text-sm">أدخل ميزان المراجعة وقم بتوجيه الحسابات ليتم توليد اللوحة.</p>
                 </div>
                 <div id="dash-content" style="display: none;">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-blue-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">النقدية وما في حكمها</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-cash">0</h4></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-green-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">رصيد العملاء</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-ar">0</h4></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-red-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">رصيد الموردين</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-ap">0</h4></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-emerald-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي التدفق التشغيلي</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-ocf">0</h4></div>
-                        
-                        <div class="bg-white p-5 rounded-xl shadow-sm border"><p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي الإيرادات</p><h4 class="text-xl font-bold text-gray-800" id="val-dash-rev">0</h4></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border"><p class="text-xs text-gray-500 font-bold uppercase mb-1">مجمل الربح</p><h4 class="text-xl font-bold text-brand-600" id="val-dash-gp">0</h4></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border"><p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي الربح</p><h4 class="text-xl font-bold text-green-600" id="val-dash-ni">0</h4></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border"><p class="text-xs text-gray-500 font-bold uppercase mb-1">رأس المال العامل</p><h4 class="text-xl font-bold text-purple-600" id="val-dash-wc">0</h4></div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-blue-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي الأصول</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-assets">0</h4></div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-red-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي الالتزامات</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-liabs">0</h4></div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-green-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي الإيرادات</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-rev">0</h4></div>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-orange-500"><p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي المصروفات</p><h4 class="text-2xl font-black text-gray-800" id="val-dash-exp">0</h4></div>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border"><h4 class="font-bold text-gray-700 mb-4 text-center">تحليل قائمة الدخل</h4><div class="relative h-64"><canvas id="isChart"></canvas></div></div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border"><h4 class="font-bold text-gray-700 mb-4 text-center">هيكل الأصول والالتزامات</h4><div class="relative h-64"><canvas id="bsChart"></canvas></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border"><h4 class="font-bold text-gray-700 mb-4 text-center">الإيرادات مقابل المصروفات</h4><div class="relative h-64"><canvas id="isChart"></canvas></div></div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border"><h4 class="font-bold text-gray-700 mb-4 text-center">هيكل المركز المالي</h4><div class="relative h-64"><canvas id="bsChart"></canvas></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 5. Financial Statements Tab -->
+            <!-- 5. القوائم المالية FS (تكملة للـ HTML الناقص) -->
             <div id="fs-tab" class="tab-content max-w-5xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border p-4 mb-6 flex justify-between items-center no-print">
+                    <h3 class="text-lg font-bold text-gray-800">القوائم المالية</h3>
+                    <div class="text-sm text-gray-500">يتم استخراجها تلقائياً بناءً على الربط والميزان.</div>
+                </div>
+                
+                <div id="fs-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
+                    <i class="fas fa-file-invoice-dollar text-4xl mb-3"></i>
+                    <p class="text-sm">يرجى استكمال رفع الميزان وتوجيه الحسابات لرؤية القوائم المالية هنا.</p>
+                </div>
+
+                <div id="fs-content" style="display: none;" class="bg-white p-6 rounded-xl shadow-sm border mb-6">
+                    <h2 class="text-xl font-bold text-center mb-4 border-b pb-2">قائمة الدخل المبسطة</h2>
+                    <table class="w-full text-right border-collapse">
+                        <tbody id="fs-is-body"></tbody>
+                    </table>
+                    
+                    <h2 class="text-xl font-bold text-center mb-4 mt-8 border-b pb-2">المركز المالي المبسط</h2>
+                    <table class="w-full text-right border-collapse">
+                        <tbody id="fs-bs-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- بداية الكود البرمجي (JavaScript) المطلوب -->
+    <script>
+        // المتغيرات لحفظ البيانات في الذاكرة
+        let coaData = [];
+        let mappingData = {};
+        let tbData = [];
+        let charts = {};
+
+        // 1. دالة التنقل بين الصفحات (Tabs)
+        function switchTab(tabId, navId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active', 'bg-brand-50', 'text-brand-600');
+                item.classList.add('text-gray-600');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            
+            let activeNav = document.getElementById(navId);
+            activeNav.classList.add('active', 'bg-brand-50', 'text-brand-600');
+            activeNav.classList.remove('text-gray-600');
+
+            document.getElementById('current-tab-title').innerText = activeNav.innerText;
+
+            // تحديث لوحة القيادة والقوائم عند فتحهم
+            if(tabId === 'dashboard-tab') updateDashboard();
+            if(tabId === 'fs-tab') generateFinancialStatements();
+        }
+
+        // 2. تحميل قالب شجرة الحسابات
+        function downloadCOATemplate() {
+            const ws = XLSX.utils.json_to_sheet([{ "رقم الحساب": "1001", "اسم الحساب": "نقدية بالصندوق" }]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "COA_Template");
+            XLSX.writeFile(wb, "COA_Template.xlsx");
+        }
+
+        // 3. رفع شجرة الحسابات
+        function handleCOAUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
