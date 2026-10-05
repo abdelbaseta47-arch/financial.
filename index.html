@@ -916,16 +916,19 @@
                 } catch (err) {
                     if (err && err.code === 'declined') return false;
                     console.error('downloads.save failed', err);
-                    // Fallback to browser standard download if plugin fails
                 }
             }
-            // Standard Browser Fallback Download
+            // Standard Browser Fallback Download (Specifically kept for PDF export)
             const blob = (data instanceof Blob) ? data : new Blob([data], { type: 'application/octet-stream' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = filename;
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            a.style.display = 'none';
+            a.href = url; 
+            a.download = filename;
+            document.body.appendChild(a); 
+            a.click(); 
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 100);
             return true;
         }
 
@@ -1115,6 +1118,8 @@
             }
         }
 
+        // ===================== Excel Templates Fix =====================
+        // Using built-in XLSX.writeFile to ensure 100% download success without Blob issues
         async function downloadCOATemplate() {
             const ws_data = currentLang === 'ar'
                 ? [["رقم_الحساب", "اسم_الحساب"], ["1101", "صندوق"], ["4001", "مبيعات"]]
@@ -1122,9 +1127,18 @@
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
             ws['!cols'] = [{wch: 15}, {wch: 40}];
             const wb = XLSX.utils.book_append_sheet(XLSX.utils.book_new(), ws, "COA");
-            const arrayBuffer = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
-            const blob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            await saveFile('COA_Template.xlsx', blob);
+            
+            XLSX.writeFile(wb, "COA_Template.xlsx");
+        }
+
+        async function downloadTBTemplate() {
+            const ws_data = currentLang === 'ar'
+                ? [["رقم_الحساب", "اسم_الحساب", "افتتاحي_مدين", "افتتاحي_دائن", "حركة_مدين", "حركة_دائن"], ["1101", "صندوق", "10000", "0", "5000", "2000"]]
+                : [["Account_Code", "Account_Name", "Opening_Dr", "Opening_Cr", "Period_Dr", "Period_Cr"], ["1101", "Cash", "10000", "0", "5000", "2000"]];
+            const ws = XLSX.utils.aoa_to_sheet(ws_data); ws['!cols'] = [{wch: 15}, {wch: 35}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 12}];
+            const wb = XLSX.utils.book_append_sheet(XLSX.utils.book_new(), ws, "TB");
+            
+            XLSX.writeFile(wb, "TB_Template.xlsx");
         }
 
         function handleCOAUpload(event) {
@@ -1168,17 +1182,6 @@
                 renderCOATable();
                 renderMappingTable();
             }
-        }
-
-        async function downloadTBTemplate() {
-            const ws_data = currentLang === 'ar'
-                ? [["رقم_الحساب", "اسم_الحساب", "افتتاحي_مدين", "افتتاحي_دائن", "حركة_مدين", "حركة_دائن"], ["1101", "صندوق", "10000", "0", "5000", "2000"]]
-                : [["Account_Code", "Account_Name", "Opening_Dr", "Opening_Cr", "Period_Dr", "Period_Cr"], ["1101", "Cash", "10000", "0", "5000", "2000"]];
-            const ws = XLSX.utils.aoa_to_sheet(ws_data); ws['!cols'] = [{wch: 15}, {wch: 35}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 12}];
-            const wb = XLSX.utils.book_append_sheet(XLSX.utils.book_new(), ws, "TB");
-            const arrayBuffer = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
-            const blob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            await saveFile('TB_Template.xlsx', blob);
         }
 
         function handleTBUpload(event) {
@@ -1263,7 +1266,6 @@
             document.getElementById('fs-empty-state').style.display = 'none';
             if(!['is','bs','cf','eq'].some(t => document.getElementById(`statement-${t}`).style.display === 'block')) toggleStatement('is');
 
-            // Bug Fixed Here: Added 'direct: 0' and 'direct: []' to initialization 
             let is = { rev: 0, cogs: 0, direct: 0, exp: 0, oi: 0, oe: 0 };
             let bs = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
             let bsOpen = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
