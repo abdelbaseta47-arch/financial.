@@ -918,7 +918,7 @@
                     console.error('downloads.save failed', err);
                 }
             }
-            // Standard Browser Fallback Download
+            // Standard Browser Fallback Download (Specifically kept for PDF export)
             const blob = (data instanceof Blob) ? data : new Blob([data], { type: 'application/octet-stream' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1119,8 +1119,8 @@
         }
 
         // ===================== Excel Templates Fix =====================
-        // Use Blob and fallback anchor to guarantee download across all browsers
-        async function downloadCOATemplate() {
+        // Use Data URI to guarantee download across all strictly sandboxed environments/Iframes
+        function downloadCOATemplate() {
             const ws_data = currentLang === 'ar'
                 ? [["رقم_الحساب", "اسم_الحساب"], ["1101", "صندوق"], ["4001", "مبيعات"]]
                 : [["Account_Code", "Account_Name"], ["1101", "Cash"], ["4001", "Sales"]];
@@ -1128,12 +1128,20 @@
             ws['!cols'] = [{wch: 15}, {wch: 40}];
             const wb = XLSX.utils.book_append_sheet(XLSX.utils.book_new(), ws, "COA");
             
-            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-            const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            await saveFile('COA_Template.xlsx', blob);
+            // تحويل الملف إلى Base64 لتفادي قيود المتصفحات (Iframes / Sandboxes)
+            const base64 = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+            const url = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," + base64;
+            
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'COA_Template.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
-        async function downloadTBTemplate() {
+        function downloadTBTemplate() {
             const ws_data = currentLang === 'ar'
                 ? [["رقم_الحساب", "اسم_الحساب", "افتتاحي_مدين", "افتتاحي_دائن", "حركة_مدين", "حركة_دائن"], ["1101", "صندوق", "10000", "0", "5000", "2000"]]
                 : [["Account_Code", "Account_Name", "Opening_Dr", "Opening_Cr", "Period_Dr", "Period_Cr"], ["1101", "Cash", "10000", "0", "5000", "2000"]];
@@ -1141,9 +1149,17 @@
             ws['!cols'] = [{wch: 15}, {wch: 35}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 12}];
             const wb = XLSX.utils.book_append_sheet(XLSX.utils.book_new(), ws, "TB");
             
-            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-            const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            await saveFile('TB_Template.xlsx', blob);
+            // تحويل الملف إلى Base64 لتفادي قيود المتصفحات (Iframes / Sandboxes)
+            const base64 = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+            const url = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," + base64;
+            
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'TB_Template.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         function handleCOAUpload(event) {
