@@ -918,7 +918,7 @@
                     console.error('downloads.save failed', err);
                 }
             }
-            // Standard Browser Fallback Download (Specifically kept for PDF export)
+            // Standard Browser Fallback Download
             const blob = (data instanceof Blob) ? data : new Blob([data], { type: 'application/octet-stream' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1119,7 +1119,7 @@
         }
 
         // ===================== Excel Templates Fix =====================
-        // Using built-in XLSX.writeFile to ensure 100% download success without Blob issues
+        // Use Blob and fallback anchor to guarantee download across all browsers
         async function downloadCOATemplate() {
             const ws_data = currentLang === 'ar'
                 ? [["رقم_الحساب", "اسم_الحساب"], ["1101", "صندوق"], ["4001", "مبيعات"]]
@@ -1128,17 +1128,22 @@
             ws['!cols'] = [{wch: 15}, {wch: 40}];
             const wb = XLSX.utils.book_append_sheet(XLSX.utils.book_new(), ws, "COA");
             
-            XLSX.writeFile(wb, "COA_Template.xlsx");
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            await saveFile('COA_Template.xlsx', blob);
         }
 
         async function downloadTBTemplate() {
             const ws_data = currentLang === 'ar'
                 ? [["رقم_الحساب", "اسم_الحساب", "افتتاحي_مدين", "افتتاحي_دائن", "حركة_مدين", "حركة_دائن"], ["1101", "صندوق", "10000", "0", "5000", "2000"]]
                 : [["Account_Code", "Account_Name", "Opening_Dr", "Opening_Cr", "Period_Dr", "Period_Cr"], ["1101", "Cash", "10000", "0", "5000", "2000"]];
-            const ws = XLSX.utils.aoa_to_sheet(ws_data); ws['!cols'] = [{wch: 15}, {wch: 35}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 12}];
+            const ws = XLSX.utils.aoa_to_sheet(ws_data); 
+            ws['!cols'] = [{wch: 15}, {wch: 35}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 12}];
             const wb = XLSX.utils.book_append_sheet(XLSX.utils.book_new(), ws, "TB");
             
-            XLSX.writeFile(wb, "TB_Template.xlsx");
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            await saveFile('TB_Template.xlsx', blob);
         }
 
         function handleCOAUpload(event) {
