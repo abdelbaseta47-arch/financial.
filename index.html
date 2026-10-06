@@ -16,10 +16,13 @@
     
     <!-- SheetJS for Excel Reading/Writing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <!-- Chart.js for Dashboard Visuals -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- HTML2PDF for PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -30,6 +33,7 @@
             }
         }
     </script>
+
     <style>
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
@@ -59,6 +63,7 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 h-screen overflow-hidden flex font-sans">
+
     <!-- Sidebar -->
     <aside class="w-64 bg-white shadow-xl flex flex-col z-20 h-full border-l border-gray-100 shrink-0 transition-all duration-300">
         <div class="h-16 flex items-center justify-center border-b border-gray-100 bg-brand-900 text-white">
@@ -87,6 +92,7 @@
             </label>
         </div>
     </aside>
+
     <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-gray-50">
         <!-- Header -->
         <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 shrink-0">
@@ -104,6 +110,7 @@
                 </button>
             </div>
         </header>
+
         <div class="h-11 bg-white border-b border-gray-100 flex items-center px-8 gap-4 shrink-0 overflow-x-auto no-print" id="setup-progress-bar">
             <div class="flex items-center gap-2 shrink-0" id="step-coa">
                 <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold step-circle shrink-0 transition-colors bg-gray-200 text-gray-500">1</div>
@@ -120,6 +127,7 @@
                 <span class="text-xs font-semibold whitespace-nowrap text-gray-400" id="step-fs-label">القوائم والتحليلات جاهزة</span>
             </div>
         </div>
+
         <div class="flex-1 overflow-y-auto p-8 relative" id="main-content-area">
             
             <div id="coa-tab" class="tab-content active max-w-6xl mx-auto">
@@ -139,6 +147,7 @@
                         </label>
                     </div>
                 </div>
+
                 <div id="coa-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-gray-50">
                         <h4 class="font-bold text-gray-700 flex items-center gap-2 shrink-0"><i class="fas fa-check-circle text-green-500"></i><span id="coa-saved-title">شجرة الحسابات المحفوظة</span></h4>
@@ -166,6 +175,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="mapping-tab" class="tab-content max-w-6xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
@@ -178,11 +188,13 @@
                         </button>
                     </div>
                 </div>
+
                 <div id="mapping-empty-state" style="display: none;" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-link text-4xl mb-3"></i>
                     <h4 class="text-lg font-bold mb-1" id="mapping-empty-title">لا توجد شجرة حسابات بعد</h4>
                     <p class="text-sm" id="mapping-empty-desc">قم برفع شجرة الحسابات أولاً لبدء عملية الربط والتصنيف.</p>
                 </div>
+
                 <div id="mapping-table-container" style="display: none;">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
@@ -198,6 +210,7 @@
                             <div><p class="text-xs text-gray-400 font-semibold uppercase" id="map-lbl-auto">مصنفة تلقائيًا</p><h4 class="text-xl font-bold text-gray-800" id="map-count-auto">0</h4></div>
                         </div>
                     </div>
+
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                         <div class="p-4 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-gray-50 no-print">
                             <div class="relative w-full md:w-80">
@@ -231,6 +244,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="tb-tab" class="tab-content max-w-7xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
@@ -247,6 +261,7 @@
                         </label>
                     </div>
                 </div>
+
                 <div id="tb-status-container" style="display: none;" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 text-xl"><i class="fas fa-list-ol"></i></div>
@@ -265,6 +280,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="tb-table-container" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-4 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-gray-50">
                         <h4 class="font-bold text-gray-700 flex items-center gap-2 shrink-0"><i class="fas fa-table text-brand-500"></i><span id="tb-saved-title">تفاصيل ميزان المراجعة</span></h4>
@@ -304,16 +320,19 @@
                     </div>
                 </div>
             </div>
+
             <div id="dashboard-tab" class="tab-content max-w-7xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
                     <h3 class="text-lg font-bold text-gray-800" id="dash-title">لوحة القيادة التنفيذية (CFO Command Center)</h3>
                     <p class="text-sm text-gray-500" id="dash-subtitle">ملخص شامل للوضع المالي، السيولة، والربحية بلمحة بصر.</p>
                 </div>
+
                 <div id="dash-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-chart-bar text-4xl mb-3"></i>
                     <h4 class="text-lg font-bold mb-1" id="dash-empty-title">بانتظار البيانات</h4>
                     <p class="text-sm" id="dash-empty-desc">أدخل ميزان المراجعة ليتم توليد لوحة القيادة والمؤشرات.</p>
                 </div>
+
                 <div id="dash-content" style="display: none;">
                     <!-- Liquidity & Cash Row -->
                     <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-water text-blue-500 ml-2"></i>السيولة والتدفقات النقدية</h4>
@@ -335,6 +354,7 @@
                             <h4 class="text-2xl font-black text-gray-800" id="val-dash-ocf">0</h4>
                         </div>
                     </div>
+
                     <!-- Profitability Row -->
                     <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-chart-line text-green-500 ml-2"></i>الأداء والربحية</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -355,6 +375,7 @@
                             <h4 class="text-xl font-bold text-purple-600" id="val-dash-margin">0%</h4>
                         </div>
                     </div>
+
                     <!-- Structure Row -->
                     <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-building text-purple-500 ml-2"></i>الهيكل المالي</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -375,6 +396,7 @@
                             <h4 class="text-xl font-bold text-blue-600" id="val-dash-wc">0</h4>
                         </div>
                     </div>
+
                     <!-- Charts -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -388,6 +410,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="fs-tab" class="tab-content max-w-5xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex justify-between items-center overflow-x-auto">
                     <div>
@@ -406,23 +429,27 @@
                         </button>
                     </div>
                 </div>
+
                 <div id="fs-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-exclamation-triangle text-4xl mb-3"></i>
                     <h4 class="text-lg font-bold mb-1" id="fs-empty-title">لا توجد بيانات كافية</h4>
                     <p class="text-sm" id="fs-empty-desc">الرجاء إدراج شجرة الحسابات وميزان المراجعة أولاً.</p>
                 </div>
+
                 <div id="statement-is" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
                     <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
                         <h3 class="font-bold text-lg tracking-wide" id="is-title">قائمة الدخل (Income Statement)</h3>
                     </div>
                     <table class="w-full text-sm text-right text-gray-800" id="is-table"><tbody id="is-table-body"></tbody></table>
                 </div>
+
                 <div id="statement-bs" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
                     <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
                         <h3 class="font-bold text-lg tracking-wide" id="bs-title">قائمة المركز المالي (Balance Sheet)</h3>
                     </div>
                     <table class="w-full text-sm text-right text-gray-800" id="bs-table"><tbody id="bs-table-body"></tbody></table>
                 </div>
+
                 <div id="statement-cf" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
                     <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
                         <h3 class="font-bold text-lg tracking-wide" id="cf-title">قائمة التدفقات النقدية (Cash Flow Statement)</h3>
@@ -430,6 +457,7 @@
                     </div>
                     <table class="w-full text-sm text-right text-gray-800" id="cf-table"><tbody id="cf-table-body"></tbody></table>
                 </div>
+
                 <div id="statement-eq" style="display: none;" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
                     <div class="bg-brand-900 text-white p-4 text-center border-b-4 border-brand-500">
                         <h3 class="font-bold text-lg tracking-wide" id="eq-title">قائمة التغير في حقوق الملكية (Changes in Equity)</h3>
@@ -450,11 +478,13 @@
                         <button onclick="toggleAnalysis('horizontal')" id="btn-show-horizontal" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap relative">مقارنات وتحليل أفقي <span class="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span></button>
                     </div>
                 </div>
+
                 <div id="analysis-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-percentage text-4xl mb-3"></i>
                     <h4 class="text-lg font-bold mb-1" id="analysis-empty-title">بانتظار البيانات</h4>
                     <p class="text-sm" id="analysis-empty-desc">أدخل ميزان المراجعة ليتم توليد التحليل المالي.</p>
                 </div>
+
                 <div id="analysis-content" style="display: none;">
                     
                     <!-- Vertical Analysis -->
@@ -468,6 +498,7 @@
                             <table class="w-full text-sm text-right text-gray-800" id="va-bs-table"><tbody id="va-bs-table-body"></tbody></table>
                         </div>
                     </div>
+
                     <!-- Ratio Analysis -->
                     <div id="analysis-ratios" style="display: none;" class="mb-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
@@ -524,6 +555,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Liquidity -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                                 <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-tint text-blue-500"></i> نسب السيولة (Liquidity)</div>
@@ -549,6 +581,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- Horizontal Analysis -->
                     <div id="analysis-horizontal" style="display: none;" class="mb-8">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-5 no-print">
@@ -593,18 +626,22 @@
                             <p class="text-sm max-w-2xl mx-auto">تأكد من تساوي طول الفترتين واستخدام قالب الميزان نفسه. تتم مطابقة الحسابات بشجرة الحسابات والتصنيفات الحالية.</p>
                         </div>
                     </div>
+
                 </div>
             </div>
+
             <div id="insights-tab" class="tab-content max-w-7xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
                     <h3 class="text-lg font-bold text-gray-800" id="insights-title">رؤية المدير المالي (CFO Strategic Insights)</h3>
                     <p class="text-sm text-gray-500" id="insights-subtitle">ملخص تنفيذي يبرز نقاط القوة، يحدد المخاطر، ويقدم توصيات استراتيجية بناءً على التحليل المالي.</p>
                 </div>
+
                 <div id="insights-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-lightbulb text-4xl mb-3"></i>
                     <h4 class="text-lg font-bold mb-1" id="insights-empty-title">بانتظار تحليل البيانات</h4>
                     <p class="text-sm" id="insights-empty-desc">قم برفع ميزان المراجعة وتوليد القوائم أولاً ليقوم النظام باستخراج الرؤية الاستراتيجية.</p>
                 </div>
+
                 <div id="insights-content" style="display: none;" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     
                     <!-- Strengths -->
@@ -617,6 +654,7 @@
                             <ul id="list-strengths" class="space-y-4 text-sm text-gray-700"></ul>
                         </div>
                     </div>
+
                     <!-- Weaknesses & Risks -->
                     <div class="bg-white rounded-xl shadow-sm border-t-4 border-t-red-500 border-x border-b border-gray-100 flex flex-col">
                         <div class="p-4 border-b border-gray-100 bg-red-50/50 flex items-center gap-2">
@@ -627,6 +665,7 @@
                             <ul id="list-weaknesses" class="space-y-4 text-sm text-gray-700"></ul>
                         </div>
                     </div>
+
                     <!-- Recommendations -->
                     <div class="bg-white rounded-xl shadow-sm border-t-4 border-t-brand-500 border-x border-b border-gray-100 flex flex-col">
                         <div class="p-4 border-b border-gray-100 bg-brand-50/50 flex items-center gap-2">
@@ -637,8 +676,10 @@
                             <ul id="list-recommendations" class="space-y-4 text-sm text-gray-700"></ul>
                         </div>
                     </div>
+
                 </div>
             </div>
+
             <div id="forecast-tab" class="tab-content max-w-7xl mx-auto">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 flex justify-between items-center">
                     <div>
@@ -649,11 +690,13 @@
                         <i class="fas fa-undo"></i> <span id="btn-reset-forecast">إعادة ضبط</span>
                     </button>
                 </div>
+
                 <div id="forecast-empty-state" class="bg-yellow-50 border border-yellow-200 rounded-xl p-8 text-center text-yellow-700 mb-6">
                     <i class="fas fa-chart-line text-4xl mb-3"></i>
                     <h4 class="text-lg font-bold mb-1" id="forecast-empty-title">بانتظار البيانات المحاسبية</h4>
                     <p class="text-sm" id="forecast-empty-desc">أدخل ميزان المراجعة أولاً لنقوم ببناء التنبؤات بناءً على أرقامك الفعلية.</p>
                 </div>
+
                 <div id="forecast-content" style="display: none;" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <!-- Controls -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col gap-6 no-print">
@@ -678,11 +721,13 @@
                             <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span>تغير المصروفات التشغيلية</span><span id="val-range-opex" class="text-orange-600">0%</span></label>
                             <input type="range" id="range-opex" min="-50" max="100" value="0" step="1" class="w-full accent-orange-600" oninput="updateForecastUI()">
                         </div>
+
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">استثمارات رأسمالية جديدة (أصول CAPEX)</label>
                             <input type="number" id="input-new-assets" value="0" class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" oninput="updateForecastUI()">
                         </div>
                     </div>
+
                     <!-- Results -->
                     <div class="lg:col-span-2 flex flex-col gap-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -702,6 +747,7 @@
                                 <p class="text-xs mt-1" id="var-f-assets">-</p>
                             </div>
                         </div>
+
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex-1">
                             <div class="p-4 bg-gray-50 border-b border-gray-200 font-bold text-gray-700">مقارنة قائمة الدخل (الفعلي مقابل المتوقع)</div>
                             <table class="w-full text-sm text-right text-gray-800">
@@ -720,9 +766,12 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </main>
+
     <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 no-print"></div>
+
     <script>
         let currentLang = 'ar';
         let savedCOA = [];
@@ -737,6 +786,7 @@
         let bsChartObj = null;
         let downloadsCap = null; // 'downloads' runtime capability, resolved on load when running as a published artifact
         let companyInfo = { name: '', period: '' }; // shown on exported PDF/Excel reports
+
         function saveCompanyInfo() {
             companyInfo = {
                 name: (document.getElementById('company-name-input').value || '').trim(),
@@ -779,6 +829,7 @@
             if (line1) line1.className = 'flex-1 h-0.5 min-w-[16px] transition-colors ' + (steps[0].done ? 'bg-green-400' : 'bg-gray-200');
             if (line2) line2.className = 'flex-1 h-0.5 min-w-[16px] transition-colors ' + (steps[1].done ? 'bg-green-400' : 'bg-gray-200');
         }
+
         // Full project backup: everything needed to pick up exactly where the user left off, in one
         // portable JSON file (COA + Mapping + Trial Balance + company header info).
         async function exportBackup() {
@@ -792,6 +843,7 @@
             const saved = await saveFile(filename, json);
             if (saved) showToast(currentLang === 'ar' ? 'تم تنزيل النسخة الاحتياطية بنجاح' : 'Backup downloaded successfully');
         }
+
         function handleBackupRestore(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -800,36 +852,44 @@
                 let backup;
                 try { backup = JSON.parse(e.target.result); }
                 catch (err) { showToast(currentLang === 'ar' ? 'ملف النسخة الاحتياطية غير صالح' : 'Invalid backup file', 'error'); event.target.value = ''; return; }
+
                 if (!backup || !Array.isArray(backup.coa) || !Array.isArray(backup.tb) || typeof backup.mapping !== 'object') {
                     showToast(currentLang === 'ar' ? 'ملف النسخة الاحتياطية غير صالح' : 'Invalid backup file', 'error');
                     event.target.value = '';
                     return;
                 }
+
                 const msg = currentLang === 'ar'
                     ? 'سيتم استبدال كل البيانات الحالية (شجرة الحسابات، الربط، ميزان المراجعة) بمحتوى هذه النسخة الاحتياطية. المتابعة؟'
                     : 'This will replace ALL current data (COA, Mapping, Trial Balance) with this backup. Continue?';
                 if (!confirm(msg)) { event.target.value = ''; return; }
+
                 savedCOA = backup.coa;
                 savedTB = backup.tb;
                 savedMapping = backup.mapping;
                 companyInfo = backup.company && typeof backup.company === 'object' ? backup.company : { name: '', period: '' };
+
                 localStorage.setItem('cfo_coa', JSON.stringify(savedCOA));
                 localStorage.setItem('cfo_tb', JSON.stringify(savedTB));
                 localStorage.setItem('cfo_mapping', JSON.stringify(savedMapping));
                 localStorage.setItem('cfo_company', JSON.stringify(companyInfo));
+
                 rebuildMapping(); // re-validates every mapping entry against the restored COA
                 loadCompanyInfo();
                 renderCOATable();
                 renderMappingTable();
                 renderTBTable();
+
                 showToast(currentLang === 'ar' ? 'تم استعادة النسخة الاحتياطية بنجاح' : 'Backup restored successfully');
                 event.target.value = '';
             };
             reader.readAsText(file);
         }
+
         function safeFileName(s) {
             return (s || '').replace(/[\\/:*?"<>|]/g, '').trim().replace(/\s+/g, '_');
         }
+
         // ===================== Classification engine =====================
         // Two-level taxonomy (رئيسي / فرعي) plus a cash-flow routing field. This is the single
         // source of truth: the COA table, the Mapping tab, and the financial-statement engine
@@ -844,6 +904,7 @@
             other_income: { ar: 'دخل آخر',              en: 'Other Income',       statement: 'is' },
             other_exp:    { ar: 'مصروفات أخرى',          en: 'Other Expenses',     statement: 'is' }
         };
+
         // Sub-category cf default: 'operating' | 'investing' | 'financing' | 'cash' for BS items,
         // undefined for IS items (their effect reaches the cash flow statement through Net Income).
         const SUB_CATEGORIES = {
@@ -901,12 +962,14 @@
                 misc_exp:     { ar: 'مصاريف أخرى متنوعة',        en: 'Miscellaneous Expenses' }
             }
         };
+
         const CF_TYPES = [
             { k: 'operating', ar: 'تشغيلي', en: 'Operating' },
             { k: 'investing', ar: 'استثماري', en: 'Investing' },
             { k: 'financing', ar: 'تمويلي', en: 'Financing' },
             { k: 'cash', ar: 'نقدية (الرصيد نفسه)', en: 'Cash (the balance itself)' }
         ];
+
         // Suggests a default classification from the account code and name. Only ever a *starting
         // point* - the user can always override it from the "ربط وتصنيف الحسابات" tab.
         function getDefaultClassification(code, name) {
@@ -950,13 +1013,16 @@
                 else if (c.startsWith('22')) sub = 'ncl_other';
                 else sub = 'cl_other';
             } else { primary = 'assets'; sub = 'ca_other'; }
+
             const subMeta = SUB_CATEGORIES[primary][sub];
             const cf = subMeta && subMeta.cf !== undefined ? subMeta.cf : null;
             return { primary, sub, cf };
         }
+
         function isValidMapping(entry) {
             return entry && PRIMARY_CATEGORIES[entry.primary] && SUB_CATEGORIES[entry.primary] && SUB_CATEGORIES[entry.primary][entry.sub];
         }
+
         // Rebuilds savedMapping so every account currently in the COA has a valid entry, keeping any
         // existing manual overrides and dropping entries for accounts no longer in the COA.
         function rebuildMapping() {
@@ -968,6 +1034,7 @@
             savedMapping = next;
             localStorage.setItem('cfo_mapping', JSON.stringify(savedMapping));
         }
+
         // field: 'primary' | 'sub' | 'cf'
         function updateMapping(code, field, value) {
             const acc = savedCOA.find(a => a.code === code);
@@ -984,12 +1051,14 @@
             } else if (field === 'cf') {
                 savedMapping[code] = { ...current, cf: value, manual: true };
             } else return;
+
             localStorage.setItem('cfo_mapping', JSON.stringify(savedMapping));
             renderMappingTable(document.getElementById('mapping-search') ? document.getElementById('mapping-search').value : '');
             renderCOATable();
             showToast(currentLang === 'ar' ? 'تم تحديث تصنيف الحساب' : 'Account classification updated');
             if (savedTB.length > 0 && savedCOA.length > 0) { generateFinancialStatements(); if (comparisonTB) calculateAndRenderComparison(); }
         }
+
         function resetAllMapping() {
             const msg = currentLang === 'ar' ? 'إعادة تصنيف كل الحسابات آلياً؟ سيتم فقد أي تعديل يدوي.' : 'Reset ALL accounts to automatic classification? Manual overrides will be lost.';
             if (!confirm(msg)) return;
@@ -1000,6 +1069,7 @@
             showToast(currentLang === 'ar' ? 'تمت إعادة كل الحسابات للتصنيف الآلي' : 'All accounts reset to automatic classification');
             if (savedTB.length > 0 && savedCOA.length > 0) { generateFinancialStatements(); if (comparisonTB) calculateAndRenderComparison(); }
         }
+
         function buildPrimaryOptions(selected) {
             return Object.keys(PRIMARY_CATEGORIES).map(k => `<option value="${k}" ${k === selected ? 'selected' : ''}>${currentLang === 'ar' ? PRIMARY_CATEGORIES[k].ar : PRIMARY_CATEGORIES[k].en}</option>`).join('');
         }
@@ -1010,14 +1080,18 @@
         function buildCFOptions(selected) {
             return CF_TYPES.map(o => `<option value="${o.k}" ${o.k === selected ? 'selected' : ''}>${currentLang === 'ar' ? o.ar : o.en}</option>`).join('');
         }
+
         let selectedMappingCodes = new Set(); // bulk-classification selection, persists across re-renders/filtering
+
         function renderMappingTable(filter) {
             const emptyEl = document.getElementById('mapping-empty-state');
             const containerEl = document.getElementById('mapping-table-container');
             if (!emptyEl || !containerEl) return;
+
             // Drop any selected codes that no longer exist in the COA (e.g. after a reset/clear).
             const validCodes = new Set(savedCOA.map(a => a.code));
             selectedMappingCodes.forEach(c => { if (!validCodes.has(c)) selectedMappingCodes.delete(c); });
+
             if (savedCOA.length === 0) {
                 emptyEl.style.display = 'block';
                 containerEl.style.display = 'none';
@@ -1025,8 +1099,10 @@
             }
             emptyEl.style.display = 'none';
             containerEl.style.display = 'block';
+
             const q = (filter || '').trim().toLowerCase();
             const rows = savedCOA.filter(acc => !q || acc.code.toLowerCase().includes(q) || acc.name.toLowerCase().includes(q));
+
             const tbody = document.getElementById('mapping-table-body');
             tbody.innerHTML = rows.map(acc => {
                 const entry = isValidMapping(savedMapping[acc.code]) ? savedMapping[acc.code] : { ...getDefaultClassification(acc.code, acc.name), manual: false };
@@ -1050,14 +1126,17 @@
                     </td>
                 </tr>`;
             }).join('');
+
             const manualCount = Object.values(savedMapping).filter(m => m.manual).length;
             document.getElementById('map-count-total').innerText = savedCOA.length;
             document.getElementById('map-count-manual').innerText = manualCount;
             document.getElementById('map-count-auto').innerText = savedCOA.length - manualCount;
+
             const selectAllBox = document.getElementById('mapping-select-all');
             if (selectAllBox) selectAllBox.checked = rows.length > 0 && rows.every(r => selectedMappingCodes.has(r.code));
             updateMappingBulkBar();
         }
+
         function toggleSelectAllMapping(checked) {
             document.querySelectorAll('#mapping-table-body .map-row-select').forEach(cb => {
                 cb.checked = checked;
@@ -1065,10 +1144,12 @@
             });
             updateMappingBulkBar();
         }
+
         function clearMappingSelection() {
             selectedMappingCodes.clear();
             renderMappingTable(document.getElementById('mapping-search') ? document.getElementById('mapping-search').value : '');
         }
+
         function updateMappingBulkBar() {
             const bar = document.getElementById('mapping-bulk-bar');
             if (!bar) return;
@@ -1082,6 +1163,7 @@
                 onBulkPrimaryChange();
             }
         }
+
         function onBulkPrimaryChange() {
             const primary = document.getElementById('bulk-primary').value;
             document.getElementById('bulk-sub').innerHTML = buildSubOptions(primary, Object.keys(SUB_CATEGORIES[primary])[0]);
@@ -1090,14 +1172,17 @@
             cfSel.style.display = isBS ? '' : 'none';
             cfSel.innerHTML = isBS ? buildCFOptions('operating') : '';
         }
+
         function applyBulkMapping() {
             if (selectedMappingCodes.size === 0) return;
             const primary = document.getElementById('bulk-primary').value;
             const sub = document.getElementById('bulk-sub').value;
             const subMeta = SUB_CATEGORIES[primary][sub];
             const cf = PRIMARY_CATEGORIES[primary].statement === 'bs' ? document.getElementById('bulk-cf').value : (subMeta.cf !== undefined ? subMeta.cf : null);
+
             selectedMappingCodes.forEach(code => { savedMapping[code] = { primary, sub, cf, manual: true }; });
             localStorage.setItem('cfo_mapping', JSON.stringify(savedMapping));
+
             const n = selectedMappingCodes.size;
             selectedMappingCodes.clear();
             renderMappingTable(document.getElementById('mapping-search') ? document.getElementById('mapping-search').value : '');
@@ -1105,6 +1190,7 @@
             showToast(currentLang === 'ar' ? `تم تصنيف ${n} حساب بنجاح` : `${n} account(s) classified successfully`);
             if (savedTB.length > 0 && savedCOA.length > 0) generateFinancialStatements();
         }
+
         // ===================== File download helper (works inside and outside the Claude runtime) =====================
         async function initDownloadsCapability() {
             if (window.claude && typeof window.claude.use === 'function') {
@@ -1130,6 +1216,7 @@
             setTimeout(() => URL.revokeObjectURL(url), 1000);
             return true;
         }
+
         const translations = {
             en: {
                 "txt-nav-coa": "Chart of Accounts", "txt-nav-tb": "Trial Balance", "txt-nav-dash": "Dashboard",
@@ -1234,6 +1321,7 @@
                 "btn-reset-forecast": "إعادة ضبط", "forecast-empty-title": "بانتظار البيانات", "forecast-empty-desc": "أدخل ميزان المراجعة لتبدأ المحاكاة."
             }
         };
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -1244,6 +1332,7 @@
             setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
             setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-10'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
+
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
@@ -1258,6 +1347,7 @@
             
             if (document.getElementById('fs-tab').classList.contains('active') || globalFS) generateFinancialStatements();
         }
+
         function applyTranslations() {
             const dict = translations[currentLang];
             for (const [id, text] of Object.entries(dict)) {
@@ -1272,6 +1362,7 @@
                 if (input) input.placeholder = dict['mapping-search-placeholder'];
             });
         }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active', 'bg-brand-50', 'text-brand-600'));
@@ -1291,13 +1382,17 @@
                 renderMappingTable(document.getElementById('mapping-search') ? document.getElementById('mapping-search').value : '');
             }
         }
+
         async function exportToPDF() {
             const activeTab = document.querySelector('.tab-content.active');
             if (!activeTab) return;
+
             const tabTitle = document.getElementById('current-tab-title').innerText;
+
             // Add class to hide 'no-print' elements
             document.body.classList.add('pdf-exporting');
             showToast(currentLang === 'ar' ? 'جاري تحضير ملف PDF...' : 'Preparing PDF...', 'success');
+
             // html2pdf only captures the active tab's own element (not the outer app header), so the
             // company name/period are injected here as a temporary report header and removed right
             // after the PDF is captured.
@@ -1308,6 +1403,7 @@
                 reportHeaderEl.innerHTML = `<div><h2 class="text-xl font-bold text-gray-800">${companyInfo.name || ''}</h2><p class="text-sm text-gray-500">${companyInfo.period || ''}</p></div><div class="text-xs text-gray-400">${currentLang === 'ar' ? 'تاريخ التقرير' : 'Report Date'}: ${new Date().toLocaleDateString()}</div>`;
                 activeTab.prepend(reportHeaderEl);
             }
+
             const filenamePrefix = companyInfo.name ? safeFileName(companyInfo.name) : 'CFO_Report';
             const opt = {
                 margin:       [10, 10, 10, 10],
@@ -1320,6 +1416,7 @@
                 // Avoids a table row or a card being sliced in half across a page boundary.
                 pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
             };
+
             try {
                 const blob = await html2pdf().set(opt).from(activeTab).outputPdf('blob');
                 document.body.classList.remove('pdf-exporting');
@@ -1333,6 +1430,7 @@
                 console.error(err);
             }
         }
+
         async function downloadCOATemplate() {
             const ws_data = currentLang === 'ar'
                 ? [["رقم_الحساب", "اسم_الحساب"], ["1101", "صندوق"], ["4001", "مبيعات"]]
@@ -1344,6 +1442,7 @@
             const arrayBuffer = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
             await saveFile('COA_Template.xlsx', arrayBuffer);
         }
+
         function handleCOAUpload(event) {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
@@ -1356,6 +1455,7 @@
                     renderCOATable();
                     renderMappingTable();
                     showToast(currentLang === 'ar' ? "تم حفظ شجرة الحسابات بنجاح!" : "COA Saved Successfully!");
+
                     // Flag duplicate account codes - a common copy/paste mistake that silently
                     // overwrites one account's mapping with another's further down the pipeline.
                     const counts = {};
@@ -1372,6 +1472,7 @@
             };
             reader.readAsArrayBuffer(file); event.target.value = '';
         }
+
         function renderCOATable(filter) {
             const tbody = document.getElementById('coa-table-body'); tbody.innerHTML = '';
             if (savedCOA.length > 0) {
@@ -1394,6 +1495,7 @@
             } else document.getElementById('coa-table-container').style.display = 'none';
             updateSetupProgress();
         }
+
         function clearCOA() {
             const msg = currentLang === 'ar' ? 'هل تريد مسح شجرة الحسابات؟' : 'Clear the Chart of Accounts?';
             if(confirm(msg)) {
@@ -1411,6 +1513,7 @@
                 generateFinancialStatements();
             }
         }
+
         async function downloadTBTemplate() {
             const ws_data = currentLang === 'ar'
                 ? [["رقم_الحساب", "اسم_الحساب", "افتتاحي_مدين", "افتتاحي_دائن", "حركة_مدين", "حركة_دائن"], ["1101", "صندوق", "10000", "0", "5000", "2000"]]
@@ -1421,6 +1524,7 @@
             const arrayBuffer = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
             await saveFile('TB_Template.xlsx', arrayBuffer);
         }
+
         function handleTBUpload(event) {
             if(savedCOA.length === 0) { showToast(currentLang === 'ar' ? "ارفع شجرة الحسابات أولاً!" : "Upload COA first!", "error"); return; }
             const file = event.target.files[0]; if (!file) return;
@@ -1438,6 +1542,7 @@
             };
             reader.readAsArrayBuffer(file); event.target.value = '';
         }
+
         function handleComparisonTBUpload(event) {
             if (!globalFS || savedCOA.length === 0) {
                 showToast(currentLang === 'ar' ? 'ارفع الميزان الأساسي وشغّل القوائم أولاً.' : 'Upload the primary trial balance and generate statements first.', 'error');
@@ -1461,6 +1566,7 @@
                             inCOA: savedCOA.some(a => a.code === code) };
                     }).filter(Boolean);
                     if (!parsed.length) throw new Error('empty');
+
                     comparisonTB = parsed;
                     comparisonPeriodName = (document.getElementById('comparison-period-label').value || '').trim() || file.name.replace(/\.[^.]+$/, '');
                     calculateAndRenderComparison();
@@ -1473,6 +1579,7 @@
             reader.readAsArrayBuffer(file);
             event.target.value = '';
         }
+
         function clearComparisonTB() {
             comparisonTB = null;
             comparisonFS = null;
@@ -1482,6 +1589,7 @@
             document.getElementById('btn-clear-comparison').classList.add('hidden');
             document.getElementById('comparison-period-label').value = '';
         }
+
         function calculateAndRenderComparison() {
             if (!comparisonTB || !savedTB.length) return;
             const primaryTB = savedTB;
@@ -1495,6 +1603,7 @@
             }
             renderHorizontalComparison();
         }
+
         function renderHorizontalComparison() {
             if (!comparisonFS || !globalFS) return;
             const prior = comparisonFS, current = globalFS;
@@ -1564,6 +1673,7 @@
             ['comparison-current-is-head','comparison-current-bs-head','comparison-current-cf-head'].forEach(id => document.getElementById(id).innerText = currentLabel);
             ['comparison-prior-is-head','comparison-prior-bs-head','comparison-prior-cf-head','comparison-prior-ratios-head'].forEach(id => document.getElementById(id).innerText = comparisonPeriodName || 'الفترة المقارنة');
             ['comparison-current-is-head','comparison-current-bs-head','comparison-current-cf-head','comparison-current-ratios-head'].forEach(id => document.getElementById(id).innerText = currentLabel);
+
             const duplicateCodes = comparisonTB.length - new Set(comparisonTB.map(a => a.code)).size;
             const missing = comparisonTB.filter(a => !a.inCOA).length;
             const endDebit = comparisonTB.reduce((s,a) => s + a.end_dr, 0), endCredit = comparisonTB.reduce((s,a) => s + a.end_cr, 0);
@@ -1591,6 +1701,7 @@
             summary.innerHTML = `<h4 class="font-bold text-gray-800 mb-2">أبرز الفروقات والتوصيات</h4><ul class="list-disc pr-5 space-y-1 text-sm text-gray-700">${insights.map(x => `<li>${esc(x)}</li>`).join('')}</ul><p class="text-xs text-gray-500 mt-3">تُفسّر الزيادة أو النقص بحسب طبيعة الحساب، ولا تعني الزيادة في الأصول أو الالتزامات وحدها تحسنًا أو تراجعًا.</p>`;
             summary.classList.remove('hidden');
         }
+
         function renderTBTable(filter) {
             if (savedTB.length === 0) {
                 document.getElementById('tb-table-container').style.display = 'none';
@@ -1609,20 +1720,26 @@
             const codeCounts = savedTB.reduce((m, a) => m.set(a.code, (m.get(a.code) || 0) + 1), new Map());
             const duplicateCount = Array.from(codeCounts.values()).reduce((n, count) => n + Math.max(0, count - 1), 0);
             if (duplicateCount) hasMissing = true;
+
             // Accounts normally carry a debit ending balance (assets/cogs/opex/other expense) or a
             // credit ending balance (liabilities/equity/revenue/other income). A balance on the
             // "wrong" side usually signals a data-entry mistake, so we flag it for review here.
             const DEBIT_NORMAL = ['assets', 'cogs', 'opex', 'other_exp'];
             const CREDIT_NORMAL = ['liabilities', 'equity', 'revenue', 'other_income'];
+
             const q = (filter || '').trim().toLowerCase();
             const notLinkedLabel = currentLang === 'ar' ? 'غير مدرج بالشجرة' : 'Not in COA';
             const quickAddLabel = currentLang === 'ar' ? 'إضافة للشجرة' : 'Add to COA';
+
             savedTB.forEach(acc => {
                 sums.op_dr+=acc.op_dr; sums.op_cr+=acc.op_cr; sums.per_dr+=acc.per_dr; sums.per_cr+=acc.per_cr; sums.end_dr+=acc.end_dr; sums.end_cr+=acc.end_cr;
                 if(!acc.inCOA) hasMissing = true;
+
                 if (q && !acc.code.toLowerCase().includes(q) && !acc.name.toLowerCase().includes(q)) return; // filter display only
+
                 const trClass = acc.inCOA ? "bg-white border-b" : "bg-red-50 border-b";
                 const fmt = (n) => n.toLocaleString(undefined, {minimumFractionDigits: 2});
+
                 let statusCell = acc.inCOA ? '<i class="fas fa-link text-green-500"></i>' : `<span class="text-xs text-red-600 font-bold">${notLinkedLabel}</span> <button class="tb-quickadd text-xs bg-white border border-red-300 text-red-600 hover:bg-red-600 hover:text-white rounded px-2 py-0.5 font-semibold transition-colors no-print" data-code="${acc.code}" title="${quickAddLabel}"><i class="fas fa-plus"></i> ${quickAddLabel}</button>`;
                 if (acc.inCOA) {
                     const mapping = isValidMapping(savedMapping[acc.code]) ? savedMapping[acc.code] : getDefaultClassification(acc.code, acc.name);
@@ -1652,11 +1769,14 @@
             const statusLabel = (bal && !hasMissing) ? (currentLang === 'ar' ? 'متزن ومطابق' : 'Balanced') : (duplicateCount ? (currentLang === 'ar' ? `راجع الميزان: ${duplicateCount} تكرار حساب` : `Review: ${duplicateCount} duplicate account(s)`) : (currentLang === 'ar' ? 'راجع الميزان' : 'Review Required'));
             document.getElementById('tb-balance-card').className = `p-4 rounded-xl shadow-sm flex items-center gap-4 md:col-span-2 ${bal&&!hasMissing?'bg-green-50 border-green-200':'bg-red-50 border-red-200'}`;
             document.getElementById('tb-balance-card').innerHTML = `<div class="w-12 h-12 rounded-full flex items-center justify-center text-xl ${bal&&!hasMissing?'bg-green-100 text-green-600':'bg-red-100 text-red-600'}"><i class="fas ${bal&&!hasMissing?'fa-check-double':'fa-times-circle'}"></i></div><div><h4 class="text-lg font-bold ${bal&&!hasMissing?'text-green-800':'text-red-800'}">${statusLabel}</h4></div>`;
+
             document.getElementById('tb-anomaly-count').innerText = anomalyCount;
             document.getElementById('tb-anomaly-card').className = `bg-white p-4 rounded-xl shadow-sm border flex items-center gap-4 ${anomalyCount > 0 ? 'border-amber-200' : 'border-gray-100'}`;
+
             if(bal && !hasMissing) generateFinancialStatements();
             updateSetupProgress();
         }
+
         // Adds a TB-only account straight into the Chart of Accounts (auto-classified, editable
         // afterwards from the Mapping tab) - turns the "Not in COA" warning into a one-click fix.
         function quickAddToCOA(code) {
@@ -1680,6 +1800,7 @@
             const msg = currentLang === 'ar' ? 'هل تريد مسح ميزان المراجعة؟' : 'Clear the Trial Balance?';
             if(confirm(msg)) { clearComparisonTB(); savedTB = []; globalFS = null; localStorage.removeItem('cfo_tb'); renderTBTable(); }
         }
+
         function toggleStatement(type) {
             ['is', 'bs', 'cf', 'eq'].forEach(t => {
                 document.getElementById(`statement-${t}`).style.display = type === t ? 'block' : 'none';
@@ -1693,6 +1814,7 @@
                 document.getElementById(`btn-show-${t}`).className = type === t ? 'px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap' : 'px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap';
             });
         }
+
         function generateFinancialStatements() {
             if (savedTB.length === 0 || savedCOA.length === 0) {
                 globalFS = null;
@@ -1712,15 +1834,19 @@
             
             document.getElementById('fs-empty-state').style.display = 'none';
             if(!['is','bs','cf','eq'].some(t => document.getElementById(`statement-${t}`).style.display === 'block')) toggleStatement('is');
+
             let is = { rev: 0, cogs: 0, exp: 0, oi: 0, oe: 0 };
             let bs = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
             let bsOpen = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
             let det = { rev:[], cogs:[], exp:[], oi:[], oe:[], ca:[], nca:[], cl:[], ncl:[], eq:[] };
+
             let cfBuckets = { operating: 0, investing: 0, financing: 0 };
             let cfLines = { operating: [], investing: [], financing: [] };
             let cashEnd = 0, cashOpen = 0;
+
             // Kept for the turnover ratios (DSO/DIO/DPO) in the Analysis & Insights tabs
             let ar = 0, ap = 0, inventory = 0, opAr = 0, opAp = 0, opInv = 0;
+
             // Every account is routed by its classification in savedMapping (primary + sub + cash-flow
             // type, set automatically by getDefaultClassification and overridable from the "ربط وتصنيف
             // الحسابات" tab). This is the ONLY place account codes get interpreted - the COA table reads
@@ -1733,8 +1859,10 @@
                 const entry = isValidMapping(raw) ? raw : getDefaultClassification(acc.code, acc.name);
                 const { primary, sub } = entry;
                 const subMeta = SUB_CATEGORIES[primary][sub];
+
                 const end = (acc.end_dr || 0) - (acc.end_cr || 0);
                 const beg = (acc.op_dr || 0) - (acc.op_cr || 0);
+
                 if (primary === 'revenue') { is.rev += -end; det.rev.push({ n: acc.name, v: -end }); }
                 else if (primary === 'cogs') { is.cogs += end; det.cogs.push({ n: acc.name, v: end }); }
                 else if (primary === 'opex') { is.exp += end; det.exp.push({ n: acc.name, v: end }); }
@@ -1785,46 +1913,56 @@
                     }
                 }
             });
+
             let gp = is.rev - is.cogs;
             let ni = gp - is.exp + is.oi - is.oe;
+
             let ta = bs.ca + bs.nca;
             let tl = bs.cl + bs.ncl;
             let teq = bs.eq + ni;
             let tleq = tl + teq;
+
             let taOpen = bsOpen.ca + bsOpen.nca;
             let tlOpen = bsOpen.cl + bsOpen.ncl;
             let teqOpen = bsOpen.eq;
             let tleqOpen = tlOpen + teqOpen;
+
             const cf_op = ni + cfBuckets.operating;
             const cf_inv = cfBuckets.investing;
             const cf_fin = cfBuckets.financing;
             const cf_net = cf_op + cf_inv + cf_fin;
             const cashActualChange = cashEnd - cashOpen;
+
             let avg_ar = (opAr + ar) / 2;
             let avg_ap = (opAp + ap) / 2;
             let avg_inv = (opInv + inventory) / 2;
             let avg_assets = (taOpen + ta) / 2;
             let avg_equity = (teqOpen + teq) / 2;
+
             globalFS = {
                 is, bs, bsOpen, det, gp, ni, ta, tl, teq, tleq, taOpen, tlOpen, teqOpen, tleqOpen,
                 cash: cashEnd, cashOpen, ar, ap, inventory, avg_ar, avg_ap, avg_inv, avg_assets, avg_equity,
                 cf_op, cf_inv, cf_fin, cf_net, cfLines, cashActualChange
             };
+
             renderIncomeStatement();
             renderBalanceSheet();
             renderCashFlow();
             renderEquityStatement();
+
             generateDashboard();
             generateAnalysis();
             generateCFOInsights(); 
             if(document.getElementById('forecast-tab').classList.contains('active')) initForecast();
             updateSetupProgress();
         }
+
         function renderIncomeStatement() {
             const { is, det, gp, ni } = globalFS;
             const t = translations[currentLang];
             const fmt = (n) => n===0?'-':(n<0?`(${(Math.abs(n)).toLocaleString(undefined,{minimumFractionDigits:2})})`:n.toLocaleString(undefined,{minimumFractionDigits:2}));
             const renderRows = (arr, isNeg=false) => arr.filter(d=>d.v!==0).map(d=>`<tr class="fs-row-detail border-b"><td class="py-2">${d.n}</td><td class="py-2">${fmt(isNeg?-d.v:d.v)}</td></tr>`).join('');
+
             document.getElementById('is-table-body').innerHTML = `
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-rev']}</td><td class="px-6 py-3">${fmt(is.rev)}</td></tr>${renderRows(det.rev)}
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['fs-cogs']}</td><td class="px-6 py-3 text-red-600">${fmt(-is.cogs)}</td></tr>${renderRows(det.cogs, true)}
@@ -1834,12 +1972,14 @@
                 ${is.oe !== 0 ? `<tr class="fs-row-main"><td class="px-6 py-3">${t['fs-oe']}</td><td class="px-6 py-3 text-red-600">${fmt(-is.oe)}</td></tr>${renderRows(det.oe, true)}` : ''}
                 <tr class="fs-row-total ${ni>=0?'text-green-700':'text-red-700'}"><td class="px-6 py-4">${t['fs-ni']}</td><td class="px-6 py-4 text-lg">${fmt(ni)}</td></tr>`;
         }
+
         function renderBalanceSheet() {
             const { bs, bsOpen, det, ta, taOpen, tl, tlOpen, teq, teqOpen, tleq, tleqOpen, ni } = globalFS;
             const t = translations[currentLang];
             const fmt = (n) => n===0?'-':(n<0?`(${(Math.abs(n)).toLocaleString(undefined,{minimumFractionDigits:2})})`:n.toLocaleString(undefined,{minimumFractionDigits:2}));
             const fmtPct = (n) => (n===null||n===undefined||isNaN(n)||!isFinite(n)) ? '-' : (n>=0?'+':'') + (Math.round(n*10)/10) + '%';
             const chgClass = (n) => n>0 ? 'text-green-600' : (n<0 ? 'text-red-600' : 'text-gray-400');
+
             const headerRow = `<tr class="bg-gray-50 text-xs text-gray-500 uppercase"><td class="px-6 py-2">${t['bs-col-item']}</td><td class="px-6 py-2">${t['bs-col-end']}</td><td class="px-6 py-2">${t['bs-col-open']}</td><td class="px-6 py-2">${t['bs-col-chg']}</td><td class="px-6 py-2">${t['bs-col-chgpct']}</td></tr>`;
             const detailRows = (arr) => arr.filter(d=>d.v!==0 || d.beg!==0).map(d=>`<tr class="fs-row-detail border-b"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td><td class="py-2 text-gray-500">${fmt(d.beg)}</td><td class="py-2 ${chgClass(d.chg)}">${fmt(d.chg)}</td><td class="py-2 ${chgClass(d.chg)}">${fmtPct(d.pctChg)}</td></tr>`).join('');
             const groupRow = (label, end, open) => {
@@ -1854,6 +1994,7 @@
                 const chg = end - open; const pct = open !== 0 ? (chg/Math.abs(open))*100 : (end!==0?null:0);
                 return `<tr class="fs-row-total ${cls}"><td class="px-6 py-4">${label}</td><td class="px-6 py-4 text-lg">${fmt(end)}</td><td class="px-6 py-4 text-gray-500">${fmt(open)}</td><td class="px-6 py-4 ${chgClass(chg)}">${fmt(chg)}</td><td class="px-6 py-4 ${chgClass(chg)}">${fmtPct(pct)}</td></tr>`;
             };
+
             document.getElementById('bs-table-body').innerHTML = `
                 ${headerRow}
                 <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="5" class="px-6 py-2">${t['fs-assets']}</td></tr>
@@ -1869,12 +2010,14 @@
                 ${subRow(t['fs-te'], teq, teqOpen)}
                 ${totalRow(t['fs-tleq'], tleq, tleqOpen, Math.abs(ta-tleq)<0.1?'text-green-700':'text-red-700')}`;
         }
+
         function renderCashFlow() {
             const { ni, cf_op, cf_inv, cf_fin, cf_net, cfLines, cashOpen, cashActualChange } = globalFS;
             const t = translations[currentLang];
             const fmt = (n) => n===0?'-':(n<0?`(${(Math.abs(n)).toLocaleString(undefined,{minimumFractionDigits:2})})`:n.toLocaleString(undefined,{minimumFractionDigits:2}));
             const lines = (arr) => arr.map(d=>`<tr class="fs-row-detail border-b"><td class="py-2">${d.n}</td><td class="py-2">${fmt(d.v)}</td></tr>`).join('');
             const noItems = `<tr class="fs-row-detail border-b"><td class="py-2 text-gray-400">${t['cf-no-items']}</td><td class="py-2">-</td></tr>`;
+
             document.getElementById('cf-table-body').innerHTML = `
                 <tr class="bg-gray-200 font-bold text-gray-800"><td colspan="2" class="px-6 py-2">${t['cf-op-title']}</td></tr>
                 <tr class="fs-row-detail border-b"><td class="py-2">${t['fs-ni']}</td><td class="py-2">${fmt(ni)}</td></tr>
@@ -1891,6 +2034,7 @@
                 <tr class="fs-row-total text-green-700"><td class="px-6 py-4">${t['cf-end']}</td><td class="px-6 py-4 text-lg">${fmt(cashOpen+cf_net)}</td></tr>
                 ${Math.abs(cf_net - cashActualChange) > 1 ? `<tr><td colspan="2" class="px-6 py-2 text-xs text-orange-600 bg-orange-50">${t['cf-mismatch']} (${fmt(cashActualChange)})</td></tr>` : ''}`;
         }
+
         function renderEquityStatement() {
             const { bs, bsOpen, ni } = globalFS;
             const t = translations[currentLang];
@@ -1902,6 +2046,7 @@
                 <tr class="fs-row-main"><td class="px-6 py-3">${t['eq-add']}</td><td class="px-6 py-3">${fmt(additions)}</td></tr>
                 <tr class="fs-row-total text-brand-800"><td class="px-6 py-4">${t['eq-end']}</td><td class="px-6 py-4 text-lg">${fmt(bsOpen.eq+ni+additions)}</td></tr>`;
         }
+
         async function exportStatementsToExcel() {
             if (!globalFS) {
                 showToast(currentLang === 'ar' ? 'لا توجد بيانات كافية للتصدير' : 'Not enough data to export', 'error');
@@ -1911,8 +2056,10 @@
             const { is, bs, bsOpen, det, gp, ni, ta, taOpen, tl, tlOpen, teq, teqOpen, tleq, tleqOpen, cf_op, cf_inv, cf_fin, cf_net, cfLines, cashOpen } = globalFS;
             const num = (n) => Math.round((n || 0) * 100) / 100;
             const pctOf = (chg, base) => (base !== 0) ? Math.round((chg / Math.abs(base)) * 1000) / 10 : null;
+
             const wb = XLSX.utils.book_new();
             const companyHeader = (companyInfo.name || companyInfo.period) ? [[companyInfo.name || '', companyInfo.period || ''], []] : [];
+
             // --- Income Statement ---
             const isRows = [[t['fs-rev'], num(is.rev)]];
             det.rev.filter(d => d.v !== 0).forEach(d => isRows.push(['   ' + d.n, num(d.v)]));
@@ -1927,6 +2074,7 @@
             const wsIS = XLSX.utils.aoa_to_sheet([...companyHeader, [t['btn-show-is'], ''], ...isRows]);
             wsIS['!cols'] = [{ wch: 40 }, { wch: 18 }];
             XLSX.utils.book_append_sheet(wb, wsIS, 'IncomeStatement');
+
             // --- Balance Sheet (comparative: ending vs opening, with variance) ---
             const bsRows = [...companyHeader.map(r => [r[0] || '', r[1] || '', '', '', '']), [t['bs-col-item'], t['bs-col-end'], t['bs-col-open'], t['bs-col-chg'], t['bs-col-chgpct']]];
             const grp = (label, end, open) => bsRows.push([label, num(end), num(open), num(end - open), pctOf(end - open, open)]);
@@ -1946,6 +2094,7 @@
             const wsBS = XLSX.utils.aoa_to_sheet(bsRows);
             wsBS['!cols'] = [{ wch: 38 }, { wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 12 }];
             XLSX.utils.book_append_sheet(wb, wsBS, 'BalanceSheet');
+
             // --- Cash Flow Statement ---
             const cfRows = [...companyHeader, [t['cf-op-title'], '']];
             cfRows.push([t['fs-ni'], num(ni)]);
@@ -1963,6 +2112,7 @@
             const wsCF = XLSX.utils.aoa_to_sheet(cfRows);
             wsCF['!cols'] = [{ wch: 40 }, { wch: 18 }];
             XLSX.utils.book_append_sheet(wb, wsCF, 'CashFlow');
+
             // --- Equity Statement ---
             const additions = bs.eq - bsOpen.eq;
             const wsEQ = XLSX.utils.aoa_to_sheet([
@@ -1974,6 +2124,7 @@
             ]);
             wsEQ['!cols'] = [{ wch: 40 }, { wch: 18 }];
             XLSX.utils.book_append_sheet(wb, wsEQ, 'Equity');
+
             if (comparisonFS) {
                 const prior = comparisonFS;
                 const curLabel = (companyInfo.period || 'Current period');
@@ -2005,12 +2156,14 @@
                 wsHorizontal['!cols'] = [{ wch: 32 }, { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 14 }];
                 XLSX.utils.book_append_sheet(wb, wsHorizontal, 'HorizontalAnalysis');
             }
+
             const arrayBuffer = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
             const filenamePrefix = companyInfo.name ? safeFileName(companyInfo.name) : 'Financial_Statements';
             const filename = `${filenamePrefix}_${new Date().toLocaleDateString()}.xlsx`;
             const saved = await saveFile(filename, arrayBuffer);
             if (saved) showToast(currentLang === 'ar' ? 'تم تصدير القوائم المالية لإكسيل بنجاح' : 'Financial statements exported to Excel successfully');
         }
+
         function applyForecastScenario(scenario) {
             if (!globalFS) return;
             const actualCogs = globalFS.is.rev ? globalFS.is.cogs / globalFS.is.rev * 100 : 0;
@@ -2025,6 +2178,7 @@
             document.getElementById('range-opex').value = p.opex;
             updateForecastUI();
         }
+
         function initForecast() {
             if (!globalFS) {
                 document.getElementById('forecast-empty-state').style.display = 'block';
@@ -2033,11 +2187,13 @@
             }
             document.getElementById('forecast-empty-state').style.display = 'none';
             document.getElementById('forecast-content').style.display = 'grid';
+
             const actualCogsMargin = globalFS.is.rev ? (globalFS.is.cogs / globalFS.is.rev) * 100 : 0;
             document.getElementById('range-cogs').value = actualCogsMargin;
             
             updateForecastUI();
         }
+
         function resetForecast() {
             document.getElementById('range-rev').value = 0;
             document.getElementById('range-opex').value = 0;
@@ -2045,15 +2201,18 @@
             if(globalFS) document.getElementById('range-cogs').value = globalFS.is.rev ? (globalFS.is.cogs / globalFS.is.rev) * 100 : 0;
             updateForecastUI();
         }
+
         function updateForecastUI() {
             if (!globalFS) return;
             const revGrowth = parseFloat(document.getElementById('range-rev').value) / 100;
             const cogsMargin = parseFloat(document.getElementById('range-cogs').value) / 100;
             const opexGrowth = parseFloat(document.getElementById('range-opex').value) / 100;
             const capex = parseFloat(document.getElementById('input-new-assets').value) || 0;
+
             document.getElementById('val-range-rev').innerText = document.getElementById('range-rev').value + '%';
             document.getElementById('val-range-cogs').innerText = document.getElementById('range-cogs').value + '%';
             document.getElementById('val-range-opex').innerText = document.getElementById('range-opex').value + '%';
+
             // Actuals
             const aRev = globalFS.is.rev;
             const aCogs = globalFS.is.cogs;
@@ -2062,6 +2221,7 @@
             const aNi = globalFS.ni;
             const aAssets = globalFS.ta;
             const aCash = globalFS.cash;
+
             // Forecasts
             const fRev = aRev * (1 + revGrowth);
             const fCogs = fRev * cogsMargin;
@@ -2071,18 +2231,21 @@
             
             const fCash = aCash + fNi - capex; 
             const fAssets = aAssets + capex + fNi;
+
             const fmt = (n) => n.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
             const fmtDiff = (act, forcast) => {
                 const diff = forcast - act;
                 if (diff === 0) return `<span class="text-gray-500">-</span>`;
                 return diff > 0 ? `<span class="text-green-600 font-bold">+${fmt(diff)} <i class="fas fa-caret-up"></i></span>` : `<span class="text-red-600 font-bold">(${fmt(Math.abs(diff))}) <i class="fas fa-caret-down"></i></span>`;
             };
+
             // Update Cards
             document.getElementById('val-f-ni').innerText = fmt(fNi);
             document.getElementById('var-f-ni').innerHTML = fmtDiff(aNi, fNi);
             document.getElementById('val-f-cash').innerText = fmt(fCash);
             document.getElementById('val-f-assets').innerText = fmt(fAssets);
             document.getElementById('var-f-assets').innerHTML = fmtDiff(aAssets, fAssets);
+
             // Update Table
             const t = translations[currentLang];
             const tbody = document.getElementById('forecast-table-body');
@@ -2097,10 +2260,12 @@
             const note = document.getElementById('forecast-risk-note');
             note.innerHTML = `${fCash < 0 ? '<strong class="text-red-700">تنبيه سيولة:</strong> النقدية المتوقعة سالبة وفق الفرضيات الحالية. ' : ''}${breakEven === null ? 'تعذر حساب نقطة التعادل لأن تكلفة المبيعات تساوي أو تتجاوز الإيرادات.' : `مبيعات نقطة التعادل التقديرية: <strong>${fmt(breakEven)}</strong>. `}هذا تقدير مبسط؛ لا يشمل تغير رأس المال العامل أو التمويل أو الضرائب، ويفترض أن حركة النقد تقارب صافي الربح قبل أثر CAPEX.`;
         }
+
         function generateDashboard() {
             if (!globalFS) return;
             document.getElementById('dash-empty-state').style.display = 'none';
             document.getElementById('dash-content').style.display = 'block';
+
             const { is, bs, gp, ni, ta, tl, teq, cash, ar, ap, cf_op } = globalFS;
             const fmt = (n) => n.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
             
@@ -2118,6 +2283,7 @@
             document.getElementById('val-dash-tl').innerText = fmt(tl);
             document.getElementById('val-dash-eq').innerText = fmt(teq);
             document.getElementById('val-dash-wc').innerText = fmt(bs.ca - bs.cl);
+
             const t = translations[currentLang];
             
             if(isChartObj) isChartObj.destroy();
@@ -2129,6 +2295,7 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
             });
+
             if(bsChartObj) bsChartObj.destroy();
             bsChartObj = new Chart(document.getElementById('bsChart'), {
                 type: 'doughnut',
@@ -2139,15 +2306,18 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
         }
+
         function generateAnalysis() {
             if (!globalFS) return;
             document.getElementById('analysis-empty-state').style.display = 'none';
             document.getElementById('analysis-content').style.display = 'block';
+
             const { is, bs, det, gp, ni, ta, tl, teq, cash, inventory, ar, ap, avg_ar, avg_ap, avg_inv, avg_assets, avg_equity, cf_op, cf_inv, cf_fin } = globalFS;
             const t = translations[currentLang];
             
             const pct = (val, base) => base === 0 ? '-' : (Math.round((val / base) * 1000) / 10) + '%';
             const renderVaRows = (arr, base) => arr.filter(d=>d.v!==0).map(d=>`<tr class="border-b"><td class="py-2 px-4">${d.n}</td><td class="py-2 px-4 font-semibold text-brand-600">${pct(Math.abs(d.v), base)}</td></tr>`).join('');
+
             document.getElementById('va-is-table-body').innerHTML = `
                 <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-rev']}</td><td class="py-2 px-4">100%</td></tr>
                 <tr class="bg-gray-50 font-bold"><td class="py-2 px-4 text-red-600">${t['fs-cogs']}</td><td class="py-2 px-4 text-red-600">${pct(is.cogs, is.rev)}</td></tr>
@@ -2157,6 +2327,7 @@
                 ${renderVaRows(det.exp, is.rev)}
                 <tr class="bg-gray-200 font-bold border-t-2"><td class="py-3 px-4 ${ni>=0?'text-green-700':'text-red-700'}">${t['fs-ni']}</td><td class="py-3 px-4 text-lg ${ni>=0?'text-green-700':'text-red-700'}">${pct(ni, is.rev)}</td></tr>
             `;
+
             document.getElementById('va-bs-table-body').innerHTML = `
                 <tr class="bg-gray-100 font-bold"><td class="py-2 px-4">${t['fs-ca']}</td><td class="py-2 px-4 text-brand-600">${pct(bs.ca, ta)}</td></tr>
                 ${renderVaRows(det.ca, ta)}
@@ -2177,6 +2348,7 @@
             
             const roa = avg_assets ? (ni / avg_assets) * 100 : 0;
             const roe = avg_equity ? (ni / avg_equity) * 100 : 0;
+
             const daysInPeriod = 365; 
             const arTurnover = avg_ar && is.rev ? (is.rev / avg_ar) : 0;
             const dso = arTurnover ? (daysInPeriod / arTurnover) : 0;
@@ -2184,54 +2356,67 @@
             const dio = invTurnover ? (daysInPeriod / invTurnover) : 0;
             const apTurnover = avg_ap && is.cogs ? (is.cogs / avg_ap) : 0; 
             const dpo = apTurnover ? (daysInPeriod / apTurnover) : 0;
+
             const ccc = dio + dso - dpo;
+
             document.getElementById('val-rt-ar').innerText = fmtR(arTurnover) + 'x';
             document.getElementById('val-dso').innerText = fmtR(dso);
             document.getElementById('val-rt-inv').innerText = fmtR(invTurnover) + 'x';
             document.getElementById('val-dio').innerText = fmtR(dio);
             document.getElementById('val-rt-ap').innerText = fmtR(apTurnover) + 'x';
             document.getElementById('val-dpo').innerText = fmtR(dpo);
+
             document.getElementById('val-ccc').innerText = isNaN(ccc) || !isFinite(ccc) ? '-' : Math.round(ccc);
             document.getElementById('val-ccc').className = ccc < 30 ? "text-2xl font-black text-green-600" : (ccc > 60 ? "text-2xl font-black text-red-600" : "text-2xl font-black text-brand-700");
+
             const badge = (val, good, bad) => {
                 if(isNaN(val)) return '';
                 if(val >= good) return `<span class="ratio-badge bg-green-100 text-green-700">ممتاز</span>`;
                 if(val <= bad) return `<span class="ratio-badge bg-red-100 text-red-700">خطر</span>`;
                 return `<span class="ratio-badge bg-yellow-100 text-yellow-700">متوسط</span>`;
             };
+
             const ratioRow = (name, val, suffix='', b='') => `<div class="flex justify-between items-center border-b pb-2 hover:bg-gray-50"><span class="text-gray-600 text-sm font-semibold">${name}</span><div>${b}<span class="font-bold text-gray-900">${val}${suffix}</span></div></div>`;
+
             document.getElementById('ratios-liquidity').innerHTML = 
                 ratioRow('نسبة التداول (Current Ratio)', fmtR(currentRatio), 'x', badge(currentRatio, 1.5, 1)) +
                 ratioRow('نسبة السيولة السريعة (Quick Ratio)', fmtR(quickRatio), 'x', badge(quickRatio, 1, 0.5)) +
                 ratioRow('نسبة النقدية (Cash Ratio)', fmtR(bs.cl ? cash / bs.cl : 0), 'x', badge(bs.cl ? cash / bs.cl : 0, 0.5, 0.2)) +
                 ratioRow('رأس المال العامل (Working Capital)', (bs.ca - bs.cl).toLocaleString());
+
             document.getElementById('ratios-profitability').innerHTML = 
                 ratioRow('هامش مجمل الربح (Gross Margin)', pct(gp, is.rev)) +
                 ratioRow('هامش صافي الربح (Net Margin)', pct(ni, is.rev)) +
                 ratioRow('العائد على الأصول (ROA)', fmtR(roa), '%') +
                 ratioRow('العائد على الملكية (ROE)', fmtR(roe), '%');
+
             document.getElementById('ratios-leverage').innerHTML = 
                 ratioRow('نسبة المديونية إلى الملكية (D/E)', fmtR(debtEquity), 'x', badge(1/debtEquity, 1, 0.5)) + 
                 ratioRow('نسبة الالتزامات للأصول (Debt Ratio)', pct(tl, ta));
+
             const ocfRatio = bs.cl ? (cf_op / bs.cl) : 0;
             const qualityOfIncome = ni ? (cf_op / ni) : 0;
             const cashRoa = ta ? (cf_op / ta) * 100 : 0;
             const freeCashFlow = cf_op + cf_inv; 
+
             document.getElementById('ratios-cashflow').innerHTML = 
                 ratioRow('جودة الأرباح (Quality of Income)', fmtR(qualityOfIncome), 'x', badge(qualityOfIncome, 1.0, 0.5)) +
                 ratioRow('تغطية التدفق التشغيلي (OCF Ratio)', fmtR(ocfRatio), 'x', badge(ocfRatio, 1.0, 0.5)) +
                 ratioRow('العائد النقدي على الأصول (Cash ROA)', fmtR(cashRoa), '%') +
                 ratioRow('التدفق النقدي الحر (Free Cash Flow)', freeCashFlow.toLocaleString(undefined, {minimumFractionDigits: 0}));
         }
+
         function generateCFOInsights() {
             if (!globalFS) return;
             document.getElementById('insights-empty-state').style.display = 'none';
             document.getElementById('insights-content').style.display = 'grid';
+
             const { is, bs, gp, ni, ta, tl, teq, cash, cf_op, avg_ar, avg_ap, avg_inv } = globalFS;
             
             let strengths = [];
             let weaknesses = [];
             let recs = [];
+
             // 1. Profitability Analysis
             const netMargin = is.rev ? ni / is.rev : 0;
             const grossMargin = is.rev ? gp / is.rev : 0;
@@ -2246,10 +2431,12 @@
                 weaknesses.push("الشركة تحقق خسائر تشغيلية. الإيرادات الحالية لا تغطي التكاليف والمصروفات.");
                 recs.push("تطبيق خطة طوارئ فورية لإيقاف النزيف، إعادة هيكلة التكاليف الثابتة، والتركيز على المنتجات/الخدمات ذات الهامش الأعلى (Cash Cows).");
             }
+
             if (grossMargin < 0.20 && is.rev > 0) {
                 weaknesses.push("هامش مجمل الربح منخفض (تكلفة البضاعة المباعة تلتهم أغلب الإيرادات).");
                 recs.push("التفاوض المباشر مع الموردين لخفض أسعار الشراء، أو البحث عن بدائل لتقليل التكلفة المباشرة (COGS).");
             }
+
             // 2. Liquidity & Solvency Analysis
             const currentRatio = bs.cl ? bs.ca / bs.cl : 0;
             if (currentRatio > 1.5) {
@@ -2258,6 +2445,7 @@
                 weaknesses.push("عجز خطير في السيولة قصيرة الأجل (نسبة التداول أقل من 1). الأصول المتداولة لا تكفي لتغطية الالتزامات المطلوبة قريباً.");
                 recs.push("التفاوض الفوري مع الدائنين لجدولة الديون وتمديد فترات السداد، ومحاولة تسييل الأصول البطيئة أو الحصول على تسهيلات ائتمانية طارئة.");
             }
+
             const debtToEquity = teq ? tl / teq : 0;
             if (debtToEquity > 2) {
                 weaknesses.push("نسبة مديونية عالية (الاعتماد الكثيف على التمويل الخارجي يفوق حقوق الملكية)، مما يزيد من المخاطر المالية وفوائد القروض.");
@@ -2265,6 +2453,7 @@
             } else if (debtToEquity > 0 && debtToEquity < 0.5) {
                 strengths.push("استقلالية مالية قوية ورافعة مالية منخفضة، هيكل التمويل يعتمد بشكل صحي على حقوق الملكية بدلاً من الديون.");
             }
+
             // 3. Cash Flow & Quality of Earnings Analysis
             if (cf_op > 0 && cf_op >= ni && ni > 0) {
                 strengths.push("جودة أرباح استثنائية: الأرباح الدفترية تتحول بالكامل إلى نقد تشغيلي حقيقي، مما يدل على صحة عمليات التحصيل والبيع.");
@@ -2274,35 +2463,42 @@
             } else if (cf_op < 0 && ni < 0) {
                 weaknesses.push("تآكل مزدوج: خسائر دفترية مقترنة بنزيف نقدي تشغيلي، الوضع يتطلب تدخلاً جوهرياً لضمان استمرارية الشركة (Going Concern).");
             }
+
             // 4. Efficiency & Turnover (DSO, DIO)
             const daysInPeriod = 365;
             const arTurnover = avg_ar && is.rev ? (is.rev / avg_ar) : 0;
             const dso = arTurnover ? (daysInPeriod / arTurnover) : 0;
             const invTurnover = avg_inv && is.cogs ? (is.cogs / avg_inv) : 0;
             const dio = invTurnover ? (daysInPeriod / invTurnover) : 0;
+
             if (dso > 90) {
                 weaknesses.push(`ضعف في كفاءة التحصيل. أموال الشركة مقيدة لدى العملاء بمتوسط (${Math.round(dso)} يوم)، مما يضغط على السيولة.`);
                 recs.push("تشديد سياسات الائتمان للعملاء الجدد، وعرض (خصم تعجيل دفع - Early Payment Discount) لتحفيز العملاء الحاليين على السداد السريع.");
             } else if (dso > 0 && dso < 30) {
                 strengths.push(`كفاءة عالية جداً في تحصيل المديونيات من العملاء بمتوسط (${Math.round(dso)} يوم)، مما يدعم التدفق النقدي بقوة.`);
             }
+
             if (dio > 120) {
                 weaknesses.push(`تراكم وبطء في حركة المخزون. البضاعة تبقى في المستودعات بمتوسط (${Math.round(dio)} يوم)، مما يجمد رأس المال العامل.`);
                 recs.push("إطلاق حملات ترويجية لتصريف المخزون الراكد أو البطيء، وتطبيق نظام (JIT - Just In Time) لتقليل كميات الشراء وربطها بالطلب الفعلي.");
             }
+
             // Fallbacks
             if (strengths.length === 0) strengths.push("بناءً على الأرقام الحالية، أداء الشركة مستقر ولا توجد نقاط قوة استثنائية تتجاوز المعدلات الطبيعية.");
             if (weaknesses.length === 0) weaknesses.push("لا توجد مخاطر مالية جوهرية أو مؤشرات سلبية خطيرة بناءً على ميزان المراجعة الحالي.");
             if (recs.length === 0) recs.push("الاستمرار في مراقبة الأداء المالي والحفاظ على مستويات السيولة والربحية الحالية.");
+
             // DOM Rendering
             const renderList = (arr, elementId, iconStr) => {
                 const ul = document.getElementById(elementId);
                 ul.innerHTML = arr.map(text => `<li class="flex items-start gap-3"><span class="mt-1 shrink-0">${iconStr}</span><span class="leading-relaxed font-semibold">${text}</span></li>`).join('');
             };
+
             renderList(strengths, 'list-strengths', '<i class="fas fa-check-circle text-green-500"></i>');
             renderList(weaknesses, 'list-weaknesses', '<i class="fas fa-times-circle text-red-500"></i>');
             renderList(recs, 'list-recommendations', '<i class="fas fa-arrow-left text-brand-500"></i>');
         }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('cfo_coa')) { savedCOA = JSON.parse(localStorage.getItem('cfo_coa')); }
             if (localStorage.getItem('cfo_mapping')) {
@@ -2311,7 +2507,9 @@
             rebuildMapping(); // ensures every COA account has a mapping entry before anything renders
             renderCOATable();
             renderMappingTable();
+
             if (localStorage.getItem('cfo_tb')) { savedTB = JSON.parse(localStorage.getItem('cfo_tb')); renderTBTable(); }
+
             const mappingContainer = document.getElementById('mapping-table-container');
             if (mappingContainer) {
                 mappingContainer.addEventListener('change', (e) => {
@@ -2326,6 +2524,7 @@
                     }
                 });
             }
+
             const tbTableBody = document.getElementById('tb-table-body');
             if (tbTableBody) {
                 tbTableBody.addEventListener('click', (e) => {
@@ -2333,6 +2532,7 @@
                     if (btn) quickAddToCOA(btn.dataset.code);
                 });
             }
+
             loadCompanyInfo();
             initDownloadsCapability();
             applyTranslations();
