@@ -45,8 +45,12 @@
         .tb-header-group { background-color: #e2e8f0; text-align: center; font-weight: bold; border-bottom: 2px solid #cbd5e1;}
         .fs-row-main { background-color: #f8fafc; font-weight: bold; font-size: 1.1em; color: #1e293b; border-top: 2px solid #e2e8f0; border-bottom: 2px solid #e2e8f0; }
         .fs-row-sub { background-color: #ffffff; font-weight: 600; color: #475569; }
-        .fs-row-detail { background-color: #ffffff; color: #64748b; padding-right: 2rem !important; }
-        .ltr .fs-row-detail { padding-right: 1rem !important; padding-left: 2rem !important; }
+        /* NOTE: padding on a <tr> is never rendered by browsers - it must target the <td> cells
+           inside it, which is what was missing before (rows looked flush against the table edge). */
+        .fs-row-detail { background-color: #ffffff; color: #64748b; }
+        .fs-row-detail td { padding-top: 0.5rem; padding-bottom: 0.5rem; padding-right: 1.5rem; padding-left: 1.5rem; }
+        .fs-row-detail td:first-child { padding-right: 3rem; }
+        .ltr .fs-row-detail td:first-child { padding-right: 1.5rem; padding-left: 3rem; }
         .fs-row-total { background-color: #f1f5f9; font-weight: 800; color: #0f172a; border-top: 2px solid #cbd5e1; border-bottom: 2px double #94a3b8; }
         .ratio-badge { font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 9999px; font-weight: 700; margin-right: 0.5rem; }
         
@@ -306,12 +310,12 @@
                                     <th rowspan="2" class="px-4 py-3 border-b border-gray-200 text-center" id="th-tb-status">حالة الربط</th>
                                 </tr>
                                 <tr>
-                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">مدين</th>
-                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">دائن</th>
-                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">مدين</th>
-                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600">دائن</th>
-                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600 bg-brand-50">مدين</th>
-                                    <th class="px-4 py-2 border-b border-gray-200 text-gray-600 bg-brand-50">دائن</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600" id="th-tb-dr-1">مدين</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600" id="th-tb-cr-1">دائن</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600" id="th-tb-dr-2">مدين</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600" id="th-tb-cr-2">دائن</th>
+                                    <th class="px-4 py-2 border-b border-l border-gray-200 text-gray-600 bg-brand-50" id="th-tb-dr-3">مدين</th>
+                                    <th class="px-4 py-2 border-b border-gray-200 text-gray-600 bg-brand-50" id="th-tb-cr-3">دائن</th>
                                 </tr>
                             </thead>
                             <tbody id="tb-table-body"></tbody>
@@ -335,64 +339,64 @@
 
                 <div id="dash-content" style="display: none;">
                     <!-- Liquidity & Cash Row -->
-                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-water text-blue-500 ml-2"></i>السيولة والتدفقات النقدية</h4>
+                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-water text-blue-500 ml-2"></i><span id="dash-sec-liquidity">السيولة والتدفقات النقدية</span></h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-blue-500">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">النقدية وما في حكمها</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-cash">النقدية وما في حكمها</p>
                             <h4 class="text-2xl font-black text-gray-800" id="val-dash-cash">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-green-500">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">العملاء (AR)</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-ar">العملاء (AR)</p>
                             <h4 class="text-2xl font-black text-gray-800" id="val-dash-ar">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-red-500">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">الموردين (AP)</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-ap">الموردين (AP)</p>
                             <h4 class="text-2xl font-black text-gray-800" id="val-dash-ap">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 border-r-4 border-r-emerald-500">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي التدفق التشغيلي</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-ocf">صافي التدفق التشغيلي</p>
                             <h4 class="text-2xl font-black text-gray-800" id="val-dash-ocf">0</h4>
                         </div>
                     </div>
 
                     <!-- Profitability Row -->
-                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-chart-line text-green-500 ml-2"></i>الأداء والربحية</h4>
+                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-chart-line text-green-500 ml-2"></i><span id="dash-sec-profit">الأداء والربحية</span></h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي الإيرادات</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-rev">صافي الإيرادات</p>
                             <h4 class="text-xl font-bold text-gray-800" id="val-dash-rev">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">مجمل الربح</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-gp">مجمل الربح</p>
                             <h4 class="text-xl font-bold text-brand-600" id="val-dash-gp">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">صافي الربح</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-ni">صافي الربح</p>
                             <h4 class="text-xl font-bold text-green-600" id="val-dash-ni">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">هامش صافي الربح</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-margin">هامش صافي الربح</p>
                             <h4 class="text-xl font-bold text-purple-600" id="val-dash-margin">0%</h4>
                         </div>
                     </div>
 
                     <!-- Structure Row -->
-                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-building text-purple-500 ml-2"></i>الهيكل المالي</h4>
+                    <h4 class="font-bold text-gray-700 mb-3 border-b pb-2"><i class="fas fa-building text-purple-500 ml-2"></i><span id="dash-sec-structure">الهيكل المالي</span></h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي الأصول</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-ta">إجمالي الأصول</p>
                             <h4 class="text-xl font-bold text-gray-800" id="val-dash-ta">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">إجمالي الالتزامات</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-tl">إجمالي الالتزامات</p>
                             <h4 class="text-xl font-bold text-orange-600" id="val-dash-tl">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">حقوق الملكية</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-eq">حقوق الملكية</p>
                             <h4 class="text-xl font-bold text-gray-800" id="val-dash-eq">0</h4>
                         </div>
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 bg-gray-50">
-                            <p class="text-xs text-gray-500 font-bold uppercase mb-1">رأس المال العامل</p>
+                            <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="dash-lbl-wc">رأس المال العامل</p>
                             <h4 class="text-xl font-bold text-blue-600" id="val-dash-wc">0</h4>
                         </div>
                     </div>
@@ -475,7 +479,7 @@
                     <div class="flex bg-gray-100 p-1 rounded-lg border border-gray-200 shrink-0 gap-1 ml-4 no-print">
                         <button onclick="toggleAnalysis('vertical')" id="btn-show-vertical" class="px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap">التحليل الرأسي</button>
                         <button onclick="toggleAnalysis('ratios')" id="btn-show-ratios" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">النسب والمؤشرات</button>
-                        <button onclick="toggleAnalysis('horizontal')" id="btn-show-horizontal" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap relative">مقارنات وتحليل أفقي <span class="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span></button>
+                        <button onclick="toggleAnalysis('horizontal')" id="btn-show-horizontal" class="px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap">مقارنات وتحليل أفقي</button>
                     </div>
                 </div>
 
@@ -506,76 +510,76 @@
                             <!-- Activity & Turnover Ratios -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden md:col-span-2">
                                 <div class="bg-brand-50 p-4 border-b border-brand-200 font-bold text-brand-900 flex justify-between items-center">
-                                    <div class="flex items-center gap-2"><i class="fas fa-sync-alt text-brand-600"></i> معدلات الدوران ودورة التحول النقدي (Activity & CCC)</div>
-                                    <span class="text-xs font-normal text-brand-700">*بناءً على متوسطات الأرصدة (الافتتاحي + الختامي / 2)</span>
+                                    <div class="flex items-center gap-2"><i class="fas fa-sync-alt text-brand-600"></i> <span id="ccc-section-title">معدلات الدوران ودورة التحول النقدي (Activity & CCC)</span></div>
+                                    <span class="text-xs font-normal text-brand-700" id="ccc-section-note">*بناءً على متوسطات الأرصدة (الافتتاحي + الختامي / 2)</span>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x md:divide-x-reverse border-b">
                                     <div class="p-4 bg-white hover:bg-gray-50 transition-colors">
-                                        <p class="text-xs text-gray-500 font-bold uppercase mb-2">العملاء (Accounts Receivable)</p>
+                                        <p class="text-xs text-gray-500 font-bold uppercase mb-2" id="ccc-ar-title">العملاء (Accounts Receivable)</p>
                                         <div class="flex justify-between items-end mb-1">
-                                            <span class="text-sm text-gray-600">معدل الدوران:</span>
+                                            <span class="text-sm text-gray-600" id="ccc-lbl-turnover-1">معدل الدوران:</span>
                                             <span class="font-bold text-gray-900" id="val-rt-ar">-</span>
                                         </div>
                                         <div class="flex justify-between items-end">
-                                            <span class="text-sm text-gray-600">فترة التحصيل (DSO):</span>
-                                            <span class="font-bold text-brand-600" id="val-dso">- يوم</span>
+                                            <span class="text-sm text-gray-600" id="ccc-lbl-dso">فترة التحصيل (DSO):</span>
+                                            <span class="font-bold text-brand-600"><span id="val-dso">-</span> <span id="unit-day-1">يوم</span></span>
                                         </div>
                                     </div>
                                     <div class="p-4 bg-white hover:bg-gray-50 transition-colors">
-                                        <p class="text-xs text-gray-500 font-bold uppercase mb-2">المخزون (Inventory)</p>
+                                        <p class="text-xs text-gray-500 font-bold uppercase mb-2" id="ccc-inv-title">المخزون (Inventory)</p>
                                         <div class="flex justify-between items-end mb-1">
-                                            <span class="text-sm text-gray-600">معدل الدوران:</span>
+                                            <span class="text-sm text-gray-600" id="ccc-lbl-turnover-2">معدل الدوران:</span>
                                             <span class="font-bold text-gray-900" id="val-rt-inv">-</span>
                                         </div>
                                         <div class="flex justify-between items-end">
-                                            <span class="text-sm text-gray-600">فترة التخزين (DIO):</span>
-                                            <span class="font-bold text-orange-600" id="val-dio">- يوم</span>
+                                            <span class="text-sm text-gray-600" id="ccc-lbl-dio">فترة التخزين (DIO):</span>
+                                            <span class="font-bold text-orange-600"><span id="val-dio">-</span> <span id="unit-day-2">يوم</span></span>
                                         </div>
                                     </div>
                                     <div class="p-4 bg-white hover:bg-gray-50 transition-colors">
-                                        <p class="text-xs text-gray-500 font-bold uppercase mb-2">الموردين (Accounts Payable)</p>
+                                        <p class="text-xs text-gray-500 font-bold uppercase mb-2" id="ccc-ap-title">الموردين (Accounts Payable)</p>
                                         <div class="flex justify-between items-end mb-1">
-                                            <span class="text-sm text-gray-600">معدل الدوران:</span>
+                                            <span class="text-sm text-gray-600" id="ccc-lbl-turnover-3">معدل الدوران:</span>
                                             <span class="font-bold text-gray-900" id="val-rt-ap">-</span>
                                         </div>
                                         <div class="flex justify-between items-end">
-                                            <span class="text-sm text-gray-600">فترة السداد (DPO):</span>
-                                            <span class="font-bold text-green-600" id="val-dpo">- يوم</span>
+                                            <span class="text-sm text-gray-600" id="ccc-lbl-dpo">فترة السداد (DPO):</span>
+                                            <span class="font-bold text-green-600"><span id="val-dpo">-</span> <span id="unit-day-3">يوم</span></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="p-5 bg-gray-50 flex flex-col md:flex-row justify-between items-center">
                                     <div>
-                                        <h4 class="font-bold text-gray-800 text-lg">دورة التحول النقدي (Cash Conversion Cycle)</h4>
-                                        <p class="text-xs text-gray-500">الفترة المستغرقة لتحويل الاستثمار في المخزون إلى نقد (DIO + DSO - DPO)</p>
+                                        <h4 class="font-bold text-gray-800 text-lg" id="ccc-title">دورة التحول النقدي (Cash Conversion Cycle)</h4>
+                                        <p class="text-xs text-gray-500" id="ccc-desc">الفترة المستغرقة لتحويل الاستثمار في المخزون إلى نقد (DIO + DSO - DPO)</p>
                                     </div>
                                     <div class="mt-3 md:mt-0 px-6 py-2 bg-white rounded-lg shadow-sm border border-gray-200 text-center">
                                         <span class="text-2xl font-black text-brand-700" id="val-ccc">-</span>
-                                        <span class="text-sm font-bold text-gray-500 ml-1">يوم</span>
+                                        <span class="text-sm font-bold text-gray-500 ml-1" id="unit-day-4">يوم</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Liquidity -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-tint text-blue-500"></i> نسب السيولة (Liquidity)</div>
+                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-tint text-blue-500"></i> <span id="ratios-sec-liquidity">نسب السيولة (Liquidity)</span></div>
                                 <div class="p-4 space-y-4" id="ratios-liquidity"></div>
                             </div>
                             <!-- Profitability -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-chart-pie text-green-500"></i> نسب الربحية (Profitability)</div>
+                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-chart-pie text-green-500"></i> <span id="ratios-sec-profit">نسب الربحية (Profitability)</span></div>
                                 <div class="p-4 space-y-4" id="ratios-profitability"></div>
                             </div>
                             <!-- Leverage -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden md:col-span-2">
-                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-balance-scale-left text-orange-500"></i> نسب المديونية والرافعة (Leverage)</div>
+                                <div class="bg-gray-100 p-3 border-b font-bold text-gray-700 flex items-center gap-2"><i class="fas fa-balance-scale-left text-orange-500"></i> <span id="ratios-sec-leverage">نسب المديونية والرافعة (Leverage)</span></div>
                                 <div class="p-4 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-x-8" id="ratios-leverage"></div>
                             </div>
                             
                             <!-- Cash Flow Analysis -->
                             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden md:col-span-2">
                                 <div class="bg-green-50 p-4 border-b border-green-200 font-bold text-green-900 flex items-center gap-2">
-                                    <i class="fas fa-money-bill-wave text-green-600"></i> تحليل التدفقات النقدية (Cash Flow Analysis)
+                                    <i class="fas fa-money-bill-wave text-green-600"></i> <span id="ratios-sec-cashflow">تحليل التدفقات النقدية (Cash Flow Analysis)</span>
                                 </div>
                                 <div class="p-4 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-x-8" id="ratios-cashflow"></div>
                             </div>
@@ -584,47 +588,20 @@
 
                     <!-- Horizontal Analysis -->
                     <div id="analysis-horizontal" style="display: none;" class="mb-8">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-5 no-print">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div>
-                                    <h4 class="font-bold text-gray-800">رفع ميزان الفترة المقارنة</h4>
-                                    <p class="text-xs text-gray-500 mt-1">ارفع ملف الميزان بنفس قالب الميزان الأساسي. تتم المقارنة في هذه الجلسة فقط ولا يُحفظ الملف المقارن.</p>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <input id="comparison-period-label" type="text" placeholder="اسم الفترة المقارنة" class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-40">
-                                    <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2 px-4 rounded-lg text-sm cursor-pointer flex items-center gap-2">
-                                        <i class="fas fa-upload"></i> رفع الميزان المقارن
-                                        <input type="file" class="hidden" accept=".xlsx,.xls,.csv" onchange="handleComparisonTBUpload(event)">
-                                    </label>
-                                    <button id="btn-clear-comparison" onclick="clearComparisonTB()" class="hidden text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 rounded-lg px-3 py-2 text-sm font-semibold">مسح المقارنة</button>
-                                </div>
+                        <div id="horiz-upload-state" class="bg-white rounded-xl shadow-sm border border-gray-100 p-10 text-center">
+                            <i class="fas fa-balance-scale-right text-5xl mb-4 text-brand-300"></i>
+                            <h4 class="text-lg font-bold text-gray-800 mb-2" id="horiz-upload-title">ارفع ميزان المراجعة المقارن</h4>
+                            <p class="text-sm text-gray-500 max-w-xl mx-auto mb-6 leading-relaxed" id="horiz-upload-desc">ارفع ميزان مراجعة فترة أخرى (مثال: العام أو الربع السابق) لمقارنته بالميزان الحالي، باستخدام نفس شجرة الحسابات والتصنيفات المحفوظة، للحصول على تحليل أفقي كامل للقوائم المالية وأهم النسب مع ملاحظات تلقائية.</p>
+                            <div class="flex flex-col items-center gap-3">
+                                <input type="text" id="horiz-period-label" oninput="saveHorizLabel()" placeholder="اسم الفترة المقارنة (مثال: 2024)" class="border border-gray-300 rounded-lg px-4 py-2 text-sm w-72 text-center focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                <label class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-2.5 rounded-lg text-sm cursor-pointer transition-colors flex items-center gap-2">
+                                    <i class="fas fa-upload"></i><span id="horiz-upload-btn">رفع ملف إكسيل</span>
+                                    <input type="file" class="hidden" accept=".xlsx, .xls" onchange="handleTBPriorUpload(event)">
+                                </label>
+                                <button onclick="downloadTBTemplate()" class="text-xs text-gray-400 hover:text-brand-600 underline" id="horiz-template-hint">استخدم نفس قالب ميزان المراجعة المستخدم بالأعلى</button>
                             </div>
                         </div>
-                        <div id="comparison-quality" class="hidden mb-5"></div>
-                        <div id="comparison-summary" class="hidden bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-5"></div>
-                        <div id="comparison-results" class="hidden space-y-5">
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-                                <div class="bg-brand-900 text-white p-4 font-bold" id="comparison-is-title">التحليل الأفقي لقائمة الدخل</div>
-                                <table class="w-full text-sm text-right"><thead class="bg-gray-100"><tr><th class="p-3">البند</th><th class="p-3" id="comparison-prior-is-head">الفترة المقارنة</th><th class="p-3" id="comparison-current-is-head">الفترة الحالية</th><th class="p-3">مقدار التغير</th><th class="p-3">نسبة التغير</th></tr></thead><tbody id="comparison-is-body"></tbody></table>
-                            </div>
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-                                <div class="bg-brand-900 text-white p-4 font-bold">التحليل الأفقي للمركز المالي</div>
-                                <table class="w-full text-sm text-right"><thead class="bg-gray-100"><tr><th class="p-3">البند</th><th class="p-3" id="comparison-prior-bs-head">الفترة المقارنة</th><th class="p-3" id="comparison-current-bs-head">الفترة الحالية</th><th class="p-3">مقدار التغير</th><th class="p-3">نسبة التغير</th></tr></thead><tbody id="comparison-bs-body"></tbody></table>
-                            </div>
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-                                <div class="bg-brand-900 text-white p-4 font-bold">مقارنة مؤشرات التدفقات النقدية</div>
-                                <table class="w-full text-sm text-right"><thead class="bg-gray-100"><tr><th class="p-3">المؤشر</th><th class="p-3" id="comparison-prior-cf-head">الفترة المقارنة</th><th class="p-3" id="comparison-current-cf-head">الفترة الحالية</th><th class="p-3">مقدار التغير</th><th class="p-3">نسبة التغير</th></tr></thead><tbody id="comparison-cf-body"></tbody></table>
-                            </div>
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-                                <div class="bg-brand-900 text-white p-4 font-bold">مقارنة النسب المالية الرئيسية</div>
-                                <table class="w-full text-sm text-right"><thead class="bg-gray-100"><tr><th class="p-3">النسبة</th><th class="p-3" id="comparison-prior-ratios-head">الفترة المقارنة</th><th class="p-3" id="comparison-current-ratios-head">الفترة الحالية</th><th class="p-3">مقدار التغير</th><th class="p-3">نسبة التغير</th></tr></thead><tbody id="comparison-ratios-body"></tbody></table>
-                            </div>
-                        </div>
-                        <div id="comparison-empty" class="bg-blue-50 border border-blue-200 rounded-xl p-8 text-center text-blue-800">
-                            <i class="fas fa-balance-scale text-4xl mb-3 opacity-70"></i>
-                            <h4 class="text-lg font-bold mb-2">ارفع ميزان الفترة التي تريد المقارنة بها</h4>
-                            <p class="text-sm max-w-2xl mx-auto">تأكد من تساوي طول الفترتين واستخدام قالب الميزان نفسه. تتم مطابقة الحسابات بشجرة الحسابات والتصنيفات الحالية.</p>
-                        </div>
+                        <div id="horiz-comparison-state" style="display:none;"></div>
                     </div>
 
                 </div>
@@ -700,30 +677,25 @@
                 <div id="forecast-content" style="display: none;" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <!-- Controls -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col gap-6 no-print">
-                        <h4 class="font-bold text-gray-800 border-b pb-2"><i class="fas fa-sliders-h text-brand-500 ml-2"></i> الفرضيات (Assumptions)</h4>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button onclick="applyForecastScenario('conservative')" class="text-xs font-semibold rounded-lg border border-orange-200 bg-orange-50 text-orange-700 py-2 hover:bg-orange-100">متحفظ</button>
-                            <button onclick="applyForecastScenario('base')" class="text-xs font-semibold rounded-lg border border-brand-200 bg-brand-50 text-brand-700 py-2 hover:bg-brand-100">أساسي</button>
-                            <button onclick="applyForecastScenario('optimistic')" class="text-xs font-semibold rounded-lg border border-green-200 bg-green-50 text-green-700 py-2 hover:bg-green-100">متفائل</button>
-                        </div>
+                        <h4 class="font-bold text-gray-800 border-b pb-2"><i class="fas fa-sliders-h text-brand-500 ml-2"></i> <span id="forecast-assumptions-title">الفرضيات (Assumptions)</span></h4>
                         
                         <div>
-                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span>نمو الإيرادات المتوقع</span><span id="val-range-rev" class="text-brand-600">0%</span></label>
+                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span id="forecast-lbl-rev">نمو الإيرادات المتوقع</span><span id="val-range-rev" class="text-brand-600">0%</span></label>
                             <input type="range" id="range-rev" min="-50" max="100" value="0" step="1" class="w-full accent-brand-600" oninput="updateForecastUI()">
                         </div>
                         
                         <div>
-                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span>نسبة تكلفة المبيعات (من الإيرادات)</span><span id="val-range-cogs" class="text-red-600">0%</span></label>
+                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span id="forecast-lbl-cogs">نسبة تكلفة المبيعات (من الإيرادات)</span><span id="val-range-cogs" class="text-red-600">0%</span></label>
                             <input type="range" id="range-cogs" min="0" max="100" value="0" step="1" class="w-full accent-red-600" oninput="updateForecastUI()">
                         </div>
                         
                         <div>
-                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span>تغير المصروفات التشغيلية</span><span id="val-range-opex" class="text-orange-600">0%</span></label>
+                            <label class="flex justify-between text-sm font-semibold text-gray-700 mb-2"><span id="forecast-lbl-opex">تغير المصروفات التشغيلية</span><span id="val-range-opex" class="text-orange-600">0%</span></label>
                             <input type="range" id="range-opex" min="-50" max="100" value="0" step="1" class="w-full accent-orange-600" oninput="updateForecastUI()">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">استثمارات رأسمالية جديدة (أصول CAPEX)</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" id="forecast-lbl-capex">استثمارات رأسمالية جديدة (أصول CAPEX)</label>
                             <input type="number" id="input-new-assets" value="0" class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" oninput="updateForecastUI()">
                         </div>
                     </div>
@@ -732,42 +704,56 @@
                     <div class="lg:col-span-2 flex flex-col gap-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="bg-brand-50 p-4 rounded-xl border border-brand-100">
-                                <p class="text-xs text-brand-600 font-bold uppercase mb-1">صافي الربح المتوقع</p>
+                                <p class="text-xs text-brand-600 font-bold uppercase mb-1" id="forecast-lbl-ni">صافي الربح المتوقع</p>
                                 <h4 class="text-2xl font-black text-brand-900" id="val-f-ni">0</h4>
                                 <p class="text-xs mt-1" id="var-f-ni">-</p>
                             </div>
                             <div class="bg-green-50 p-4 rounded-xl border border-green-100">
-                                <p class="text-xs text-green-600 font-bold uppercase mb-1">النقدية المتوقعة (Cash)</p>
+                                <p class="text-xs text-green-600 font-bold uppercase mb-1" id="forecast-lbl-cash">النقدية المتوقعة (Cash)</p>
                                 <h4 class="text-2xl font-black text-green-900" id="val-f-cash">0</h4>
-                                <p class="text-xs mt-1 text-gray-500">بعد الاستثمارات والأرباح</p>
+                                <p class="text-xs mt-1 text-gray-500" id="forecast-lbl-cash-note">بعد الاستثمارات والأرباح</p>
                             </div>
                             <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
-                                <p class="text-xs text-purple-600 font-bold uppercase mb-1">إجمالي الأصول المتوقع</p>
+                                <p class="text-xs text-purple-600 font-bold uppercase mb-1" id="forecast-lbl-assets">إجمالي الأصول المتوقع</p>
                                 <h4 class="text-2xl font-black text-purple-900" id="val-f-assets">0</h4>
                                 <p class="text-xs mt-1" id="var-f-assets">-</p>
                             </div>
                         </div>
 
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                            <div>
+                                <p class="text-xs text-gray-500 font-bold uppercase mb-1 flex items-center gap-1"><i class="fas fa-bullseye text-gray-400"></i><span id="forecast-lbl-breakeven">نقطة التعادل (الإيرادات اللازمة لتغطية المصروفات)</span></p>
+                                <h4 class="text-xl font-black text-gray-800" id="val-f-breakeven">0</h4>
+                            </div>
+                            <div class="sm:text-left sm:border-r sm:pr-4 sm:border-gray-100">
+                                <p class="text-xs text-gray-500 font-bold uppercase mb-1" id="forecast-lbl-mos">هامش الأمان (Margin of Safety)</p>
+                                <h4 class="text-xl font-black" id="val-f-mos">0%</h4>
+                            </div>
+                        </div>
+
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex-1">
-                            <div class="p-4 bg-gray-50 border-b border-gray-200 font-bold text-gray-700">مقارنة قائمة الدخل (الفعلي مقابل المتوقع)</div>
+                            <div class="p-4 bg-gray-50 border-b border-gray-200 font-bold text-gray-700" id="forecast-compare-title">مقارنة قائمة الدخل (الفعلي مقابل المتوقع)</div>
                             <table class="w-full text-sm text-right text-gray-800">
                                 <thead class="bg-gray-100 text-xs uppercase text-gray-600">
                                     <tr>
-                                        <th class="px-4 py-3">البند</th>
-                                        <th class="px-4 py-3">الفعلي (الحالي)</th>
-                                        <th class="px-4 py-3 bg-brand-50">المتوقع (Forecast)</th>
-                                        <th class="px-4 py-3">الانحراف (Variance)</th>
+                                        <th class="px-4 py-3" id="forecast-th-item">البند</th>
+                                        <th class="px-4 py-3" id="forecast-th-actual">الفعلي (الحالي)</th>
+                                        <th class="px-4 py-3 bg-brand-50" id="forecast-th-forecast">المتوقع (Forecast)</th>
+                                        <th class="px-4 py-3" id="forecast-th-variance">الانحراف (Variance)</th>
                                     </tr>
                                 </thead>
                                 <tbody id="forecast-table-body" class="divide-y divide-gray-100"></tbody>
                             </table>
-                            <p id="forecast-risk-note" class="px-4 py-3 text-xs text-gray-600 bg-yellow-50 border-t border-yellow-100"></p>
                         </div>
                     </div>
                 </div>
             </div>
 
         </div>
+
+        <footer class="h-8 flex items-center justify-center border-t border-gray-100 bg-white shrink-0 no-print">
+            <p class="text-[11px] text-gray-400 tracking-wide" id="app-footer-credit">جميع الحقوق محفوظة &copy; 2026 - أحمد عبدالباسط</p>
+        </footer>
     </main>
 
     <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 no-print"></div>
@@ -776,12 +762,10 @@
         let currentLang = 'ar';
         let savedCOA = [];
         let savedTB = [];
-        // Comparative TB is intentionally session-only; it is never written to localStorage.
-        let comparisonTB = null;
-        let comparisonFS = null;
-        let comparisonPeriodName = '';
         let savedMapping = {}; // { [code]: { primary, sub, cf: 'operating'|'investing'|'financing'|'cash'|null, manual } }
         let globalFS = null; 
+        let savedTB_prior = []; // comparative-period trial balance for horizontal analysis (same COA/mapping)
+        let horizPriorLabel = ''; // user-given label for the comparative period (e.g. "2024")
         let isChartObj = null;
         let bsChartObj = null;
         let downloadsCap = null; // 'downloads' runtime capability, resolved on load when running as a published artifact
@@ -1056,7 +1040,7 @@
             renderMappingTable(document.getElementById('mapping-search') ? document.getElementById('mapping-search').value : '');
             renderCOATable();
             showToast(currentLang === 'ar' ? 'تم تحديث تصنيف الحساب' : 'Account classification updated');
-            if (savedTB.length > 0 && savedCOA.length > 0) { generateFinancialStatements(); if (comparisonTB) calculateAndRenderComparison(); }
+            if (savedTB.length > 0 && savedCOA.length > 0) generateFinancialStatements();
         }
 
         function resetAllMapping() {
@@ -1067,7 +1051,7 @@
             renderMappingTable();
             renderCOATable();
             showToast(currentLang === 'ar' ? 'تمت إعادة كل الحسابات للتصنيف الآلي' : 'All accounts reset to automatic classification');
-            if (savedTB.length > 0 && savedCOA.length > 0) { generateFinancialStatements(); if (comparisonTB) calculateAndRenderComparison(); }
+            if (savedTB.length > 0 && savedCOA.length > 0) generateFinancialStatements();
         }
 
         function buildPrimaryOptions(selected) {
@@ -1225,6 +1209,36 @@
                 "txt-nav-mapping": "Account Mapping",
                 "step-coa-label": "Chart of Accounts", "step-tb-label": "Trial Balance", "step-fs-label": "Statements & Analysis Ready",
                 "backup-export-btn": "Backup", "backup-restore-btn": "Restore Backup",
+                "app-footer-credit": "All Rights Reserved © 2026 - Ahmed Abdelbasset",
+                "th-tb-dr-1": "Debit", "th-tb-cr-1": "Credit", "th-tb-dr-2": "Debit", "th-tb-cr-2": "Credit", "th-tb-dr-3": "Debit", "th-tb-cr-3": "Credit",
+                "dash-sec-liquidity": "Liquidity & Cash Flow", "dash-lbl-cash": "Cash & Equivalents", "dash-lbl-ar": "Accounts Receivable (AR)",
+                "dash-lbl-ap": "Accounts Payable (AP)", "dash-lbl-ocf": "Net Operating Cash Flow",
+                "dash-sec-profit": "Performance & Profitability", "dash-lbl-rev": "Net Revenue", "dash-lbl-gp": "Gross Profit",
+                "dash-lbl-ni": "Net Income", "dash-lbl-margin": "Net Profit Margin",
+                "dash-sec-structure": "Financial Structure", "dash-lbl-ta": "Total Assets", "dash-lbl-tl": "Total Liabilities",
+                "dash-lbl-eq": "Total Equity", "dash-lbl-wc": "Working Capital",
+                "ccc-section-title": "Turnover Ratios & Cash Conversion Cycle (Activity & CCC)",
+                "ccc-section-note": "*Based on average balances (opening + ending / 2)",
+                "ccc-ar-title": "Accounts Receivable", "ccc-lbl-turnover-1": "Turnover Rate:", "ccc-lbl-dso": "Collection Period (DSO):",
+                "ccc-inv-title": "Inventory", "ccc-lbl-turnover-2": "Turnover Rate:", "ccc-lbl-dio": "Storage Period (DIO):",
+                "ccc-ap-title": "Accounts Payable", "ccc-lbl-turnover-3": "Turnover Rate:", "ccc-lbl-dpo": "Payment Period (DPO):",
+                "unit-day-1": "days", "unit-day-2": "days", "unit-day-3": "days", "unit-day-4": "days",
+                "ccc-title": "Cash Conversion Cycle", "ccc-desc": "The time needed to convert inventory investment into cash (DIO + DSO - DPO)",
+                "ratios-sec-liquidity": "Liquidity Ratios", "ratios-sec-profit": "Profitability Ratios",
+                "ratios-sec-leverage": "Debt & Leverage Ratios", "ratios-sec-cashflow": "Cash Flow Analysis",
+                "horiz-upload-title": "Upload the Comparative Trial Balance", "horiz-upload-desc": "Upload another period's trial balance (e.g. last year or last quarter) to compare it against the current one, using the same Chart of Accounts and classifications, for a full horizontal analysis of the statements and key ratios with automatic commentary.",
+                "horiz-upload-btn": "Upload Excel File", "horiz-template-hint": "Uses the same Trial Balance template as above",
+                "horiz-clear-btn": "Remove Comparison", "horiz-commentary-title": "Horizontal Analysis Notes",
+                "horiz-title-suffix": "Horizontal Analysis", "horiz-ratios-title": "Key Financial Ratios - Comparison",
+                "horiz-th-item": "Item", "horiz-th-ratio": "Ratio", "horiz-th-change": "Change", "horiz-th-changepct": "Change %",
+                "horiz-cf-net": "Net Change in Cash",
+                "forecast-assumptions-title": "Assumptions", "forecast-lbl-rev": "Expected Revenue Growth",
+                "forecast-lbl-cogs": "Cost of Sales Ratio (of Revenue)", "forecast-lbl-opex": "Change in Operating Expenses",
+                "forecast-lbl-capex": "New Capital Investments (CAPEX)", "forecast-lbl-ni": "Projected Net Income",
+                "forecast-lbl-cash": "Projected Cash", "forecast-lbl-cash-note": "After investments and earnings",
+                "forecast-lbl-assets": "Projected Total Assets", "forecast-compare-title": "Income Statement Comparison (Actual vs. Forecast)",
+                "forecast-lbl-breakeven": "Break-even Revenue (needed to cover costs)", "forecast-lbl-mos": "Margin of Safety",
+                "forecast-th-item": "Item", "forecast-th-actual": "Actual (Current)", "forecast-th-forecast": "Forecast", "forecast-th-variance": "Variance",
                 "btn-pdf-text": "Export PDF", "btn-excel-text": "Export Excel",
                 "coa-header": "Chart of Accounts Setup", "coa-desc": "Upload Excel with Account Code and Name only. System auto-classifies them.",
                 "coa-download-btn": "Template", "coa-upload-title": "Upload", "coa-saved-title": "Saved Accounts", "coa-clear-btn": "Reset",
@@ -1267,7 +1281,14 @@
                 "insights-empty-title": "Awaiting Analysis", "insights-empty-desc": "Upload TB to generate strategic insights.",
                 "lbl-strengths": "Strengths", "lbl-weaknesses": "Risks & Weaknesses", "lbl-recommendations": "Strategic Actions",
                 "forecast-title": "FP&A and Forecasting", "forecast-subtitle": "Simulate revenue and cost scenarios to see future impact on profits and liquidity.",
-                "btn-reset-forecast": "Reset", "forecast-empty-title": "Awaiting Data", "forecast-empty-desc": "Upload TB to start forecasting."
+                "btn-reset-forecast": "Reset", "forecast-empty-title": "Awaiting Data", "forecast-empty-desc": "Upload TB to start forecasting.",
+                "ratio-current": "Current Ratio", "ratio-quick": "Quick Ratio", "ratio-cash": "Cash Ratio", "ratio-dir": "Defensive Interval Ratio", "ratio-wc": "Working Capital", "ratio-wc-pct": "Working Capital (% of Total Assets)",
+                "ratio-gm": "Gross Margin", "ratio-nm": "Net Margin", "ratio-roa": "Return on Assets (ROA)", "ratio-roe": "Return on Equity (ROE)",
+                "ratio-de": "Debt to Equity (D/E)", "ratio-debt": "Debt Ratio",
+                "ratio-qoi": "Quality of Income", "ratio-ocf": "Operating Cash Flow Ratio", "ratio-croa": "Cash Return on Assets", "ratio-fcf": "Free Cash Flow",
+                "badge-excellent": "Excellent", "badge-risk": "Risk", "badge-average": "Average",
+                "lbl-breakeven": "Break-even Revenue", "lbl-breakeven-hint": "Revenue level where net income is zero, at the current cost structure",
+                "lbl-margin-of-safety": "Margin of Safety"
             },
             ar: {
                 "txt-nav-coa": "شجرة الحسابات", "txt-nav-tb": "ميزان المراجعة", "txt-nav-dash": "لوحة القيادة",
@@ -1276,6 +1297,36 @@
                 "txt-nav-mapping": "ربط وتصنيف الحسابات",
                 "step-coa-label": "شجرة الحسابات", "step-tb-label": "ميزان المراجعة", "step-fs-label": "القوائم والتحليلات جاهزة",
                 "backup-export-btn": "نسخة احتياطية", "backup-restore-btn": "استعادة نسخة",
+                "app-footer-credit": "جميع الحقوق محفوظة © 2026 - أحمد عبدالباسط",
+                "th-tb-dr-1": "مدين", "th-tb-cr-1": "دائن", "th-tb-dr-2": "مدين", "th-tb-cr-2": "دائن", "th-tb-dr-3": "مدين", "th-tb-cr-3": "دائن",
+                "dash-sec-liquidity": "السيولة والتدفقات النقدية", "dash-lbl-cash": "النقدية وما في حكمها", "dash-lbl-ar": "العملاء (AR)",
+                "dash-lbl-ap": "الموردين (AP)", "dash-lbl-ocf": "صافي التدفق التشغيلي",
+                "dash-sec-profit": "الأداء والربحية", "dash-lbl-rev": "صافي الإيرادات", "dash-lbl-gp": "مجمل الربح",
+                "dash-lbl-ni": "صافي الربح", "dash-lbl-margin": "هامش صافي الربح",
+                "dash-sec-structure": "الهيكل المالي", "dash-lbl-ta": "إجمالي الأصول", "dash-lbl-tl": "إجمالي الالتزامات",
+                "dash-lbl-eq": "حقوق الملكية", "dash-lbl-wc": "رأس المال العامل",
+                "ccc-section-title": "معدلات الدوران ودورة التحول النقدي (Activity & CCC)",
+                "ccc-section-note": "*بناءً على متوسطات الأرصدة (الافتتاحي + الختامي / 2)",
+                "ccc-ar-title": "العملاء (Accounts Receivable)", "ccc-lbl-turnover-1": "معدل الدوران:", "ccc-lbl-dso": "فترة التحصيل (DSO):",
+                "ccc-inv-title": "المخزون (Inventory)", "ccc-lbl-turnover-2": "معدل الدوران:", "ccc-lbl-dio": "فترة التخزين (DIO):",
+                "ccc-ap-title": "الموردين (Accounts Payable)", "ccc-lbl-turnover-3": "معدل الدوران:", "ccc-lbl-dpo": "فترة السداد (DPO):",
+                "unit-day-1": "يوم", "unit-day-2": "يوم", "unit-day-3": "يوم", "unit-day-4": "يوم",
+                "ccc-title": "دورة التحول النقدي (Cash Conversion Cycle)", "ccc-desc": "الفترة المستغرقة لتحويل الاستثمار في المخزون إلى نقد (DIO + DSO - DPO)",
+                "ratios-sec-liquidity": "نسب السيولة (Liquidity)", "ratios-sec-profit": "نسب الربحية (Profitability)",
+                "ratios-sec-leverage": "نسب المديونية والرافعة (Leverage)", "ratios-sec-cashflow": "تحليل التدفقات النقدية (Cash Flow Analysis)",
+                "horiz-upload-title": "ارفع ميزان المراجعة المقارن", "horiz-upload-desc": "ارفع ميزان مراجعة فترة أخرى (مثال: العام أو الربع السابق) لمقارنته بالميزان الحالي، باستخدام نفس شجرة الحسابات والتصنيفات المحفوظة، للحصول على تحليل أفقي كامل للقوائم المالية وأهم النسب مع ملاحظات تلقائية.",
+                "horiz-upload-btn": "رفع ملف إكسيل", "horiz-template-hint": "استخدم نفس قالب ميزان المراجعة المستخدم بالأعلى",
+                "horiz-clear-btn": "إزالة المقارنة", "horiz-commentary-title": "ملاحظات التحليل الأفقي",
+                "horiz-title-suffix": "تحليل أفقي", "horiz-ratios-title": "أهم النسب المالية - مقارنة",
+                "horiz-th-item": "البند", "horiz-th-ratio": "النسبة", "horiz-th-change": "التغير", "horiz-th-changepct": "التغير %",
+                "horiz-cf-net": "صافي التغير في النقدية",
+                "forecast-assumptions-title": "الفرضيات (Assumptions)", "forecast-lbl-rev": "نمو الإيرادات المتوقع",
+                "forecast-lbl-cogs": "نسبة تكلفة المبيعات (من الإيرادات)", "forecast-lbl-opex": "تغير المصروفات التشغيلية",
+                "forecast-lbl-capex": "استثمارات رأسمالية جديدة (أصول CAPEX)", "forecast-lbl-ni": "صافي الربح المتوقع",
+                "forecast-lbl-cash": "النقدية المتوقعة (Cash)", "forecast-lbl-cash-note": "بعد الاستثمارات والأرباح",
+                "forecast-lbl-assets": "إجمالي الأصول المتوقع", "forecast-compare-title": "مقارنة قائمة الدخل (الفعلي مقابل المتوقع)",
+                "forecast-lbl-breakeven": "نقطة التعادل (الإيرادات اللازمة لتغطية المصروفات)", "forecast-lbl-mos": "هامش الأمان (Margin of Safety)",
+                "forecast-th-item": "البند", "forecast-th-actual": "الفعلي (الحالي)", "forecast-th-forecast": "المتوقع (Forecast)", "forecast-th-variance": "الانحراف (Variance)",
                 "btn-pdf-text": "تصدير PDF", "btn-excel-text": "تصدير Excel",
                 "coa-header": "تأسيس شجرة الحسابات", "coa-desc": "قم برفع ملف الإكسيل برقم واسم الحساب فقط، وسيقوم النظام بتصنيفها آلياً بناءً على الكود الخاص بكل حساب.",
                 "coa-download-btn": "تحميل القالب", "coa-upload-title": "رفع الملف", "coa-saved-title": "شجرة الحسابات المحفوظة", "coa-clear-btn": "تهيئة",
@@ -1318,7 +1369,14 @@
                 "insights-empty-title": "بانتظار تحليل البيانات", "insights-empty-desc": "قم برفع ميزان المراجعة لتوليد الرؤية الاستراتيجية.",
                 "lbl-strengths": "نقاط القوة", "lbl-weaknesses": "المخاطر ونقاط الضعف", "lbl-recommendations": "توصيات استراتيجية",
                 "forecast-title": "التنبؤ المالي والتخطيط (FP&A)", "forecast-subtitle": "محاكاة لسيناريوهات الإيرادات والتكاليف وتأثيرها المستقبلي على الأرباح والسيولة.",
-                "btn-reset-forecast": "إعادة ضبط", "forecast-empty-title": "بانتظار البيانات", "forecast-empty-desc": "أدخل ميزان المراجعة لتبدأ المحاكاة."
+                "btn-reset-forecast": "إعادة ضبط", "forecast-empty-title": "بانتظار البيانات", "forecast-empty-desc": "أدخل ميزان المراجعة لتبدأ المحاكاة.",
+                "ratio-current": "نسبة التداول (Current Ratio)", "ratio-quick": "نسبة السيولة السريعة (Quick Ratio)", "ratio-cash": "نسبة النقدية (Cash Ratio)", "ratio-dir": "الفترة الدفاعية (Defensive Interval)", "ratio-wc": "رأس المال العامل (Working Capital)", "ratio-wc-pct": "رأس المال العامل (% من إجمالي الأصول)",
+                "ratio-gm": "هامش مجمل الربح (Gross Margin)", "ratio-nm": "هامش صافي الربح (Net Margin)", "ratio-roa": "العائد على الأصول (ROA)", "ratio-roe": "العائد على الملكية (ROE)",
+                "ratio-de": "نسبة المديونية إلى الملكية (D/E)", "ratio-debt": "نسبة الالتزامات للأصول (Debt Ratio)",
+                "ratio-qoi": "جودة الأرباح (Quality of Income)", "ratio-ocf": "تغطية التدفق التشغيلي (OCF Ratio)", "ratio-croa": "العائد النقدي على الأصول (Cash ROA)", "ratio-fcf": "التدفق النقدي الحر (Free Cash Flow)",
+                "badge-excellent": "ممتاز", "badge-risk": "خطر", "badge-average": "متوسط",
+                "lbl-breakeven": "نقطة التعادل (الإيرادات)", "lbl-breakeven-hint": "مستوى الإيرادات الذي يكون عنده صافي الربح صفر، وفق هيكل التكاليف الحالي",
+                "lbl-margin-of-safety": "هامش الأمان"
             }
         };
 
@@ -1341,9 +1399,25 @@
             document.body.classList.toggle('ltr', currentLang === 'en');
             
             applyTranslations(); 
+            // The header title isn't itself a translations-dict key (it mirrors whichever nav item
+            // is active), so it needs its own refresh here - applyTranslations() can't reach it.
+            const activeNav = document.querySelector('.sidebar-item.active');
+            if (activeNav) {
+                const navSpan = activeNav.querySelector('span');
+                if (navSpan) document.getElementById('current-tab-title').innerText = translations[currentLang][navSpan.id];
+            }
             renderCOATable(document.getElementById('coa-search') ? document.getElementById('coa-search').value : '');
             renderMappingTable(document.getElementById('mapping-search') ? document.getElementById('mapping-search').value : '');
             renderTBTable(document.getElementById('tb-search') ? document.getElementById('tb-search').value : '');
+            renderHorizontalAnalysis();
+            // The bulk-mapping dropdowns are built once (cached) - if the bar is open, rebuild their
+            // option labels in the new language rather than leaving them stale.
+            const bulkBar = document.getElementById('mapping-bulk-bar');
+            if (bulkBar && !bulkBar.classList.contains('hidden')) {
+                const curPrimary = document.getElementById('bulk-primary').value;
+                document.getElementById('bulk-primary').innerHTML = buildPrimaryOptions(curPrimary);
+                onBulkPrimaryChange();
+            }
             
             if (document.getElementById('fs-tab').classList.contains('active') || globalFS) generateFinancialStatements();
         }
@@ -1500,10 +1574,6 @@
             const msg = currentLang === 'ar' ? 'هل تريد مسح شجرة الحسابات؟' : 'Clear the Chart of Accounts?';
             if(confirm(msg)) {
                 savedCOA = [];
-            const msg = currentLang === 'ar' ? 'هل تريد مسح شجرة الحسابات؟' : 'Clear the Chart of Accounts?';
-            if(confirm(msg)) {
-                clearComparisonTB();
-                savedCOA = [];
                 savedMapping = {};
                 globalFS = null;
                 localStorage.removeItem('cfo_coa');
@@ -1538,168 +1608,9 @@
                     const net = (op_dr - op_cr) + (per_dr - per_cr);
                     return { code, name: r[1]?String(r[1]).trim():'', op_dr, op_cr, per_dr, per_cr, end_dr: net>0?net:0, end_cr: net<0?Math.abs(net):0, inCOA: savedCOA.some(a => a.code === code) };
                 }).filter(r => r !== null);
-                if (savedTB.length > 0) { localStorage.setItem('cfo_tb', JSON.stringify(savedTB)); renderTBTable(); if (comparisonTB && globalFS) calculateAndRenderComparison(); showToast(currentLang === 'ar' ? "تم رفع ميزان المراجعة بنجاح!" : "TB Uploaded Successfully!"); }
+                if (savedTB.length > 0) { localStorage.setItem('cfo_tb', JSON.stringify(savedTB)); renderTBTable(); showToast(currentLang === 'ar' ? "تم رفع ميزان المراجعة بنجاح!" : "TB Uploaded Successfully!"); }
             };
             reader.readAsArrayBuffer(file); event.target.value = '';
-        }
-
-        function handleComparisonTBUpload(event) {
-            if (!globalFS || savedCOA.length === 0) {
-                showToast(currentLang === 'ar' ? 'ارفع الميزان الأساسي وشغّل القوائم أولاً.' : 'Upload the primary trial balance and generate statements first.', 'error');
-                event.target.value = '';
-                return;
-            }
-            const file = event.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-                    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
-                    const fmt = n => { const v = parseFloat(String(n ?? '').replace(/,/g, '')); return Number.isFinite(v) ? v : 0; };
-                    const parsed = rows.slice(1).map(r => {
-                        const code = r[0] ? String(r[0]).trim() : '';
-                        if (!code) return null;
-                        const op_dr = fmt(r[2]), op_cr = fmt(r[3]), per_dr = fmt(r[4]), per_cr = fmt(r[5]);
-                        const net = (op_dr - op_cr) + (per_dr - per_cr);
-                        return { code, name: r[1] ? String(r[1]).trim() : '', op_dr, op_cr, per_dr, per_cr,
-                            end_dr: net > 0 ? net : 0, end_cr: net < 0 ? Math.abs(net) : 0,
-                            inCOA: savedCOA.some(a => a.code === code) };
-                    }).filter(Boolean);
-                    if (!parsed.length) throw new Error('empty');
-
-                    comparisonTB = parsed;
-                    comparisonPeriodName = (document.getElementById('comparison-period-label').value || '').trim() || file.name.replace(/\.[^.]+$/, '');
-                    calculateAndRenderComparison();
-                    document.getElementById('btn-clear-comparison').classList.remove('hidden');
-                    showToast(currentLang === 'ar' ? 'تم تحليل الميزان المقارن مؤقتًا.' : 'Comparative trial balance analyzed for this session.', 'success');
-                } catch (err) {
-                    showToast(currentLang === 'ar' ? 'تعذر قراءة الملف. استخدم قالب ميزان المراجعة المعتاد.' : 'Could not read the file. Use the standard trial-balance template.', 'error');
-                }
-            };
-            reader.readAsArrayBuffer(file);
-            event.target.value = '';
-        }
-
-        function clearComparisonTB() {
-            comparisonTB = null;
-            comparisonFS = null;
-            comparisonPeriodName = '';
-            ['comparison-quality', 'comparison-summary', 'comparison-results'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById('comparison-empty').classList.remove('hidden');
-            document.getElementById('btn-clear-comparison').classList.add('hidden');
-            document.getElementById('comparison-period-label').value = '';
-        }
-
-        function calculateAndRenderComparison() {
-            if (!comparisonTB || !savedTB.length) return;
-            const primaryTB = savedTB;
-            try {
-                savedTB = comparisonTB;
-                generateFinancialStatements(); // Uses the existing statement engine and the current COA mapping.
-                comparisonFS = globalFS;
-            } finally {
-                savedTB = primaryTB;
-                generateFinancialStatements(); // Restore the primary period and its visible statements.
-            }
-            renderHorizontalComparison();
-        }
-
-        function renderHorizontalComparison() {
-            if (!comparisonFS || !globalFS) return;
-            const prior = comparisonFS, current = globalFS;
-            const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-            const fmt = n => (Number(n) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const pct = (change, base) => Math.abs(base) < 0.005 ? (Math.abs(change) < 0.005 ? '0%' : 'جديد / لا ينطبق') : `${(change / Math.abs(base) * 100).toFixed(1)}%`;
-            const deltaClass = d => Math.abs(d) < 0.005 ? 'text-gray-500' : (d > 0 ? 'text-blue-700' : 'text-orange-700');
-            const makeRows = rows => rows.map(r => {
-                const change = r.current - r.prior;
-                return `<tr class="border-b hover:bg-gray-50"><td class="p-3 ${r.detail ? 'pr-8 text-gray-600' : 'font-bold text-gray-800'}">${esc(r.name)}</td><td class="p-3">${fmt(r.prior)}</td><td class="p-3">${fmt(r.current)}</td><td class="p-3 font-semibold ${deltaClass(change)}">${fmt(change)}</td><td class="p-3">${pct(change, r.prior)}</td></tr>`;
-            }).join('');
-            const detail = (fs, key, sign = 1) => (fs.det[key] || []).filter(d => Math.abs(d.v) > 0.005).map(d => ({ name: d.n, prior: sign * d.v, current: 0, detail: true }));
-            const groupDetails = (key, sign = 1) => {
-                const p = new Map((prior.det[key] || []).map(d => [d.n, sign * d.v]));
-                const c = new Map((current.det[key] || []).map(d => [d.n, sign * d.v]));
-                return [...new Set([...p.keys(), ...c.keys()])].map(name => ({ name, prior: p.get(name) || 0, current: c.get(name) || 0, detail: true }));
-            };
-            const incomeRows = [
-                { name: 'الإيرادات', prior: prior.is.rev, current: current.is.rev }, ...groupDetails('rev', -1),
-                { name: 'تكلفة المبيعات', prior: prior.is.cogs, current: current.is.cogs }, ...groupDetails('cogs'),
-                { name: 'مجمل الربح', prior: prior.gp, current: current.gp },
-                { name: 'المصروفات التشغيلية', prior: prior.is.exp, current: current.is.exp }, ...groupDetails('exp'),
-                { name: 'صافي الربح', prior: prior.ni, current: current.ni }
-            ];
-            const bsRows = [
-                { name: 'الأصول المتداولة', prior: prior.bs.ca, current: current.bs.ca }, ...groupDetails('ca'),
-                { name: 'الأصول غير المتداولة', prior: prior.bs.nca, current: current.bs.nca }, ...groupDetails('nca'),
-                { name: 'إجمالي الأصول', prior: prior.ta, current: current.ta },
-                { name: 'الالتزامات المتداولة', prior: prior.bs.cl, current: current.bs.cl }, ...groupDetails('cl'),
-                { name: 'الالتزامات غير المتداولة', prior: prior.bs.ncl, current: current.bs.ncl }, ...groupDetails('ncl'),
-                { name: 'إجمالي الالتزامات', prior: prior.tl, current: current.tl },
-                { name: 'حقوق الملكية شاملاً صافي الربح', prior: prior.teq, current: current.teq },
-                { name: 'إجمالي الالتزامات وحقوق الملكية', prior: prior.tleq, current: current.tleq }
-            ];
-            const cfRows = [
-                { name: 'التدفق النقدي من الأنشطة التشغيلية', prior: prior.cf_op, current: current.cf_op },
-                { name: 'التدفق النقدي من الأنشطة الاستثمارية', prior: prior.cf_inv, current: current.cf_inv },
-                { name: 'التدفق النقدي من الأنشطة التمويلية', prior: prior.cf_fin, current: current.cf_fin },
-                { name: 'صافي التغير النقدي المحسوب', prior: prior.cf_net, current: current.cf_net },
-                { name: 'التغير الفعلي في النقدية', prior: prior.cashActualChange, current: current.cashActualChange }
-            ];
-            const ratioSet = fs => {
-                const currentRatio = fs.bs.cl ? fs.bs.ca / fs.bs.cl : 0;
-                const quickRatio = fs.bs.cl ? (fs.cash + fs.ar) / fs.bs.cl : 0;
-                const cashRatio = fs.bs.cl ? fs.cash / fs.bs.cl : 0;
-                const avgAssets = fs.avg_assets || 0, avgEquity = fs.avg_equity || 0;
-                return [
-                    { name: 'نسبة التداول (x)', value: currentRatio }, { name: 'نسبة السيولة السريعة (x)', value: quickRatio },
-                    { name: 'نسبة النقدية (x)', value: cashRatio },
-                    { name: 'هامش مجمل الربح (%)', value: fs.is.rev ? fs.gp / fs.is.rev * 100 : 0 },
-                    { name: 'هامش صافي الربح (%)', value: fs.is.rev ? fs.ni / fs.is.rev * 100 : 0 },
-                    { name: 'العائد على متوسط الأصول (%)', value: avgAssets ? fs.ni / avgAssets * 100 : 0 },
-                    { name: 'العائد على متوسط حقوق الملكية (%)', value: avgEquity ? fs.ni / avgEquity * 100 : 0 },
-                    { name: 'الالتزامات إلى الأصول (%)', value: fs.ta ? fs.tl / fs.ta * 100 : 0 },
-                    { name: 'التدفق التشغيلي إلى الالتزامات المتداولة (x)', value: fs.bs.cl ? fs.cf_op / fs.bs.cl : 0 },
-                    { name: 'جودة الأرباح (x)', value: fs.ni ? fs.cf_op / fs.ni : 0 }
-                ];
-            };
-            const pRatios = ratioSet(prior), cRatios = ratioSet(current);
-            const ratioRows = pRatios.map((r, i) => ({ name: r.name, prior: r.value, current: cRatios[i].value }));
-            document.getElementById('comparison-is-body').innerHTML = makeRows(incomeRows);
-            document.getElementById('comparison-bs-body').innerHTML = makeRows(bsRows);
-            document.getElementById('comparison-cf-body').innerHTML = makeRows(cfRows);
-            document.getElementById('comparison-ratios-body').innerHTML = makeRows(ratioRows);
-            const currentLabel = (document.getElementById('company-period-input').value || '').trim() || 'الفترة الحالية';
-            ['comparison-prior-is-head','comparison-prior-bs-head','comparison-prior-cf-head'].forEach(id => document.getElementById(id).innerText = comparisonPeriodName || 'الفترة المقارنة');
-            ['comparison-current-is-head','comparison-current-bs-head','comparison-current-cf-head'].forEach(id => document.getElementById(id).innerText = currentLabel);
-            ['comparison-prior-is-head','comparison-prior-bs-head','comparison-prior-cf-head','comparison-prior-ratios-head'].forEach(id => document.getElementById(id).innerText = comparisonPeriodName || 'الفترة المقارنة');
-            ['comparison-current-is-head','comparison-current-bs-head','comparison-current-cf-head','comparison-current-ratios-head'].forEach(id => document.getElementById(id).innerText = currentLabel);
-
-            const duplicateCodes = comparisonTB.length - new Set(comparisonTB.map(a => a.code)).size;
-            const missing = comparisonTB.filter(a => !a.inCOA).length;
-            const endDebit = comparisonTB.reduce((s,a) => s + a.end_dr, 0), endCredit = comparisonTB.reduce((s,a) => s + a.end_cr, 0);
-            const unbalanced = Math.abs(endDebit - endCredit) > 0.01;
-            const quality = [];
-            if (missing) quality.push(`${missing} حساب غير موجود في شجرة الحسابات ولن يدخل في القوائم حتى تتم إضافته وتصنيفه.`);
-            if (duplicateCodes) quality.push(`${duplicateCodes} رقم حساب مكرر في ملف المقارنة؛ راجع الملف قبل اعتماد النتائج.`);
-            if (unbalanced) quality.push(`الميزان المقارن غير متوازن بفارق ${fmt(endDebit - endCredit)}.`);
-            quality.push('التدفقات النقدية مشتقة وفق منهج النظام من أرصدة أول وآخر الفترة والتصنيفات الحالية؛ راجع تصنيف التدفقات قبل الاعتماد.');
-            const qualityEl = document.getElementById('comparison-quality');
-            qualityEl.className = `mb-5 rounded-xl border p-4 text-sm ${unbalanced || missing || duplicateCodes ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-green-50 border-green-200 text-green-900'}`;
-            qualityEl.innerHTML = `<div class="font-bold mb-2">${unbalanced || missing || duplicateCodes ? 'مراجعة جودة البيانات' : 'فحوصات البيانات'}</div><ul class="list-disc pr-5 space-y-1">${quality.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
-            qualityEl.classList.remove('hidden');
-            document.getElementById('comparison-empty').classList.add('hidden');
-            document.getElementById('comparison-results').classList.remove('hidden');
-            const insights = [];
-            if (current.is.rev < prior.is.rev) insights.push('الإيرادات تراجعت؛ راجع حجم المبيعات والأسعار ومزيج المنتجات أو الخدمات.');
-            if (current.is.cogs > prior.is.cogs && current.is.rev <= prior.is.rev) insights.push('تكلفة المبيعات ارتفعت دون نمو مماثل في الإيرادات؛ راجع تكلفة الشراء والهدر والتسعير.');
-            if (current.is.exp > prior.is.exp && current.is.exp - prior.is.exp > Math.max(0, current.is.rev - prior.is.rev)) insights.push('نمو المصروفات التشغيلية تجاوز نمو الإيرادات؛ افحص أكبر بنود الزيادة قبل خفض الإنفاق.');
-            if (current.ar > prior.ar * 1.1 && current.ar - prior.ar > 0) insights.push('الذمم المدينة ارتفعت بأكثر من 10%؛ راجع أعمار الديون والتحصيل وشروط الائتمان.');
-            if (current.inventory > prior.inventory * 1.1 && current.inventory - prior.inventory > 0) insights.push('المخزون ارتفع بأكثر من 10%؛ افحص دوران المخزون واحتمال وجود بضاعة بطيئة الحركة.');
-            if (current.cf_op < 0) insights.push('التدفق التشغيلي للفترة الحالية سالب؛ راجع التحصيل والمخزون ومواعيد السداد.');
-            if (!insights.length) insights.push('لم تظهر الانحرافات المحددة أعلاه؛ راجع جدول البنود والتغيرات لتحديد فرص التحسين حسب نشاط الشركة.');
-            const summary = document.getElementById('comparison-summary');
-            summary.innerHTML = `<h4 class="font-bold text-gray-800 mb-2">أبرز الفروقات والتوصيات</h4><ul class="list-disc pr-5 space-y-1 text-sm text-gray-700">${insights.map(x => `<li>${esc(x)}</li>`).join('')}</ul><p class="text-xs text-gray-500 mt-3">تُفسّر الزيادة أو النقص بحسب طبيعة الحساب، ولا تعني الزيادة في الأصول أو الالتزامات وحدها تحسنًا أو تراجعًا.</p>`;
-            summary.classList.remove('hidden');
         }
 
         function renderTBTable(filter) {
@@ -1717,9 +1628,6 @@
             let sums = { op_dr: 0, op_cr: 0, per_dr: 0, per_cr: 0, end_dr: 0, end_cr: 0 };
             let hasMissing = false;
             let anomalyCount = 0;
-            const codeCounts = savedTB.reduce((m, a) => m.set(a.code, (m.get(a.code) || 0) + 1), new Map());
-            const duplicateCount = Array.from(codeCounts.values()).reduce((n, count) => n + Math.max(0, count - 1), 0);
-            if (duplicateCount) hasMissing = true;
 
             // Accounts normally carry a debit ending balance (assets/cogs/opex/other expense) or a
             // credit ending balance (liabilities/equity/revenue/other income). A balance on the
@@ -1765,8 +1673,7 @@
             document.getElementById('tb-table-foot').innerHTML = `<tr><td colspan="2" class="px-4 py-3">${totalsLabel}</td><td class="px-4 py-3">${fmtS(sums.op_dr)}</td><td class="px-4 py-3">${fmtS(sums.op_cr)}</td><td class="px-4 py-3">${fmtS(sums.per_dr)}</td><td class="px-4 py-3">${fmtS(sums.per_cr)}</td><td class="px-4 py-3 bg-brand-100">${fmtS(sums.end_dr)}</td><td class="px-4 py-3 bg-brand-100">${fmtS(sums.end_cr)}</td><td></td></tr>`;
             
             const bal = Math.abs(sums.end_dr - sums.end_cr) < 0.1 && Math.abs(sums.op_dr - sums.op_cr) < 0.1;
-            anomalyCount += duplicateCount;
-            const statusLabel = (bal && !hasMissing) ? (currentLang === 'ar' ? 'متزن ومطابق' : 'Balanced') : (duplicateCount ? (currentLang === 'ar' ? `راجع الميزان: ${duplicateCount} تكرار حساب` : `Review: ${duplicateCount} duplicate account(s)`) : (currentLang === 'ar' ? 'راجع الميزان' : 'Review Required'));
+            const statusLabel = (bal && !hasMissing) ? (currentLang === 'ar' ? 'متزن ومطابق' : 'Balanced') : (currentLang === 'ar' ? 'راجع الميزان' : 'Review Required');
             document.getElementById('tb-balance-card').className = `p-4 rounded-xl shadow-sm flex items-center gap-4 md:col-span-2 ${bal&&!hasMissing?'bg-green-50 border-green-200':'bg-red-50 border-red-200'}`;
             document.getElementById('tb-balance-card').innerHTML = `<div class="w-12 h-12 rounded-full flex items-center justify-center text-xl ${bal&&!hasMissing?'bg-green-100 text-green-600':'bg-red-100 text-red-600'}"><i class="fas ${bal&&!hasMissing?'fa-check-double':'fa-times-circle'}"></i></div><div><h4 class="text-lg font-bold ${bal&&!hasMissing?'text-green-800':'text-red-800'}">${statusLabel}</h4></div>`;
 
@@ -1796,9 +1703,6 @@
         function clearTB() {
             const msg = currentLang === 'ar' ? 'هل تريد مسح ميزان المراجعة؟' : 'Clear the Trial Balance?';
             if(confirm(msg)) { savedTB = []; globalFS = null; localStorage.removeItem('cfo_tb'); renderTBTable(); }
-        function clearTB() {
-            const msg = currentLang === 'ar' ? 'هل تريد مسح ميزان المراجعة؟' : 'Clear the Trial Balance?';
-            if(confirm(msg)) { clearComparisonTB(); savedTB = []; globalFS = null; localStorage.removeItem('cfo_tb'); renderTBTable(); }
         }
 
         function toggleStatement(type) {
@@ -1813,6 +1717,285 @@
                 if(t==='ratios' && type==='ratios') document.getElementById(`analysis-${t}`).style.display = 'block';
                 document.getElementById(`btn-show-${t}`).className = type === t ? 'px-4 py-2 text-sm font-semibold rounded-md bg-white shadow-sm text-brand-600 transition-all whitespace-nowrap' : 'px-4 py-2 text-sm font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all whitespace-nowrap';
             });
+            if (type === 'horizontal') renderHorizontalAnalysis();
+        }
+
+        // ===================== Horizontal (period-over-period) analysis =====================
+
+        function saveHorizLabel() {
+            const input = document.getElementById('horiz-period-label');
+            horizPriorLabel = input ? input.value : '';
+            localStorage.setItem('cfo_horiz_label', horizPriorLabel);
+        }
+
+        function handleTBPriorUpload(event) {
+            if (savedCOA.length === 0) { showToast(currentLang === 'ar' ? "ارفع شجرة الحسابات أولاً!" : "Upload COA first!", "error"); return; }
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+                const fmt = (n) => isNaN(parseFloat(n)) ? 0 : parseFloat(n);
+                const parsed = json.slice(1).map(r => {
+                    const code = r[0] ? String(r[0]).trim() : ''; if (!code) return null;
+                    const op_dr = fmt(r[2]), op_cr = fmt(r[3]), per_dr = fmt(r[4]), per_cr = fmt(r[5]);
+                    const net = (op_dr - op_cr) + (per_dr - per_cr);
+                    return { code, name: r[1] ? String(r[1]).trim() : '', op_dr, op_cr, per_dr, per_cr, end_dr: net > 0 ? net : 0, end_cr: net < 0 ? Math.abs(net) : 0, inCOA: savedCOA.some(a => a.code === code) };
+                }).filter(r => r !== null);
+
+                if (parsed.length === 0) { showToast(currentLang === 'ar' ? "الملف فارغ أو غير صالح" : "File is empty or invalid", "error"); event.target.value = ''; return; }
+
+                savedTB_prior = parsed;
+                localStorage.setItem('cfo_tb_prior', JSON.stringify(savedTB_prior));
+                renderHorizontalAnalysis();
+                showToast(currentLang === 'ar' ? "تم رفع الميزان المقارن - جاري إعداد التحليل الأفقي" : "Comparative TB uploaded - building horizontal analysis");
+            };
+            reader.readAsArrayBuffer(file); event.target.value = '';
+        }
+
+        function clearTBPrior() {
+            const msg = currentLang === 'ar' ? 'إزالة ميزان المقارنة والعودة لشاشة الرفع؟' : 'Remove the comparative trial balance and return to the upload screen?';
+            if (!confirm(msg)) return;
+            savedTB_prior = [];
+            localStorage.removeItem('cfo_tb_prior');
+            renderHorizontalAnalysis();
+        }
+
+        // Plain-number ratio set (no HTML) - computed from a financial-statement object produced by
+        // computeFinancialStatements(), so it works identically for the current period and for any
+        // comparative period used in horizontal analysis.
+        function computeRatioSet(fs) {
+            const { is, bs, ta, tl, teq, cash, ar, gp, ni, cf_op, cf_inv } = fs;
+            return {
+                currentRatio: bs.cl ? bs.ca / bs.cl : 0,
+                quickRatio: bs.cl ? (cash + ar) / bs.cl : 0,
+                grossMargin: is.rev ? (gp / is.rev) * 100 : 0,
+                netMargin: is.rev ? (ni / is.rev) * 100 : 0,
+                roa: ta ? (ni / ta) * 100 : 0,
+                roe: teq ? (ni / teq) * 100 : 0,
+                debtEquity: teq ? tl / teq : 0,
+                debtRatio: ta ? (tl / ta) * 100 : 0,
+                freeCashFlow: cf_op + cf_inv
+            };
+        }
+
+        // Generates short, plain-language CFO-style commentary from the two periods' numbers. Each
+        // rule only fires when the swing is large enough to matter, so a quiet period stays quiet.
+        function generateHorizontalCommentary(pFS, cFS, rPrior, rCur) {
+            const ar = currentLang === 'ar';
+            const items = [];
+            const pct = (chg, base) => base !== 0 ? (chg / Math.abs(base)) * 100 : null;
+            const r1 = (n) => Math.round(n * 10) / 10;
+
+            const revChg = cFS.is.rev - pFS.is.rev;
+            const revPct = pct(revChg, pFS.is.rev);
+            if (revPct !== null && Math.abs(revPct) >= 1) {
+                items.push({ type: revChg >= 0 ? 'positive' : 'negative', text: ar
+                    ? `الإيرادات ${revChg >= 0 ? 'ارتفعت' : 'انخفضت'} بنسبة ${Math.abs(r1(revPct))}% مقارنة بالفترة السابقة.`
+                    : `Revenue ${revChg >= 0 ? 'increased' : 'decreased'} by ${Math.abs(r1(revPct))}% versus the comparative period.` });
+            }
+
+            const gmChg = rCur.grossMargin - rPrior.grossMargin;
+            if (Math.abs(gmChg) >= 1) {
+                items.push({ type: gmChg >= 0 ? 'positive' : 'negative', text: ar
+                    ? `هامش الربح الإجمالي ${gmChg >= 0 ? 'تحسّن' : 'تراجع'} من ${r1(rPrior.grossMargin)}% إلى ${r1(rCur.grossMargin)}%.`
+                    : `Gross margin ${gmChg >= 0 ? 'improved' : 'declined'} from ${r1(rPrior.grossMargin)}% to ${r1(rCur.grossMargin)}%.` });
+            }
+
+            const nmChg = rCur.netMargin - rPrior.netMargin;
+            if (Math.abs(nmChg) >= 1) {
+                items.push({ type: nmChg >= 0 ? 'positive' : 'negative', text: ar
+                    ? `صافي هامش الربح ${nmChg >= 0 ? 'ارتفع' : 'انخفض'} من ${r1(rPrior.netMargin)}% إلى ${r1(rCur.netMargin)}%.`
+                    : `Net margin ${nmChg >= 0 ? 'rose' : 'fell'} from ${r1(rPrior.netMargin)}% to ${r1(rCur.netMargin)}%.` });
+            }
+
+            const expPct = pct(cFS.is.exp - pFS.is.exp, pFS.is.exp);
+            if (expPct !== null && revPct !== null && expPct > revPct + 5) {
+                items.push({ type: 'negative', text: ar
+                    ? `المصروفات التشغيلية نمت بمعدل ${r1(expPct)}% أسرع من نمو الإيرادات (${r1(revPct)}%) - يستحق المراجعة.`
+                    : `Operating expenses grew ${r1(expPct)}% - faster than revenue growth (${r1(revPct)}%) - worth reviewing.` });
+            }
+
+            const crChg = rCur.currentRatio - rPrior.currentRatio;
+            if (Math.abs(crChg) >= 0.1) {
+                items.push({ type: crChg >= 0 ? 'positive' : 'negative', text: ar
+                    ? `نسبة التداول ${crChg >= 0 ? 'تحسّنت' : 'تراجعت'} من ${r1(rPrior.currentRatio)}x إلى ${r1(rCur.currentRatio)}x.`
+                    : `Current ratio ${crChg >= 0 ? 'improved' : 'declined'} from ${r1(rPrior.currentRatio)}x to ${r1(rCur.currentRatio)}x.` });
+            }
+            if (rCur.currentRatio < 1 && rPrior.currentRatio >= 1) {
+                items.push({ type: 'negative', text: ar
+                    ? `تنبيه: نسبة التداول أصبحت أقل من 1x، أي أن الأصول المتداولة لم تعد تغطي الالتزامات المتداولة بالكامل.`
+                    : `Alert: the current ratio has dropped below 1x - current assets no longer fully cover current liabilities.` });
+            }
+
+            const deChg = rCur.debtEquity - rPrior.debtEquity;
+            if (Math.abs(deChg) >= 0.1) {
+                items.push({ type: deChg <= 0 ? 'positive' : 'negative', text: ar
+                    ? `نسبة الدين إلى حقوق الملكية ${deChg >= 0 ? 'ارتفعت' : 'انخفضت'} من ${r1(rPrior.debtEquity)}x إلى ${r1(rCur.debtEquity)}x.`
+                    : `Debt-to-equity ${deChg >= 0 ? 'increased' : 'decreased'} from ${r1(rPrior.debtEquity)}x to ${r1(rCur.debtEquity)}x.` });
+            }
+
+            const cashChg = cFS.cash - pFS.cash;
+            const cashPct = pct(cashChg, pFS.cash);
+            if (cashPct !== null && Math.abs(cashPct) >= 5) {
+                items.push({ type: cashChg >= 0 ? 'positive' : 'negative', text: ar
+                    ? `رصيد النقدية ${cashChg >= 0 ? 'ارتفع' : 'انخفض'} بنسبة ${Math.abs(r1(cashPct))}%.`
+                    : `Cash balance ${cashChg >= 0 ? 'increased' : 'decreased'} by ${Math.abs(r1(cashPct))}%.` });
+            }
+
+            if (pFS.ni !== 0 && cFS.ni !== 0) {
+                const qoiPrior = pFS.cf_op / pFS.ni, qoiCur = cFS.cf_op / cFS.ni;
+                if (qoiCur < 0.8 && qoiPrior >= 0.8) {
+                    items.push({ type: 'negative', text: ar
+                        ? `جودة الأرباح تراجعت: التدفق النقدي التشغيلي أصبح أقل بوضوح من صافي الربح، ما قد يشير لتعثر في التحصيل أو تراكم المخزون.`
+                        : `Earnings quality has weakened: operating cash flow now trails net income noticeably - could signal collection or inventory issues.` });
+                }
+            }
+
+            if (items.length === 0) {
+                items.push({ type: 'neutral', text: ar
+                    ? 'لا توجد تغيرات جوهرية بين الفترتين في أهم المؤشرات المالية.'
+                    : 'No material changes between the two periods in the key financial indicators.' });
+            }
+            return items;
+        }
+
+        function renderHorizontalAnalysis() {
+            const uploadState = document.getElementById('horiz-upload-state');
+            const comparisonState = document.getElementById('horiz-comparison-state');
+            if (!uploadState || !comparisonState) return;
+
+            const labelInput = document.getElementById('horiz-period-label');
+            if (labelInput && document.activeElement !== labelInput) labelInput.value = horizPriorLabel;
+
+            if (savedTB_prior.length === 0) {
+                uploadState.style.display = 'block';
+                comparisonState.style.display = 'none';
+                return;
+            }
+            uploadState.style.display = 'none';
+            comparisonState.style.display = 'block';
+
+            if (!globalFS) { comparisonState.innerHTML = ''; return; }
+
+            const t = translations[currentLang];
+            const ar = currentLang === 'ar';
+            const priorFS = computeFinancialStatements(savedTB_prior);
+            const curLabel = companyInfo.period || (ar ? 'الفترة الحالية' : 'Current Period');
+            const priorLabel = horizPriorLabel || (ar ? 'الفترة المقارنة' : 'Comparative Period');
+
+            const fmt = (n) => Math.round(n).toLocaleString();
+            const cell = (val, extraClass = '') => `<td class="px-4 py-2 ${extraClass}">${fmt(val)}</td>`;
+            const changeCells = (chg, pctChg, favorable) => {
+                if (Math.abs(chg) < 0.5) return `<td class="px-4 py-2 text-gray-400">-</td><td class="px-4 py-2 text-gray-400">-</td>`;
+                const color = favorable ? 'text-green-600' : 'text-red-600';
+                const icon = chg > 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                const pctTxt = (pctChg === null || !isFinite(pctChg)) ? '-' : `${pctChg > 0 ? '+' : ''}${Math.round(pctChg * 10) / 10}%`;
+                return `<td class="px-4 py-2 font-semibold ${color}"><i class="fas ${icon} text-xs"></i> ${fmt(Math.abs(chg))}</td><td class="px-4 py-2 font-semibold ${color}">${pctTxt}</td>`;
+            };
+            function row(label, priorVal, curVal, increaseIsGood, bold) {
+                const chg = curVal - priorVal;
+                const pctChg = priorVal !== 0 ? (chg / Math.abs(priorVal)) * 100 : (curVal !== 0 ? null : 0);
+                const favorable = chg === 0 ? true : (increaseIsGood ? chg > 0 : chg < 0);
+                return `<tr class="${bold ? 'bg-gray-50 font-bold' : ''} border-b hover:bg-gray-50">
+                    <td class="px-4 py-2">${label}</td>${cell(priorVal, 'text-gray-500')}${cell(curVal)}${changeCells(chg, pctChg, favorable)}
+                </tr>`;
+            }
+
+            const theadRow = `<thead class="bg-gray-50 text-xs text-gray-500 uppercase"><tr>
+                <th class="px-4 py-2 text-right">${t['horiz-th-item']}</th><th class="px-4 py-2 text-right">${priorLabel}</th>
+                <th class="px-4 py-2 text-right">${curLabel}</th><th class="px-4 py-2 text-right">${t['horiz-th-change']}</th><th class="px-4 py-2 text-right">${t['horiz-th-changepct']}</th>
+            </tr></thead>`;
+
+            const isRows = [
+                row(t['fs-rev'], priorFS.is.rev, globalFS.is.rev, true, true),
+                row(t['fs-cogs'], priorFS.is.cogs, globalFS.is.cogs, false, false),
+                row(t['fs-gp'], priorFS.gp, globalFS.gp, true, true),
+                row(t['fs-exp'], priorFS.is.exp, globalFS.is.exp, false, false),
+                row(t['fs-ni'], priorFS.ni, globalFS.ni, true, true)
+            ].join('');
+
+            const bsRows = [
+                row(t['fs-ca'], priorFS.bs.ca, globalFS.bs.ca, true, false),
+                row(t['fs-nca'], priorFS.bs.nca, globalFS.bs.nca, true, false),
+                row(t['fs-ta'], priorFS.ta, globalFS.ta, true, true),
+                row(t['fs-cl'], priorFS.bs.cl, globalFS.bs.cl, false, false),
+                row(t['fs-ncl'], priorFS.bs.ncl, globalFS.bs.ncl, false, false),
+                row(t['fs-te'], priorFS.teq, globalFS.teq, true, true)
+            ].join('');
+
+            const cfRows = [
+                row(t['cf-op'], priorFS.cf_op, globalFS.cf_op, true, false),
+                row(t['cf-inv'], priorFS.cf_inv, globalFS.cf_inv, true, false),
+                row(t['cf-fin'], priorFS.cf_fin, globalFS.cf_fin, true, false),
+                row(t['horiz-cf-net'], priorFS.cf_net, globalFS.cf_net, true, true)
+            ].join('');
+
+            const rPrior = computeRatioSet(priorFS);
+            const rCur = computeRatioSet(globalFS);
+            const fmtR = (n) => isNaN(n) || !isFinite(n) ? '-' : (Math.round(n * 100) / 100);
+            function ratioRow(label, pVal, cVal, suffix, increaseIsGood) {
+                const chg = cVal - pVal;
+                const quiet = Math.abs(chg) < (suffix === '%' ? 0.1 : 0.01);
+                const favorable = quiet ? true : (increaseIsGood ? chg > 0 : chg < 0);
+                const color = quiet ? 'text-gray-400' : (favorable ? 'text-green-600' : 'text-red-600');
+                return `<tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-2">${label}</td><td class="px-4 py-2 text-gray-500">${fmtR(pVal)}${suffix}</td>
+                    <td class="px-4 py-2 font-semibold">${fmtR(cVal)}${suffix}</td>
+                    <td class="px-4 py-2 font-semibold ${color}">${quiet ? '-' : (chg > 0 ? '+' : '') + fmtR(chg) + suffix}</td>
+                </tr>`;
+            }
+            const ratioRows = [
+                ratioRow(t['ratio-current'], rPrior.currentRatio, rCur.currentRatio, 'x', true),
+                ratioRow(t['ratio-quick'], rPrior.quickRatio, rCur.quickRatio, 'x', true),
+                ratioRow(t['ratio-gm'], rPrior.grossMargin, rCur.grossMargin, '%', true),
+                ratioRow(t['ratio-nm'], rPrior.netMargin, rCur.netMargin, '%', true),
+                ratioRow(t['ratio-roe'], rPrior.roe, rCur.roe, '%', true),
+                ratioRow(t['ratio-de'], rPrior.debtEquity, rCur.debtEquity, 'x', false)
+            ].join('');
+
+            const commentary = generateHorizontalCommentary(priorFS, globalFS, rPrior, rCur);
+            const commentaryHTML = commentary.map(c => `<div class="flex items-start gap-2 text-sm py-1.5">
+                <i class="fas ${c.type === 'positive' ? 'fa-check-circle text-green-500' : c.type === 'negative' ? 'fa-exclamation-triangle text-amber-500' : 'fa-info-circle text-gray-400'} mt-0.5 shrink-0"></i>
+                <span class="text-gray-700">${c.text}</span>
+            </div>`).join('');
+
+            comparisonState.innerHTML = `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-3">
+                    <div class="flex items-center gap-3 text-sm flex-wrap">
+                        <span class="px-3 py-1 rounded-full bg-gray-100 font-bold text-gray-700">${priorLabel}</span>
+                        <i class="fas fa-long-arrow-alt-${ar ? 'left' : 'right'} text-gray-400"></i>
+                        <span class="px-3 py-1 rounded-full bg-brand-50 font-bold text-brand-700">${curLabel}</span>
+                    </div>
+                    <button onclick="clearTBPrior()" class="text-red-500 hover:text-red-700 text-xs font-semibold px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-md transition-colors border border-red-100 flex items-center gap-1 no-print">
+                        <i class="fas fa-times-circle"></i> ${t['horiz-clear-btn']}
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="bg-indigo-50 p-4 border-b border-indigo-200 font-bold text-indigo-900 flex items-center gap-2"><i class="fas fa-robot text-indigo-600"></i> ${t['horiz-commentary-title']}</div>
+                    <div class="p-4">${commentaryHTML}</div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="bg-brand-900 text-white p-4 text-center font-bold">${t['btn-show-is']} - ${t['horiz-title-suffix']}</div>
+                    <table class="w-full text-sm text-right text-gray-800">${theadRow}<tbody>${isRows}</tbody></table>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="bg-brand-900 text-white p-4 text-center font-bold">${t['btn-show-bs']} - ${t['horiz-title-suffix']}</div>
+                    <table class="w-full text-sm text-right text-gray-800">${theadRow}<tbody>${bsRows}</tbody></table>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="bg-brand-900 text-white p-4 text-center font-bold">${t['btn-show-cf']} - ${t['horiz-title-suffix']}</div>
+                    <table class="w-full text-sm text-right text-gray-800">${theadRow}<tbody>${cfRows}</tbody></table>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                    <div class="bg-gray-100 p-4 text-center font-bold text-gray-700">${t['horiz-ratios-title']}</div>
+                    <table class="w-full text-sm text-right text-gray-800"><thead class="bg-gray-50 text-xs text-gray-500 uppercase"><tr>
+                        <th class="px-4 py-2 text-right">${t['horiz-th-ratio']}</th><th class="px-4 py-2 text-right">${priorLabel}</th><th class="px-4 py-2 text-right">${curLabel}</th><th class="px-4 py-2 text-right">${t['horiz-th-change']}</th>
+                    </tr></thead><tbody>${ratioRows}</tbody></table>
+                </div>
+            `;
         }
 
         function generateFinancialStatements() {
@@ -1835,6 +2018,26 @@
             document.getElementById('fs-empty-state').style.display = 'none';
             if(!['is','bs','cf','eq'].some(t => document.getElementById(`statement-${t}`).style.display === 'block')) toggleStatement('is');
 
+            globalFS = computeFinancialStatements(savedTB);
+
+            renderIncomeStatement();
+            renderBalanceSheet();
+            renderCashFlow();
+            renderEquityStatement();
+
+            generateDashboard();
+            generateAnalysis();
+            generateCFOInsights(); 
+            if(document.getElementById('forecast-tab').classList.contains('active')) initForecast();
+            renderHorizontalAnalysis();
+            updateSetupProgress();
+        }
+
+        // Pure calculation core (no DOM access): takes any trial-balance array built the same way as
+        // savedTB and returns a complete financial-statement object. generateFinancialStatements()
+        // uses this for the CURRENT period; the horizontal (period-over-period) comparison below
+        // reuses the exact same function for the COMPARATIVE period, so the two can never diverge.
+        function computeFinancialStatements(tbArray) {
             let is = { rev: 0, cogs: 0, exp: 0, oi: 0, oe: 0 };
             let bs = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
             let bsOpen = { ca: 0, nca: 0, cl: 0, ncl: 0, eq: 0 };
@@ -1842,6 +2045,10 @@
 
             let cfBuckets = { operating: 0, investing: 0, financing: 0 };
             let cfLines = { operating: [], investing: [], financing: [] };
+            // Cash flow lines are grouped by sub-classification (e.g. every "Cash Custodies" account,
+            // whoever holds it, becomes ONE line) so the statement stays readable - the Balance Sheet
+            // keeps the full per-account detail via det[grp] below, untouched.
+            let cfGroups = { operating: {}, investing: {}, financing: {} };
             let cashEnd = 0, cashOpen = 0;
 
             // Kept for the turnover ratios (DSO/DIO/DPO) in the Analysis & Insights tabs
@@ -1853,7 +2060,7 @@
             // the same savedMapping, so the two can never disagree, and reclassifying an account here
             // instantly flows into the income statement, the comparative balance sheet, the detailed cash
             // flow statement, every ratio, and every chart below.
-            savedTB.forEach(acc => {
+            tbArray.forEach(acc => {
                 if (!acc.inCOA) return;
                 const raw = savedMapping[acc.code];
                 const entry = isValidMapping(raw) ? raw : getDefaultClassification(acc.code, acc.name);
@@ -1880,7 +2087,8 @@
                         if (cfType && cfBuckets.hasOwnProperty(cfType)) {
                             const contrib = beg - end;
                             cfBuckets[cfType] += contrib;
-                            if (Math.abs(contrib) > 0.004) cfLines[cfType].push({ n: acc.name, v: contrib });
+                            const gKey = primary + '|' + sub;
+                            cfGroups[cfType][gKey] = (cfGroups[cfType][gKey] || 0) + contrib;
                         }
                     }
                     if (sub === 'ar_customers') { ar += end; opAr += beg; }
@@ -1896,7 +2104,8 @@
                     if (cfType && cfBuckets.hasOwnProperty(cfType)) {
                         const contrib = beg - end; // universal formula: beg-end is already sign-correct for liabilities
                         cfBuckets[cfType] += contrib;
-                        if (Math.abs(contrib) > 0.004) cfLines[cfType].push({ n: acc.name, v: contrib });
+                        const gKey = primary + '|' + sub;
+                        cfGroups[cfType][gKey] = (cfGroups[cfType][gKey] || 0) + contrib;
                     }
                     if (sub === 'ap_suppliers') { ap += v; opAp += b; }
                 }
@@ -1909,9 +2118,25 @@
                     if (cfType && cfBuckets.hasOwnProperty(cfType)) {
                         const contrib = beg - end;
                         cfBuckets[cfType] += contrib;
-                        if (Math.abs(contrib) > 0.004) cfLines[cfType].push({ n: acc.name, v: contrib });
+                        const gKey = primary + '|' + sub;
+                        cfGroups[cfType][gKey] = (cfGroups[cfType][gKey] || 0) + contrib;
                     }
                 }
+            });
+
+            // Flatten the grouped totals into cfLines, one row per sub-category (e.g. all "Cash
+            // Custodies" accounts combined into a single "عهد نقدية" line), using each sub-category's
+            // own display label so the statement reads cleanly regardless of how many accounts (or
+            // people) make it up.
+            ['operating', 'investing', 'financing'].forEach(ct => {
+                Object.keys(cfGroups[ct]).forEach(gKey => {
+                    const val = cfGroups[ct][gKey];
+                    if (Math.abs(val) <= 0.004) return;
+                    const [gPrimary, gSub] = gKey.split('|');
+                    const meta = SUB_CATEGORIES[gPrimary] && SUB_CATEGORIES[gPrimary][gSub];
+                    const label = meta ? (currentLang === 'ar' ? meta.ar : meta.en) : gSub;
+                    cfLines[ct].push({ n: label, v: val });
+                });
             });
 
             let gp = is.rev - is.cogs;
@@ -1936,25 +2161,12 @@
             let avg_ar = (opAr + ar) / 2;
             let avg_ap = (opAp + ap) / 2;
             let avg_inv = (opInv + inventory) / 2;
-            let avg_assets = (taOpen + ta) / 2;
-            let avg_equity = (teqOpen + teq) / 2;
 
-            globalFS = {
+            return {
                 is, bs, bsOpen, det, gp, ni, ta, tl, teq, tleq, taOpen, tlOpen, teqOpen, tleqOpen,
-                cash: cashEnd, cashOpen, ar, ap, inventory, avg_ar, avg_ap, avg_inv, avg_assets, avg_equity,
+                cash: cashEnd, cashOpen, ar, ap, inventory, avg_ar, avg_ap, avg_inv,
                 cf_op, cf_inv, cf_fin, cf_net, cfLines, cashActualChange
             };
-
-            renderIncomeStatement();
-            renderBalanceSheet();
-            renderCashFlow();
-            renderEquityStatement();
-
-            generateDashboard();
-            generateAnalysis();
-            generateCFOInsights(); 
-            if(document.getElementById('forecast-tab').classList.contains('active')) initForecast();
-            updateSetupProgress();
         }
 
         function renderIncomeStatement() {
@@ -2125,58 +2337,11 @@
             wsEQ['!cols'] = [{ wch: 40 }, { wch: 18 }];
             XLSX.utils.book_append_sheet(wb, wsEQ, 'Equity');
 
-            if (comparisonFS) {
-                const prior = comparisonFS;
-                const curLabel = (companyInfo.period || 'Current period');
-                const priorLabel = comparisonPeriodName || 'Comparison period';
-                const pCurrentRatio = prior.bs.cl ? prior.bs.ca / prior.bs.cl : 0;
-                const cCurrentRatio = bs.cl ? bs.ca / bs.cl : 0;
-                const pQuickRatio = prior.bs.cl ? (prior.cash + prior.ar) / prior.bs.cl : 0;
-                const cQuickRatio = bs.cl ? (cash + ar) / bs.cl : 0;
-                const pCashRatio = prior.bs.cl ? prior.cash / prior.bs.cl : 0;
-                const cCashRatio = bs.cl ? cash / bs.cl : 0;
-                const pNetMargin = prior.is.rev ? prior.ni / prior.is.rev * 100 : 0;
-                const cNetMargin = is.rev ? ni / is.rev * 100 : 0;
-                const comparativeRows = [
-                    ['Horizontal Analysis', priorLabel, curLabel, 'Change', 'Change %'],
-                    ['Revenue', num(prior.is.rev), num(is.rev)], ['Cost of Sales', num(prior.is.cogs), num(is.cogs)],
-                    ['Gross Profit', num(prior.gp), num(gp)], ['Operating Expenses', num(prior.is.exp), num(is.exp)], ['Net Income', num(prior.ni), num(ni)],
-                    ['Current Assets', num(prior.bs.ca), num(bs.ca)], ['Non-current Assets', num(prior.bs.nca), num(bs.nca)], ['Total Assets', num(prior.ta), num(ta)],
-                    ['Current Liabilities', num(prior.bs.cl), num(bs.cl)], ['Non-current Liabilities', num(prior.bs.ncl), num(bs.ncl)], ['Total Liabilities', num(prior.tl), num(tl)], ['Equity', num(prior.teq), num(teq)],
-                    ['Operating Cash Flow', num(prior.cf_op), num(cf_op)], ['Investing Cash Flow', num(prior.cf_inv), num(cf_inv)], ['Financing Cash Flow', num(prior.cf_fin), num(cf_fin)], ['Net Cash Movement', num(prior.cf_net), num(cf_net)]
-                    ['Operating Cash Flow', num(prior.cf_op), num(cf_op)], ['Investing Cash Flow', num(prior.cf_inv), num(cf_inv)], ['Financing Cash Flow', num(prior.cf_fin), num(cf_fin)], ['Net Cash Movement', num(prior.cf_net), num(cf_net)],
-                    ['Current Ratio (x)', pCurrentRatio, cCurrentRatio], ['Quick Ratio (x)', pQuickRatio, cQuickRatio], ['Cash Ratio (x)', pCashRatio, cCashRatio], ['Net Margin (%)', pNetMargin, cNetMargin]
-                ];
-                comparativeRows.slice(1).forEach(row => {
-                    const change = row[2] - row[1];
-                    row.push(num(change));
-                    row.push(Math.abs(row[1]) > 0.005 ? Math.round(change / Math.abs(row[1]) * 1000) / 10 : null);
-                });
-                const wsHorizontal = XLSX.utils.aoa_to_sheet(comparativeRows);
-                wsHorizontal['!cols'] = [{ wch: 32 }, { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 14 }];
-                XLSX.utils.book_append_sheet(wb, wsHorizontal, 'HorizontalAnalysis');
-            }
-
             const arrayBuffer = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
             const filenamePrefix = companyInfo.name ? safeFileName(companyInfo.name) : 'Financial_Statements';
             const filename = `${filenamePrefix}_${new Date().toLocaleDateString()}.xlsx`;
             const saved = await saveFile(filename, arrayBuffer);
             if (saved) showToast(currentLang === 'ar' ? 'تم تصدير القوائم المالية لإكسيل بنجاح' : 'Financial statements exported to Excel successfully');
-        }
-
-        function applyForecastScenario(scenario) {
-            if (!globalFS) return;
-            const actualCogs = globalFS.is.rev ? globalFS.is.cogs / globalFS.is.rev * 100 : 0;
-            const presets = {
-                conservative: { rev: -10, cogs: Math.min(100, actualCogs + 3), opex: 5 },
-                base: { rev: 0, cogs: actualCogs, opex: 0 },
-                optimistic: { rev: 15, cogs: Math.max(0, actualCogs - 2), opex: 2 }
-            };
-            const p = presets[scenario] || presets.base;
-            document.getElementById('range-rev').value = p.rev;
-            document.getElementById('range-cogs').value = p.cogs;
-            document.getElementById('range-opex').value = p.opex;
-            updateForecastUI();
         }
 
         function initForecast() {
@@ -2229,8 +2394,8 @@
             const fOpex = aOpex * (1 + opexGrowth);
             const fNi = fGp - fOpex;
             
-            const fCash = aCash + fNi - capex; 
-            const fAssets = aAssets + capex + fNi;
+            const fCash = aCash + (fNi - aNi) - capex; 
+            const fAssets = aAssets + capex + (fNi - aNi);
 
             const fmt = (n) => n.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
             const fmtDiff = (act, forcast) => {
@@ -2246,6 +2411,25 @@
             document.getElementById('val-f-assets').innerText = fmt(fAssets);
             document.getElementById('var-f-assets').innerHTML = fmtDiff(aAssets, fAssets);
 
+            // Break-even revenue (CVP): COGS is treated as the variable cost and Opex as the fixed
+            // cost base - the standard simplification when a full fixed/variable cost split isn't
+            // tracked. Break-even revenue = Opex / Contribution Margin %.
+            const contributionMarginPct = fRev ? (fRev - fCogs) / fRev : 0;
+            const breakEvenRev = contributionMarginPct > 0 ? fOpex / contributionMarginPct : null;
+            const marginOfSafety = (breakEvenRev !== null && fRev > 0) ? ((fRev - breakEvenRev) / fRev) * 100 : null;
+
+            const beEl = document.getElementById('val-f-breakeven');
+            const mosEl = document.getElementById('val-f-mos');
+            if (breakEvenRev === null) {
+                beEl.innerText = currentLang === 'ar' ? 'غير محدد' : 'N/A';
+                mosEl.innerText = '-';
+                mosEl.className = 'text-xl font-black text-gray-400';
+            } else {
+                beEl.innerText = fmt(breakEvenRev);
+                mosEl.innerText = (Math.round(marginOfSafety * 10) / 10) + '%';
+                mosEl.className = 'text-xl font-black ' + (marginOfSafety >= 20 ? 'text-green-600' : marginOfSafety >= 0 ? 'text-amber-600' : 'text-red-600');
+            }
+
             // Update Table
             const t = translations[currentLang];
             const tbody = document.getElementById('forecast-table-body');
@@ -2256,9 +2440,6 @@
                 <tr class="hover:bg-gray-50 transition-colors"><td class="px-4 py-3 font-semibold">${t['fs-exp']}</td><td class="px-4 py-3 text-orange-600">${fmt(aOpex)}</td><td class="px-4 py-3 font-bold text-orange-700 bg-brand-50/50">${fmt(fOpex)}</td><td class="px-4 py-3">${fmtDiff(-aOpex, -fOpex)}</td></tr>
                 <tr class="bg-gray-100 border-t-2 border-gray-300"><td class="px-4 py-4 font-black">${t['fs-ni']}</td><td class="px-4 py-4 font-black text-gray-900">${fmt(aNi)}</td><td class="px-4 py-4 font-black text-brand-900 bg-brand-100">${fmt(fNi)}</td><td class="px-4 py-4">${fmtDiff(aNi, fNi)}</td></tr>
             `;
-            const breakEven = cogsMargin < 1 ? fOpex / (1 - cogsMargin) : null;
-            const note = document.getElementById('forecast-risk-note');
-            note.innerHTML = `${fCash < 0 ? '<strong class="text-red-700">تنبيه سيولة:</strong> النقدية المتوقعة سالبة وفق الفرضيات الحالية. ' : ''}${breakEven === null ? 'تعذر حساب نقطة التعادل لأن تكلفة المبيعات تساوي أو تتجاوز الإيرادات.' : `مبيعات نقطة التعادل التقديرية: <strong>${fmt(breakEven)}</strong>. `}هذا تقدير مبسط؛ لا يشمل تغير رأس المال العامل أو التمويل أو الضرائب، ويفترض أن حركة النقد تقارب صافي الربح قبل أثر CAPEX.`;
         }
 
         function generateDashboard() {
@@ -2291,7 +2472,7 @@
                 type: 'bar',
                 data: {
                     labels: [t['fs-rev'], t['fs-cogs'], t['fs-exp'], t['fs-ni']],
-                    datasets: [{ label: 'Amount', data: [is.rev, is.cogs, is.exp, ni], backgroundColor: ['#0ea5e9', '#ef4444', '#f97316', '#22c55e'], borderRadius: 5 }]
+                    datasets: [{ label: currentLang === 'ar' ? 'القيمة' : 'Amount', data: [is.rev, is.cogs, is.exp, ni], backgroundColor: ['#0ea5e9', '#ef4444', '#f97316', '#22c55e'], borderRadius: 5 }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
             });
@@ -2312,7 +2493,7 @@
             document.getElementById('analysis-empty-state').style.display = 'none';
             document.getElementById('analysis-content').style.display = 'block';
 
-            const { is, bs, det, gp, ni, ta, tl, teq, cash, inventory, ar, ap, avg_ar, avg_ap, avg_inv, avg_assets, avg_equity, cf_op, cf_inv, cf_fin } = globalFS;
+            const { is, bs, bsOpen, det, gp, ni, ta, tl, teq, cash, inventory, ar, ap, avg_ar, avg_ap, avg_inv, cf_op, cf_inv, cf_fin } = globalFS;
             const t = translations[currentLang];
             
             const pct = (val, base) => base === 0 ? '-' : (Math.round((val / base) * 1000) / 10) + '%';
@@ -2346,8 +2527,8 @@
             const debtEquity = teq ? tl / teq : 0;
             const debtAssets = ta ? tl / ta : 0;
             
-            const roa = avg_assets ? (ni / avg_assets) * 100 : 0;
-            const roe = avg_equity ? (ni / avg_equity) * 100 : 0;
+            const roa = ta ? (ni / ta) * 100 : 0;
+            const roe = teq ? (ni / teq) * 100 : 0;
 
             const daysInPeriod = 365; 
             const arTurnover = avg_ar && is.rev ? (is.rev / avg_ar) : 0;
@@ -2371,28 +2552,48 @@
 
             const badge = (val, good, bad) => {
                 if(isNaN(val)) return '';
-                if(val >= good) return `<span class="ratio-badge bg-green-100 text-green-700">ممتاز</span>`;
-                if(val <= bad) return `<span class="ratio-badge bg-red-100 text-red-700">خطر</span>`;
-                return `<span class="ratio-badge bg-yellow-100 text-yellow-700">متوسط</span>`;
+                if(val >= good) return `<span class="ratio-badge bg-green-100 text-green-700">${t['badge-excellent']}</span>`;
+                if(val <= bad) return `<span class="ratio-badge bg-red-100 text-red-700">${t['badge-risk']}</span>`;
+                return `<span class="ratio-badge bg-yellow-100 text-yellow-700">${t['badge-average']}</span>`;
             };
 
             const ratioRow = (name, val, suffix='', b='') => `<div class="flex justify-between items-center border-b pb-2 hover:bg-gray-50"><span class="text-gray-600 text-sm font-semibold">${name}</span><div>${b}<span class="font-bold text-gray-900">${val}${suffix}</span></div></div>`;
 
+            const cashRatio = bs.cl ? cash / bs.cl : 0; // stricter than Quick Ratio - excludes receivables entirely
+
+            // Working capital trend vs. period start, and WC as a share of total assets - cheap to
+            // compute (reuses bsOpen, already tracked for the comparative balance sheet) and gives a
+            // liquidity *direction* signal that a single-period ratio can't show on its own.
+            const wc = bs.ca - bs.cl;
+            const wcOpen = bsOpen.ca - bsOpen.cl;
+            const wcChange = wc - wcOpen;
+            const wcToAssets = ta ? (wc / ta) * 100 : 0;
+            const wcTrendBadge = Math.abs(wcChange) < 0.5 ? '' :
+                `<span class="ratio-badge ${wcChange > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}"><i class="fas fa-arrow-${wcChange > 0 ? 'up' : 'down'}"></i> ${Math.abs(Math.round(wcChange)).toLocaleString()}</span>`;
+
+            // Defensive Interval Ratio: how many days the company could keep operating using only
+            // its liquid assets (cash + receivables) if revenue stopped entirely - a liquidity
+            // metric the Current/Quick/Cash ratios don't capture, since they're point-in-time only.
+            const dailyOpEx = (is.cogs + is.exp) / 365;
+            const defensiveInterval = dailyOpEx > 0 ? (cash + ar) / dailyOpEx : 0;
+
             document.getElementById('ratios-liquidity').innerHTML = 
-                ratioRow('نسبة التداول (Current Ratio)', fmtR(currentRatio), 'x', badge(currentRatio, 1.5, 1)) +
-                ratioRow('نسبة السيولة السريعة (Quick Ratio)', fmtR(quickRatio), 'x', badge(quickRatio, 1, 0.5)) +
-                ratioRow('نسبة النقدية (Cash Ratio)', fmtR(bs.cl ? cash / bs.cl : 0), 'x', badge(bs.cl ? cash / bs.cl : 0, 0.5, 0.2)) +
-                ratioRow('رأس المال العامل (Working Capital)', (bs.ca - bs.cl).toLocaleString());
+                ratioRow(t['ratio-current'], fmtR(currentRatio), 'x', badge(currentRatio, 1.5, 1)) +
+                ratioRow(t['ratio-quick'], fmtR(quickRatio), 'x', badge(quickRatio, 1, 0.5)) +
+                ratioRow(t['ratio-cash'], fmtR(cashRatio), 'x', badge(cashRatio, 0.5, 0.2)) +
+                ratioRow(t['ratio-dir'], fmtR(defensiveInterval), ' ' + t['unit-day-1'], badge(defensiveInterval, 90, 30)) +
+                ratioRow(t['ratio-wc'], wc.toLocaleString(), '', wcTrendBadge) +
+                ratioRow(t['ratio-wc-pct'], fmtR(wcToAssets), '%', badge(wcToAssets, 15, 0));
 
             document.getElementById('ratios-profitability').innerHTML = 
-                ratioRow('هامش مجمل الربح (Gross Margin)', pct(gp, is.rev)) +
-                ratioRow('هامش صافي الربح (Net Margin)', pct(ni, is.rev)) +
-                ratioRow('العائد على الأصول (ROA)', fmtR(roa), '%') +
-                ratioRow('العائد على الملكية (ROE)', fmtR(roe), '%');
+                ratioRow(t['ratio-gm'], pct(gp, is.rev)) +
+                ratioRow(t['ratio-nm'], pct(ni, is.rev)) +
+                ratioRow(t['ratio-roa'], fmtR(roa), '%') +
+                ratioRow(t['ratio-roe'], fmtR(roe), '%');
 
             document.getElementById('ratios-leverage').innerHTML = 
-                ratioRow('نسبة المديونية إلى الملكية (D/E)', fmtR(debtEquity), 'x', badge(1/debtEquity, 1, 0.5)) + 
-                ratioRow('نسبة الالتزامات للأصول (Debt Ratio)', pct(tl, ta));
+                ratioRow(t['ratio-de'], fmtR(debtEquity), 'x', badge(1/debtEquity, 1, 0.5)) + 
+                ratioRow(t['ratio-debt'], pct(tl, ta));
 
             const ocfRatio = bs.cl ? (cf_op / bs.cl) : 0;
             const qualityOfIncome = ni ? (cf_op / ni) : 0;
@@ -2400,10 +2601,10 @@
             const freeCashFlow = cf_op + cf_inv; 
 
             document.getElementById('ratios-cashflow').innerHTML = 
-                ratioRow('جودة الأرباح (Quality of Income)', fmtR(qualityOfIncome), 'x', badge(qualityOfIncome, 1.0, 0.5)) +
-                ratioRow('تغطية التدفق التشغيلي (OCF Ratio)', fmtR(ocfRatio), 'x', badge(ocfRatio, 1.0, 0.5)) +
-                ratioRow('العائد النقدي على الأصول (Cash ROA)', fmtR(cashRoa), '%') +
-                ratioRow('التدفق النقدي الحر (Free Cash Flow)', freeCashFlow.toLocaleString(undefined, {minimumFractionDigits: 0}));
+                ratioRow(t['ratio-qoi'], fmtR(qualityOfIncome), 'x', badge(qualityOfIncome, 1.0, 0.5)) +
+                ratioRow(t['ratio-ocf'], fmtR(ocfRatio), 'x', badge(ocfRatio, 1.0, 0.5)) +
+                ratioRow(t['ratio-croa'], fmtR(cashRoa), '%') +
+                ratioRow(t['ratio-fcf'], freeCashFlow.toLocaleString(undefined, {minimumFractionDigits: 0}));
         }
 
         function generateCFOInsights() {
@@ -2416,52 +2617,98 @@
             let strengths = [];
             let weaknesses = [];
             let recs = [];
+            const m = (ar, en) => currentLang === 'ar' ? ar : en; // keeps every insight bilingual
 
             // 1. Profitability Analysis
             const netMargin = is.rev ? ni / is.rev : 0;
             const grossMargin = is.rev ? gp / is.rev : 0;
             
             if (netMargin > 0.15) {
-                strengths.push("هامش صافي ربح ممتاز يتجاوز 15%، مما يدل على كفاءة عالية في التسعير والتحكم الصارم في المصروفات التشغيلية والإدارية.");
-                recs.push("استغلال هوامش الربح المرتفعة في إعادة استثمار جزء من الأرباح في تطوير الأعمال (R&D) أو التسويق لزيادة الحصة السوقية.");
+                strengths.push(m("هامش صافي ربح ممتاز يتجاوز 15%، مما يدل على كفاءة عالية في التسعير والتحكم الصارم في المصروفات التشغيلية والإدارية.",
+                    "Excellent net margin above 15%, reflecting strong pricing power and tight control over operating and administrative expenses."));
+                recs.push(m("استغلال هوامش الربح المرتفعة في إعادة استثمار جزء من الأرباح في تطوير الأعمال (R&D) أو التسويق لزيادة الحصة السوقية.",
+                    "Leverage the high margins by reinvesting part of the profits into business development (R&D) or marketing to grow market share."));
             } else if (netMargin > 0 && netMargin <= 0.05) {
-                weaknesses.push("هامش الربح الصافي ضعيف جداً (أقل من 5%)، أي زيادة طفيفة في التكاليف قد تؤدي إلى خسائر فعلية.");
-                recs.push("إجراء مراجعة شاملة لجميع بنود المصروفات (Cost Cutting)، ومراجعة سياسات التسعير لضمان تغطية التكاليف بهامش آمن.");
+                weaknesses.push(m("هامش الربح الصافي ضعيف جداً (أقل من 5%)، أي زيادة طفيفة في التكاليف قد تؤدي إلى خسائر فعلية.",
+                    "Net margin is very thin (below 5%); even a small cost increase could push the company into an actual loss."));
+                recs.push(m("إجراء مراجعة شاملة لجميع بنود المصروفات (Cost Cutting)، ومراجعة سياسات التسعير لضمان تغطية التكاليف بهامش آمن.",
+                    "Conduct a full expense review (cost cutting) and revisit pricing policies to ensure costs are covered with a safe margin."));
             } else if (netMargin < 0) {
-                weaknesses.push("الشركة تحقق خسائر تشغيلية. الإيرادات الحالية لا تغطي التكاليف والمصروفات.");
-                recs.push("تطبيق خطة طوارئ فورية لإيقاف النزيف، إعادة هيكلة التكاليف الثابتة، والتركيز على المنتجات/الخدمات ذات الهامش الأعلى (Cash Cows).");
+                weaknesses.push(m("الشركة تحقق خسائر تشغيلية. الإيرادات الحالية لا تغطي التكاليف والمصروفات.",
+                    "The company is operating at a loss - current revenue does not cover costs and expenses."));
+                recs.push(m("تطبيق خطة طوارئ فورية لإيقاف النزيف، إعادة هيكلة التكاليف الثابتة، والتركيز على المنتجات/الخدمات ذات الهامش الأعلى (Cash Cows).",
+                    "Implement an immediate turnaround plan to stop the bleeding, restructure fixed costs, and focus on the highest-margin products/services (cash cows)."));
+            }
+
+            // 1b. Break-even distance (CVP): same simplification as the Forecast tab - COGS as the
+            // variable cost, Opex as the fixed cost base.
+            const cmPct = is.rev ? (is.rev - is.cogs) / is.rev : 0;
+            const breakEvenRevActual = cmPct > 0 ? is.exp / cmPct : null;
+            const marginOfSafetyActual = (breakEvenRevActual !== null && is.rev > 0) ? ((is.rev - breakEvenRevActual) / is.rev) * 100 : null;
+            if (marginOfSafetyActual !== null) {
+                if (marginOfSafetyActual < 0) {
+                    const gapPct = Math.abs(Math.round(marginOfSafetyActual));
+                    weaknesses.push(m(`الإيرادات الحالية أقل من نقطة التعادل بنحو ${gapPct}%، أي أن هامش المساهمة لا يغطي المصروفات التشغيلية الثابتة بعد.`,
+                        `Current revenue sits about ${gapPct}% below the break-even point - the contribution margin doesn't yet cover fixed operating expenses.`));
+                } else if (marginOfSafetyActual < 15) {
+                    weaknesses.push(m(`هامش الأمان ضيق (الإيرادات تتجاوز نقطة التعادل بنحو ${Math.round(marginOfSafetyActual)}% فقط)، أي انخفاض بسيط في المبيعات قد يدخل الشركة في خسارة.`,
+                        `Thin margin of safety - revenue is only about ${Math.round(marginOfSafetyActual)}% above the break-even point, so a small sales drop could push the company into a loss.`));
+                    recs.push(m("بناء احتياطي تشغيلي ومراقبة أي انحراف في المبيعات عن الخطة أولاً بأول، مع تأجيل أي زيادة في المصروفات الثابتة حتى يتسع هامش الأمان.",
+                        "Build an operating buffer and track any sales shortfall against plan closely, and hold off on adding fixed costs until the margin of safety widens."));
+                } else if (marginOfSafetyActual > 40) {
+                    strengths.push(m(`هامش أمان مريح (الإيرادات تتجاوز نقطة التعادل بنحو ${Math.round(marginOfSafetyActual)}%)، ما يمنح الشركة مساحة جيدة لامتصاص أي تراجع غير متوقع في المبيعات.`,
+                        `Comfortable margin of safety - revenue is about ${Math.round(marginOfSafetyActual)}% above break-even, giving the company good room to absorb an unexpected sales dip.`));
+                }
             }
 
             if (grossMargin < 0.20 && is.rev > 0) {
-                weaknesses.push("هامش مجمل الربح منخفض (تكلفة البضاعة المباعة تلتهم أغلب الإيرادات).");
-                recs.push("التفاوض المباشر مع الموردين لخفض أسعار الشراء، أو البحث عن بدائل لتقليل التكلفة المباشرة (COGS).");
+                weaknesses.push(m("هامش مجمل الربح منخفض (تكلفة البضاعة المباعة تلتهم أغلب الإيرادات).",
+                    "Gross margin is low - cost of goods sold is consuming most of the revenue."));
+                recs.push(m("التفاوض المباشر مع الموردين لخفض أسعار الشراء، أو البحث عن بدائل لتقليل التكلفة المباشرة (COGS).",
+                    "Negotiate directly with suppliers to lower purchase prices, or look for alternatives to reduce direct cost of goods sold (COGS)."));
             }
 
             // 2. Liquidity & Solvency Analysis
             const currentRatio = bs.cl ? bs.ca / bs.cl : 0;
             if (currentRatio > 1.5) {
-                strengths.push("وضع سيولة قصير الأجل مريح ومستقر (نسبة التداول فوق 1.5)، مما يوفر قدرة ممتازة على سداد الالتزامات المتداولة دون ضغوط.");
+                strengths.push(m("وضع سيولة قصير الأجل مريح ومستقر (نسبة التداول فوق 1.5)، مما يوفر قدرة ممتازة على سداد الالتزامات المتداولة دون ضغوط.",
+                    "Comfortable, stable short-term liquidity (current ratio above 1.5), providing strong ability to meet current liabilities without pressure."));
+                if (currentRatio > 3) {
+                    weaknesses.push(m("سيولة مرتفعة جداً (نسبة التداول تتجاوز 3)، قد يشير هذا إلى نقد أو أصول متداولة غير مُستغلة بكفاءة بدلاً من استثمارها في نمو الأعمال.",
+                        "Very high liquidity (current ratio above 3) may indicate idle cash or current assets that aren't being put to efficient use for business growth."));
+                    recs.push(m("دراسة توظيف الفائض النقدي في فرص استثمارية أو توسعية تزيد العائد على الأصول بدلاً من الاحتفاظ به خاملاً.",
+                        "Consider deploying the cash surplus into investment or expansion opportunities that raise return on assets instead of holding it idle."));
+                }
             } else if (currentRatio < 1.0) {
-                weaknesses.push("عجز خطير في السيولة قصيرة الأجل (نسبة التداول أقل من 1). الأصول المتداولة لا تكفي لتغطية الالتزامات المطلوبة قريباً.");
-                recs.push("التفاوض الفوري مع الدائنين لجدولة الديون وتمديد فترات السداد، ومحاولة تسييل الأصول البطيئة أو الحصول على تسهيلات ائتمانية طارئة.");
+                weaknesses.push(m("عجز خطير في السيولة قصيرة الأجل (نسبة التداول أقل من 1). الأصول المتداولة لا تكفي لتغطية الالتزامات المطلوبة قريباً.",
+                    "Serious short-term liquidity shortfall (current ratio below 1) - current assets are not enough to cover liabilities coming due soon."));
+                recs.push(m("التفاوض الفوري مع الدائنين لجدولة الديون وتمديد فترات السداد، ومحاولة تسييل الأصول البطيئة أو الحصول على تسهيلات ائتمانية طارئة.",
+                    "Negotiate immediately with creditors to reschedule debt and extend payment terms, and try to liquidate slow-moving assets or secure emergency credit facilities."));
             }
 
             const debtToEquity = teq ? tl / teq : 0;
             if (debtToEquity > 2) {
-                weaknesses.push("نسبة مديونية عالية (الاعتماد الكثيف على التمويل الخارجي يفوق حقوق الملكية)، مما يزيد من المخاطر المالية وفوائد القروض.");
-                recs.push("تجنب أخذ أي قروض جديدة، وتوجيه التدفقات النقدية الحرة لسداد الديون الأعلى تكلفة لتقليل الرافعة المالية.");
+                weaknesses.push(m("نسبة مديونية عالية (الاعتماد الكثيف على التمويل الخارجي يفوق حقوق الملكية)، مما يزيد من المخاطر المالية وفوائد القروض.",
+                    "High leverage - heavy reliance on external financing exceeds equity, increasing financial risk and interest costs."));
+                recs.push(m("تجنب أخذ أي قروض جديدة، وتوجيه التدفقات النقدية الحرة لسداد الديون الأعلى تكلفة لتقليل الرافعة المالية.",
+                    "Avoid taking on any new debt, and direct free cash flow toward repaying the highest-cost debt to reduce leverage."));
             } else if (debtToEquity > 0 && debtToEquity < 0.5) {
-                strengths.push("استقلالية مالية قوية ورافعة مالية منخفضة، هيكل التمويل يعتمد بشكل صحي على حقوق الملكية بدلاً من الديون.");
+                strengths.push(m("استقلالية مالية قوية ورافعة مالية منخفضة، هيكل التمويل يعتمد بشكل صحي على حقوق الملكية بدلاً من الديون.",
+                    "Strong financial independence and low leverage - the financing structure relies healthily on equity rather than debt."));
             }
 
             // 3. Cash Flow & Quality of Earnings Analysis
             if (cf_op > 0 && cf_op >= ni && ni > 0) {
-                strengths.push("جودة أرباح استثنائية: الأرباح الدفترية تتحول بالكامل إلى نقد تشغيلي حقيقي، مما يدل على صحة عمليات التحصيل والبيع.");
+                strengths.push(m("جودة أرباح استثنائية: الأرباح الدفترية تتحول بالكامل إلى نقد تشغيلي حقيقي، مما يدل على صحة عمليات التحصيل والبيع.",
+                    "Exceptional earnings quality: book profits are fully converting into real operating cash, indicating healthy collections and sales operations."));
             } else if (cf_op < 0 && ni > 0) {
-                weaknesses.push("أزمة في جودة الأرباح: الشركة تحقق أرباحاً على الورق، ولكن العمليات التشغيلية تستنزف الكاش (تدفق تشغيلي سالب).");
-                recs.push("مراجعة دورة التحول النقدي فوراً؛ المشكلة تكمن إما في تأخر تحصيل العملاء، أو تضخم المخزون، أو الدفع السريع للموردين.");
+                weaknesses.push(m("أزمة في جودة الأرباح: الشركة تحقق أرباحاً على الورق، ولكن العمليات التشغيلية تستنزف الكاش (تدفق تشغيلي سالب).",
+                    "Earnings quality red flag: the company shows paper profits, but operations are draining cash (negative operating cash flow)."));
+                recs.push(m("مراجعة دورة التحول النقدي فوراً؛ المشكلة تكمن إما في تأخر تحصيل العملاء، أو تضخم المخزون، أو الدفع السريع للموردين.",
+                    "Review the cash conversion cycle immediately - the issue likely lies in slow customer collections, bloated inventory, or paying suppliers too quickly."));
             } else if (cf_op < 0 && ni < 0) {
-                weaknesses.push("تآكل مزدوج: خسائر دفترية مقترنة بنزيف نقدي تشغيلي، الوضع يتطلب تدخلاً جوهرياً لضمان استمرارية الشركة (Going Concern).");
+                weaknesses.push(m("تآكل مزدوج: خسائر دفترية مقترنة بنزيف نقدي تشغيلي، الوضع يتطلب تدخلاً جوهرياً لضمان استمرارية الشركة (Going Concern).",
+                    "Double erosion: book losses combined with operating cash burn - the situation requires decisive intervention to ensure going-concern viability."));
             }
 
             // 4. Efficiency & Turnover (DSO, DIO)
@@ -2472,21 +2719,29 @@
             const dio = invTurnover ? (daysInPeriod / invTurnover) : 0;
 
             if (dso > 90) {
-                weaknesses.push(`ضعف في كفاءة التحصيل. أموال الشركة مقيدة لدى العملاء بمتوسط (${Math.round(dso)} يوم)، مما يضغط على السيولة.`);
-                recs.push("تشديد سياسات الائتمان للعملاء الجدد، وعرض (خصم تعجيل دفع - Early Payment Discount) لتحفيز العملاء الحاليين على السداد السريع.");
+                weaknesses.push(m(`ضعف في كفاءة التحصيل. أموال الشركة مقيدة لدى العملاء بمتوسط (${Math.round(dso)} يوم)، مما يضغط على السيولة.`,
+                    `Weak collection efficiency - company funds are tied up with customers for an average of ${Math.round(dso)} days, pressuring liquidity.`));
+                recs.push(m("تشديد سياسات الائتمان للعملاء الجدد، وعرض (خصم تعجيل دفع - Early Payment Discount) لتحفيز العملاء الحاليين على السداد السريع.",
+                    "Tighten credit policies for new customers, and offer an early-payment discount to encourage existing customers to pay faster."));
             } else if (dso > 0 && dso < 30) {
-                strengths.push(`كفاءة عالية جداً في تحصيل المديونيات من العملاء بمتوسط (${Math.round(dso)} يوم)، مما يدعم التدفق النقدي بقوة.`);
+                strengths.push(m(`كفاءة عالية جداً في تحصيل المديونيات من العملاء بمتوسط (${Math.round(dso)} يوم)، مما يدعم التدفق النقدي بقوة.`,
+                    `Very high collection efficiency - customer receivables are collected in an average of ${Math.round(dso)} days, strongly supporting cash flow.`));
             }
 
             if (dio > 120) {
-                weaknesses.push(`تراكم وبطء في حركة المخزون. البضاعة تبقى في المستودعات بمتوسط (${Math.round(dio)} يوم)، مما يجمد رأس المال العامل.`);
-                recs.push("إطلاق حملات ترويجية لتصريف المخزون الراكد أو البطيء، وتطبيق نظام (JIT - Just In Time) لتقليل كميات الشراء وربطها بالطلب الفعلي.");
+                weaknesses.push(m(`تراكم وبطء في حركة المخزون. البضاعة تبقى في المستودعات بمتوسط (${Math.round(dio)} يوم)، مما يجمد رأس المال العامل.`,
+                    `Inventory is building up and moving slowly - goods sit in storage for an average of ${Math.round(dio)} days, tying up working capital.`));
+                recs.push(m("إطلاق حملات ترويجية لتصريف المخزون الراكد أو البطيء، وتطبيق نظام (JIT - Just In Time) لتقليل كميات الشراء وربطها بالطلب الفعلي.",
+                    "Launch promotional campaigns to clear slow-moving or obsolete inventory, and adopt a Just-In-Time (JIT) system to align purchase quantities with actual demand."));
             }
 
             // Fallbacks
-            if (strengths.length === 0) strengths.push("بناءً على الأرقام الحالية، أداء الشركة مستقر ولا توجد نقاط قوة استثنائية تتجاوز المعدلات الطبيعية.");
-            if (weaknesses.length === 0) weaknesses.push("لا توجد مخاطر مالية جوهرية أو مؤشرات سلبية خطيرة بناءً على ميزان المراجعة الحالي.");
-            if (recs.length === 0) recs.push("الاستمرار في مراقبة الأداء المالي والحفاظ على مستويات السيولة والربحية الحالية.");
+            if (strengths.length === 0) strengths.push(m("بناءً على الأرقام الحالية، أداء الشركة مستقر ولا توجد نقاط قوة استثنائية تتجاوز المعدلات الطبيعية.",
+                "Based on the current figures, performance is stable with no exceptional strengths beyond normal benchmarks."));
+            if (weaknesses.length === 0) weaknesses.push(m("لا توجد مخاطر مالية جوهرية أو مؤشرات سلبية خطيرة بناءً على ميزان المراجعة الحالي.",
+                "No material financial risks or serious warning signs based on the current trial balance."));
+            if (recs.length === 0) recs.push(m("الاستمرار في مراقبة الأداء المالي والحفاظ على مستويات السيولة والربحية الحالية.",
+                "Continue monitoring financial performance and maintaining current liquidity and profitability levels."));
 
             // DOM Rendering
             const renderList = (arr, elementId, iconStr) => {
@@ -2509,6 +2764,11 @@
             renderMappingTable();
 
             if (localStorage.getItem('cfo_tb')) { savedTB = JSON.parse(localStorage.getItem('cfo_tb')); renderTBTable(); }
+            if (localStorage.getItem('cfo_tb_prior')) {
+                try { savedTB_prior = JSON.parse(localStorage.getItem('cfo_tb_prior')); } catch (e) { savedTB_prior = []; }
+            }
+            horizPriorLabel = localStorage.getItem('cfo_horiz_label') || '';
+            renderHorizontalAnalysis();
 
             const mappingContainer = document.getElementById('mapping-table-container');
             if (mappingContainer) {
